@@ -320,8 +320,8 @@ flowchart TD
 ## 🗺️ Roadmap
 
 **Fase 1 — Base de datos y CRUD**
-- [ *] Configuración de Firebase
-- [ ] Modelo de datos
+- [.] Configuración de Firebase
+- [.] Modelo de datos
 - [ ] Gestión de lotes, productos y clientes
 - [ ] Gestión de pedidos
 
@@ -338,7 +338,6 @@ flowchart TD
 - [ ] Cierre de lote y resumen económico
 
 **Fase 4 — Operación manos libres**
-- [ ] Botón físico Bluetooth
 - [ ] Reconocimiento de voz
 - [ ] Texto a voz y flujo de pesado por voz
 
@@ -392,7 +391,7 @@ El objetivo del proyecto no es solo digitalizar una libreta, sino **modelar digi
 El proyecto está en evolución activa; algunas funcionalidades descritas corresponden al diseño y roadmap del producto.
 
 **Contacto:**
-[GitHub](https://github.com/tu-usuario) · [LinkedIn](https://linkedin.com/in/tu-usuario)
+[GitHub](https://github.com/BehLik) · [LinkedIn](www.linkedin.com/in/likbeh-alejandro-caamal-sabido-6811b7370)
 
 ---
 
