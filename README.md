@@ -7,7 +7,7 @@
   <img src="https://img.shields.io/badge/licencia-por%20definir-lightgrey" alt="Licencia" />
 </p>
 
-<h1 align="center">🐖 Arrax</h1>
+<h1 align="center">Arrax</h1>
 
 <p align="center">
   <strong>Gestión de pedidos, inventario y ventas por encargo de carne de cerdo.</strong>
@@ -81,7 +81,7 @@ La entrega y el pago se manejan de forma **independiente**, permitiendo escenari
 
 ## ✨ Funcionalidades del MVP
 
-### 🐖 Gestión de lotes
+### Gestión de lotes
 
 Cada cerdo vendido se representa como un **lote independiente**, con:
 
@@ -320,7 +320,7 @@ flowchart TD
 ## 🗺️ Roadmap
 
 **Fase 1 — Base de datos y CRUD**
-- [ ] Configuración de Firebase
+- [ *] Configuración de Firebase
 - [ ] Modelo de datos
 - [ ] Gestión de lotes, productos y clientes
 - [ ] Gestión de pedidos
