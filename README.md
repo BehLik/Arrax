@@ -22,7 +22,7 @@
 
 ---
 
-## 🚀 Sobre el proyecto
+##  Sobre el proyecto
 
 **ARRAX** es una plataforma móvil Android orientada a la **asistencia, automatización y trazabilidad de procesos operativos**.
 
@@ -38,7 +38,7 @@ La plataforma busca que la tecnología se adapte al ritmo del trabajador, en lug
 
 ---
 
-## 🧠 Concepto
+##  Concepto
 
 La mayoría de las aplicaciones administrativas están diseñadas alrededor de formularios, tablas y registros.
 
@@ -82,7 +82,7 @@ Por ello, el sistema prioriza:
 
 ---
 
-# 🎯 Problema tecnológico
+#  Problema tecnológico
 
 Los procesos físicos de pequeños negocios suelen depender de herramientas que fueron diseñadas para oficinas: hojas de cálculo, libretas, aplicaciones administrativas o sistemas POS tradicionales.
 
@@ -106,7 +106,7 @@ Consiste en **modelar digitalmente un proceso físico y convertir ese modelo en 
 
 ---
 
-# 💡 Propuesta
+#  Propuesta
 
 ARRAX utiliza el flujo de pedidos de carne por encargo como primer caso de uso para experimentar con:
 
@@ -152,7 +152,7 @@ Esto permite que cada acción realizada durante el proceso produzca información
 
 ---
 
-# 🔬 Caso de uso inicial
+#  Caso de uso inicial
 
 El primer dominio de aplicación de ARRAX es la venta de carne de cerdo por encargo.
 
@@ -177,9 +177,9 @@ El dominio puede evolucionar posteriormente hacia otros escenarios donde exista 
 
 ---
 
-# ✨ Capacidades principales
+#  Capacidades principales
 
-## 📦 Modelado de operaciones
+##  Modelado de operaciones
 
 ARRAX representa las entidades y relaciones que forman parte del proceso operativo.
 
@@ -200,7 +200,7 @@ Cada entidad representa un estado real del proceso.
 
 ---
 
-## 🧩 Sistema de pedidos
+##  Sistema de pedidos
 
 Los pedidos pueden contener múltiples líneas de producto.
 
@@ -238,7 +238,7 @@ Esta lógica permite que el usuario trabaje con la forma de solicitud que le res
 
 ---
 
-# ⚖️ Motor de procesamiento por corte
+#  Motor de procesamiento por corte
 
 Una de las decisiones de diseño más importantes de ARRAX es que el procesamiento no se organiza únicamente por pedido.
 
@@ -275,7 +275,7 @@ Esto permite que la aplicación siga el **flujo físico de trabajo**, en lugar d
 
 ---
 
-# 🧠 Estado granular
+#  Estado granular
 
 Los pedidos no siempre se completan de manera uniforme.
 
@@ -295,7 +295,7 @@ Esto permite representar operaciones parcialmente completadas y mantener una tra
 
 ---
 
-# 🎙️ Interacción manos libres
+#  Interacción manos libres
 
 Una de las líneas de evolución más importantes de ARRAX es la interacción mediante voz.
 
@@ -336,7 +336,7 @@ La interacción por voz está planteada como una **capa de asistencia sobre el f
 
 ---
 
-# 🔄 Automatización del flujo
+#  Automatización del flujo
 
 ARRAX busca reducir la cantidad de decisiones manuales necesarias durante operaciones repetitivas.
 
@@ -362,7 +362,7 @@ El sistema mantiene el contexto y continúa el flujo.
 
 ---
 
-# 🗄️ Persistencia y consistencia
+#  Persistencia y consistencia
 
 ARRAX utiliza **Cloud Firestore** como capa de persistencia.
 
@@ -387,7 +387,7 @@ La cola de procesamiento por corte puede resolverse mediante consultas `collecti
 
 ---
 
-# 🏗️ Arquitectura
+#  Arquitectura
 
 ARRAX utiliza una arquitectura por capas:
 
@@ -426,7 +426,7 @@ Esto facilita:
 
 ---
 
-# 🧰 Stack tecnológico
+#  Stack tecnológico
 
 | Tecnología                       | Uso                        |
 | -------------------------------- | -------------------------- |
@@ -442,7 +442,7 @@ Esto facilita:
 
 ---
 
-# 🎨 Diseño de experiencia
+#  Diseño de experiencia
 
 La interfaz está diseñada bajo un principio:
 
@@ -472,7 +472,7 @@ La pantalla no debe exigir atención innecesaria.
 
 ---
 
-# 📱 Interfaces principales
+#  Interfaces principales
 
 ### Dashboard
 
@@ -506,7 +506,7 @@ Transforma los eventos registrados durante la operación en información financi
 
 ---
 
-# 🔄 Flujo operativo
+#  Flujo operativo
 
 ```mermaid
 flowchart LR
@@ -542,7 +542,7 @@ El modelo de datos representa estos escenarios sin forzar una secuencia artifici
 
 ---
 
-# 📊 Información generada
+#  Información generada
 
 Uno de los objetivos de ARRAX es que las operaciones cotidianas generen información reutilizable.
 
@@ -575,7 +575,7 @@ Esto permite que el sistema evolucione desde una herramienta de registro hacia u
 
 ---
 
-# 🗺️ Roadmap
+#  Roadmap
 
 ## Fase 1 — Core Platform
 
@@ -662,7 +662,7 @@ La intención es que las capacidades desarrolladas para un escenario puedan reut
 
 ---
 
-# 🔐 Alcance actual
+#  Alcance actual
 
 ARRAX se encuentra en desarrollo.
 
@@ -684,7 +684,7 @@ Funcionalidades avanzadas como inteligencia contextual, automatización extendid
 
 ---
 
-# 🧠 Retos técnicos
+#  Retos técnicos
 
 ARRAX permite explorar problemas de ingeniería que van más allá de un CRUD tradicional.
 
@@ -720,7 +720,7 @@ La futura integración de voz transforma la aplicación de una interfaz purament
 
 ---
 
-# 📈 Evolución del proyecto
+#  Evolución del proyecto
 
 ARRAX está planteado como un proyecto evolutivo.
 
@@ -746,7 +746,7 @@ Es explorar cómo una aplicación móvil puede convertirse en una **capa digital
 
 ---
 
-# 👨‍💻 Sobre el proyecto
+# Sobre el proyecto
 
 ARRAX forma parte de mi portafolio de desarrollo de software.
 
@@ -773,7 +773,7 @@ Consiste en aprender a **transformar un proceso físico en un modelo digital cap
 
 ---
 
-# 🧩 Filosofía
+#  Filosofía
 
 > **ARRAX no le dice al usuario cómo trabajar.**
 >
@@ -785,7 +785,7 @@ El sistema comienza con un caso concreto y evoluciona alrededor de una pregunta:
 
 ---
 
-# 📸 Capturas
+#  Capturas
 
 Las interfaces se incorporarán conforme avance la implementación.
 
@@ -800,7 +800,7 @@ La dirección visual utiliza:
 
 ---
 
-# 📄 Documentación
+#  Documentación
 
 La documentación técnica del proyecto incluye:
 
@@ -814,7 +814,7 @@ La documentación técnica del proyecto incluye:
 
 ---
 
-# 📌 Estado
+#  Estado
 
 **En desarrollo activo.**
 
@@ -822,7 +822,7 @@ ARRAX se encuentra en evolución y algunas capacidades descritas en este documen
 
 ---
 
-# 📬 Contacto
+# Contacto
 
 **GitHub:** [tu perfil de GitHub](https://github.com/BehLik)
 
@@ -830,7 +830,7 @@ ARRAX se encuentra en evolución y algunas capacidades descritas en este documen
 
 ---
 
-# ⚖️ Licencia
+# Licencia
 
 Proyecto personal desarrollado como parte de mi portafolio profesional.
 
