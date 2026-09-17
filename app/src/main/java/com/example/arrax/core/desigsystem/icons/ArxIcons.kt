@@ -15,7 +15,7 @@ import com.example.arrax.R
  *
  * Esto permite cambiar el recurso gráfico sin modificar las pantallas.
  */
-object ArraxIcons {
+object ArxIcons {
 
     // ============================================================
     // NAVEGACIÓN
