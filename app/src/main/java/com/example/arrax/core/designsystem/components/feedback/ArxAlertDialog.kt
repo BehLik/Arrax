@@ -28,11 +28,10 @@ fun ArxAlertDialog(
     icon: Painter? = null,
     isDestructive: Boolean = false
 ) {
-
     AlertDialog(
         onDismissRequest = { onDismiss?.invoke() },
         modifier = modifier,
-        shape = MaterialTheme.shapes.large,
+        shape = MaterialTheme.shapes.large, // Redondeo de 24dp
         containerColor = MaterialTheme.colorScheme.surface,
         titleContentColor = MaterialTheme.colorScheme.onSurface,
         textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -71,7 +70,7 @@ fun ArxAlertDialog(
                 )
             ) {
                 Text(
-                text = confirmText.uppercase(),
+                    text = confirmText.uppercase(),
                     style = MaterialTheme.typography.labelLarge
                 )
             }
@@ -95,29 +94,30 @@ fun ArxAlertDialog(
     )
 }
 
-
-
-@Preview(showBackground = true, name = "1")
+@Preview(showBackground = true, name = "Alert Dialog Dark")
 @Composable
-fun ArxAlertDialogPreview_Standard()
-{
-    ArxTheme (darkTheme = true){ ArxAlertDialog(
-        title = "Sincronización Completa",
-        message = "Todos los registros offline han sido subidos a la nube exitosamente.",
-        confirmText = "Entendido",
-        onConfirm = {},
-        icon= painterResource(id = ArxIcons.Sync)
-    ) }
+fun ArxAlertDialogPreview_Dark() {
+    ArxTheme(darkTheme = true) {
+        ArxAlertDialog(
+            title = "Sincronización Completa",
+            message = "Todos los registros offline han sido subidos a la nube exitosamente.",
+            confirmText = "Entendido",
+            onConfirm = {},
+            icon = painterResource(id = ArxIcons.Sync) // Asegúrate de tener este ícono
+        )
+    }
 }
-@Preview(showBackground = true, name = "1")
+
+@Preview(showBackground = true, name = "Alert Dialog Light")
 @Composable
-fun ArxAlertDialogPreview2_Standard()
-{
-    ArxTheme{ ArxAlertDialog(
-        title = "Sincronización Completa",
-        message = "Todos los registros offline han sido subidos a la nube exitosamente.",
-        confirmText = "Entendido",
-        onConfirm = {},
-        icon= painterResource(id = ArxIcons.Sync)
-    ) }
+fun ArxAlertDialogPreview_Light() {
+    ArxTheme {
+        ArxAlertDialog(
+            title = "Sincronización Completa",
+            message = "Todos los registros offline han sido subidos a la nube exitosamente.",
+            confirmText = "Entendido",
+            onConfirm = {},
+            icon = painterResource(id = ArxIcons.Sync)
+        )
+    }
 }

@@ -27,7 +27,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.arrax.core.designsystem.icons.ArxIcons
-//import com.example.arrax.core.desigsystem.theme.AppTheme
 import com.example.arrax.core.designsystem.theme.ArxTheme
 
 @Composable
@@ -174,7 +173,7 @@ fun ArxFieldActionButton(
         }
     }
 }
-@Preview(showBackground = false, name = "Familia de Botones AviSentinel")
+@Preview(showBackground = false, name = "Familia de Botones Arrax")
 @Composable
 fun ArxButtonsPreview() {
     ArxTheme{
@@ -210,7 +209,7 @@ fun ArxFieldActionButtonsPreview() {
 
             ArxFieldActionButton(
                 iconRes = ArxIcons.NfcOutline,
-                label = "Escanear\nAve",
+                label = "Escanear",
                 isHighlighted = true,
                 modifier = Modifier.weight(1f),
                 onClick = {}
