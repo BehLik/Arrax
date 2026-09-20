@@ -1,4 +1,4 @@
-package com.example.arrax.core.desigsystem.theme
+package com.example.arrax.core.designsystem.theme
 import androidx.compose.ui.graphics.Color
 
 val primaryLight = Color(0xFF0C6B59)

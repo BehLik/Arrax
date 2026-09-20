@@ -1,4 +1,4 @@
-package com.example.arrax.core.desigsystem.icons
+package com.example.arrax.core.designsystem.icons
 
 import com.example.arrax.R
 

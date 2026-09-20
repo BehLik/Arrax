@@ -1,4 +1,4 @@
-package com.example.arrax.core.desigsystem.components.feedback
+package com.example.arrax.core.designsystem.components.feedback
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
@@ -12,10 +12,9 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-//import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.arrax.core.desigsystem.icons.ArxIcons
-import com.example.arrax.core.desigsystem.theme.AppTheme
+import com.example.arrax.core.designsystem.icons.ArxIcons
+import com.example.arrax.core.designsystem.theme.ArxTheme
 
 @Composable
 fun ArxAlertDialog(
@@ -102,7 +101,19 @@ fun ArxAlertDialog(
 @Composable
 fun ArxAlertDialogPreview_Standard()
 {
-    AppTheme { ArxAlertDialog(
+    ArxTheme (darkTheme = true){ ArxAlertDialog(
+        title = "Sincronización Completa",
+        message = "Todos los registros offline han sido subidos a la nube exitosamente.",
+        confirmText = "Entendido",
+        onConfirm = {},
+        icon= painterResource(id = ArxIcons.Sync)
+    ) }
+}
+@Preview(showBackground = true, name = "1")
+@Composable
+fun ArxAlertDialogPreview2_Standard()
+{
+    ArxTheme{ ArxAlertDialog(
         title = "Sincronización Completa",
         message = "Todos los registros offline han sido subidos a la nube exitosamente.",
         confirmText = "Entendido",

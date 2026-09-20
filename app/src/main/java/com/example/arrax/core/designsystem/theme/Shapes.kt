@@ -1,11 +1,11 @@
-package com.example.arrax.core.desigsystem.theme
+package com.example.arrax.core.designsystem.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Shapes
 import androidx.compose.ui.unit.dp
 
 // Definimos la personalidad de los bordes
-val AviShapes = Shapes(
+val ArxShapes = Shapes(
     // Extra Pequeño (4dp): Para etiquetas muy chiquitas, tooltips o badges
     extraSmall = RoundedCornerShape(4.dp),
 
