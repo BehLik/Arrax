@@ -1,4 +1,4 @@
-package com.example.arrax.ui.screen.auth.login.component
+package com.example.arrax.ui.screen.auth.register.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,17 +15,16 @@ import com.example.arrax.core.designsystem.components.buttons.ArxPrimaryButton
 import com.example.arrax.core.designsystem.components.buttons.ArxTextButton
 
 @Composable
-fun LoginActions(
+fun RegisterActions(
     isLoading: Boolean,
     isButtonEnabled: Boolean,
-    onLoginClick: () -> Unit,
     onRegisterClick: () -> Unit,
-    onForgotClick: () -> Unit
+    onLoginClick: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         ArxPrimaryButton(
-            text = if (isLoading) "Iniciando sesión..." else "Iniciar sesión",
-            onClick = onLoginClick,
+            text = if (isLoading) "Creando cuenta..." else "Crear cuenta",
+            onClick = onRegisterClick,
             enabled = isButtonEnabled && !isLoading,
             leadingIcon = if (isLoading) {
                 {
@@ -38,14 +37,12 @@ fun LoginActions(
             } else null
         )
 
-        ArxTextButton(text = "¿Olvidaste tu contraseña?", onClick = onForgotClick)
-
         Row(
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("¿No tienes cuenta?")
-            ArxTextButton(text = "Crear cuenta", onClick = onRegisterClick)
+            Text("¿Ya tienes cuenta?")
+            ArxTextButton(text = "Inicia sesión", onClick = onLoginClick)
         }
     }
 }

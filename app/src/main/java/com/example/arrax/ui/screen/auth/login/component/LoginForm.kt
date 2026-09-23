@@ -31,26 +31,23 @@ import com.example.arrax.core.designsystem.icons.ArxIcons
 fun LoginForm(
     email: String,
     password: String,
+    emailError: String?,
     errorMessage: String?,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit
 ) {
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
-
-    // Validación local simple
-    val isEmailValid = email.isEmpty() || android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
-
     Column(modifier = Modifier.fillMaxWidth()) {
         // Email
         OutlinedTextField(
             value = email,
             onValueChange = onEmailChange,
             label = { Text(text = stringResource(id = R.string.common_email_label)) },
-            isError = !isEmailValid,
+            isError = emailError != null,
             supportingText = {
-                if (!isEmailValid) {
+                if (emailError != null) {
                     Text(
-                        text = stringResource(id = R.string.auth_error_invalid_email),
+                        text = emailError,
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
