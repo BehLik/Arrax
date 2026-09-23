@@ -86,4 +86,28 @@
     <string name="common_settings">Configuración</string>
 <!--    authetication-->
 
+    <string name="auth_login_welcome_title">Bienvenido a Arrax</string>
+    <string name="auth_login_label">Iniciar Sesión</string>
+    <string name="auth_login_registro_label">¿No tienes cuenta? Regístrate aquí</string>
+    <string name="auth_login_forgot_password">¿Has olvidado tu contraseña?</string>
+    <string name="auth_hide_password">ocultar contraseña</string>
+    <string name="auth_show_password">mostrar contraseña</string>
+    <string name="auth_error_invalid_email">Ingresa un correo electrónico válido</string>
+
+    <string name="auth_register_birthdate">Fecha de Nacimiento</string>
+    <string name="auth_register_verification_email_message">Hemos enviado un enlace de verificación a tu correo. Por favor, revísalo para activar tu cuenta de Arrax.</string>
+    <string name="auth_register_back_login">Ir a Login</string>
+    <string name="auth_register_birthdate_placeholder">DD/MM/AAAA</string>
+
+    <string name="auth_verification_title">Verifica tu correo</string>
+    <string name="auth_verification_message">Te hemos enviado un enlace para activar tu cuenta. Por favor, haz clic en él para poder acceder a Arrax.</string>
+    <string name="auth_verification_spam_message">Revisa tu carpeta de SPAM o correo no deseado. A veces nuestros correos pueden llegar allí.</string>
+    <string name="auth_verification_confirm_button">Ya verifiqué mi correo</string>
+    <string name="auth_verification_resend_button">Reenviar correo</string>
+    <string name="auth_verification_back_to_login_button">Volver al inicio de sesión</string>
+
+    <string name="auth_forgot_password_button_send">Enviar enlace</string>
+    <string name="auth_forgot_password_title">Recuperar Contraseña</string>
+    <string name="auth_forgot_password_description">Ingresa tu correo asociado a la cuenta</string>
+
 </resources>
