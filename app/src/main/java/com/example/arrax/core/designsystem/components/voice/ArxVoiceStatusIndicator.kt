@@ -74,7 +74,7 @@ fun ArxVoiceStatusIndicator(
         )
         Spacer(modifier = Modifier.width(4.dp))
         Text(
-            text = "Manos libres",
+            text = "Hand-Free",
             style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
             color = MaterialTheme.colorScheme.onPrimaryContainer
         )

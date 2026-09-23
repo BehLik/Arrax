@@ -40,6 +40,10 @@ object ArxIcons {
     /** Crea un nuevo registro u operación. */
     val Add = R.drawable.ic_fab_add
 
+    /**Quita registros u operacion*/
+    val Remove = R.drawable.ic_remove
+
+
     /** Escanea un código QR. */
     val Qr = R.drawable.ic_fab_qr
 
@@ -58,6 +62,12 @@ object ArxIcons {
     /** Actualiza la información mostrada. */
     val Refresh = R.drawable.ic_refresh
 
+    /**Lista Conponentes*/
+    val List =R.drawable.ic_list
+    /**Unirse a un Grupo*/
+    val GroupAdd=R.drawable.ic_group_add
+    /**Evento*/
+    val Event=R.drawable.ic_event
     // ============================================================
     // NAVEGACIÓN PRINCIPAL
     // ============================================================
