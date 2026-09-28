@@ -5,10 +5,12 @@ import com.example.arrax.data.repository.AuthRepositoryImpl
 import com.example.arrax.data.repository.CatalogCutRepositoryImpl
 import com.example.arrax.data.repository.EventRepositoryImpl
 import com.example.arrax.data.repository.TenantRepositoryImpl
+import com.example.arrax.data.repository.UserRepositoryImpl
 import com.example.arrax.domain.repository.AuthRepository
 import com.example.arrax.domain.repository.CutCatalogRepository
 import com.example.arrax.domain.repository.EventRepository
 import com.example.arrax.domain.repository.TenantRepository
+import com.example.arrax.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -34,4 +36,6 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindCutCatalogRepository(impl: CatalogCutRepositoryImpl): CutCatalogRepository
+    @Binds
+    abstract fun bindUserRepository(impl: UserRepositoryImpl): UserRepository
 }

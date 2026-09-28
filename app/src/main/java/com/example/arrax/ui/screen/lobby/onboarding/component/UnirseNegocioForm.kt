@@ -40,7 +40,7 @@ fun UnirseNegocioForm(
             text = "Unirme",
             onClick = onConfirmar,
             enabled = !state.isLoading,
-            isLoading = state.isLoading,
+//            isLoading = state.isLoading,
             modifier = Modifier.fillMaxWidth().padding(top = 24.dp)
         )
         ArxTextButton(text = "Volver", onClick = onVolver, enabled = !state.isLoading, modifier = Modifier.padding(top = 8.dp))

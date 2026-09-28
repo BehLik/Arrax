@@ -12,7 +12,10 @@ sealed class Routes(val route: String) {
     data object LobbyHome : Routes("lobby/home")
     // Evento
     data object EventCreate : Routes("evento/create")
-    data object EventDetail : Routes("evento/detail/{eventoId}")
+    data object EventDetail : Routes("evento/detail/{eventoId}") {
+        const val ARG_EVENT_ID = "eventoId"
+        fun createRoute(eventoId: String) = "evento/detail/$eventoId"
+    }
 }
 ////Grafos raiz
 //@Serializable

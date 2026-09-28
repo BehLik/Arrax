@@ -1,5 +1,6 @@
 package com.example.arrax.ui.screen.lobby.home
 
+import android.R
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,6 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
@@ -39,7 +42,7 @@ fun LobbyHomeScreen(
             topBar = { ArxTopBar(title = "Mis eventos") },
             floatingActionButton = {
                 if (state.esAdmin && !state.isLoading) {
-                    ArxExtendedFAB(text = "Nuevo evento", icon = ArxIcons.Add, onClick = onNuevoEventoClick)
+                    ArxExtendedFAB(text = "Nuevo evento", icon = painterResource(ArxIcons.Add), onClick = onNuevoEventoClick)
                 }
             }
         ) { padding ->

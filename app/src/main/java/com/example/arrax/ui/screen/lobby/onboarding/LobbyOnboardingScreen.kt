@@ -11,6 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
@@ -69,13 +70,13 @@ private fun SeleccionModo(onCrearClick: () -> Unit, onUnirseClick: () -> Unit) {
         ArxActionCard(
             title = "Crear mi negocio",
             description = "Empieza un negocio nuevo y administra tus propios eventos",
-            icon = ArxIcons.Add,
+            iconRes = ArxIcons.Add,
             onClick = onCrearClick
         )
         ArxActionCard(
             title = "Unirme con código",
             description = "Tu familia o negocio ya usa Arrax y tienes un código de invitación",
-            icon = ArxIcons.GroupAdd,
+            iconRes = ArxIcons.GroupAdd,
             onClick = onUnirseClick,
             modifier = Modifier.padding(top = 12.dp)
         )
