@@ -1,11 +1,10 @@
-# ARRAX
-
 <p align="center">
   <img src="https://img.shields.io/badge/estado-en%20desarrollo-yellow" alt="Estado" />
   <img src="https://img.shields.io/badge/plataforma-Android-3DDC84?logo=android&logoColor=white" alt="Plataforma" />
   <img src="https://img.shields.io/badge/Kotlin-100%25-7F52FF?logo=kotlin&logoColor=white" alt="Kotlin" />
   <img src="https://img.shields.io/badge/Firebase-Firestore%20%7C%20Auth-FFCA28?logo=firebase&logoColor=black" alt="Firebase" />
   <img src="https://img.shields.io/badge/UI-Jetpack%20Compose-4285F4?logo=jetpackcompose&logoColor=white" alt="Jetpack Compose" />
+  <img src="https://img.shields.io/badge/DI-Hilt-2196F3" alt="Hilt" />
   <img src="https://img.shields.io/badge/arquitectura-Clean%20%7C%20Layered-6C63FF" alt="Arquitectura" />
   <img src="https://img.shields.io/badge/licencia-por%20definir-lightgrey" alt="Licencia" />
 </p>
@@ -22,11 +21,11 @@
 
 ---
 
-##  Sobre el proyecto
+## Sobre el proyecto
 
 **ARRAX** es una plataforma móvil Android orientada a la **asistencia, automatización y trazabilidad de procesos operativos**.
 
-El proyecto nace a partir de un escenario real: la gestión de pedidos y procesamiento de productos por encargo en un punto de venta de carne de cerdo.
+El proyecto nace a partir de un escenario real: la gestión de pedidos y el procesamiento de productos por encargo en un negocio familiar de venta de carne de cerdo, donde los pedidos se llevaban en listas de papel y era común perder registros o confundir pedidos.
 
 Sin embargo, el objetivo de ARRAX no es convertirse en un ERP especializado en carnicerías.
 
@@ -38,7 +37,22 @@ La plataforma busca que la tecnología se adapte al ritmo del trabajador, en lug
 
 ---
 
-##  Concepto
+## Estado de implementación
+
+| Fase | Alcance | Estado |
+| ---- | ------- | ------ |
+| **0** | Cimientos: arquitectura por capas, design system, inyección de dependencias, configuración de Firebase | Completada |
+| **1** | Autenticación: inicio de sesión, registro y recuperación de contraseña contra Firebase Auth | Completada |
+| **2** | Lobby multi-tenant: crear un negocio o unirse a uno con código, y lista de eventos | Completada |
+| **3** | Eventos: creación en 3 pasos, detalle en tiempo real y cierre de evento | Completada |
+| **4** | Pedidos, pesaje por corte y modo manos libres | En desarrollo |
+| **5** | Capa financiera: gastos, ventas, utilidad neta y reportes | Planeada |
+| **6** | Inteligencia y automatización | Planeada |
+| **7** | Extensibilidad a otros dominios | Planeada |
+
+---
+
+## Concepto
 
 La mayoría de las aplicaciones administrativas están diseñadas alrededor de formularios, tablas y registros.
 
@@ -65,9 +79,7 @@ ARRAX parte de una perspectiva diferente:
                     └─────────────────────┘
 ```
 
-La interfaz no debe convertirse en una interrupción del trabajo.
-
-Por ello, el sistema prioriza:
+La interfaz no debe convertirse en una interrupción del trabajo. Por ello, el sistema prioriza:
 
 * Interacciones rápidas.
 * Información contextual.
@@ -75,14 +87,14 @@ Por ello, el sistema prioriza:
 * Automatización de tareas repetitivas.
 * Operación con una sola mano.
 * Interfaces de alto contraste.
-* Interacción por voz.
+* Interacción por voz y por botón físico.
 * Estados persistentes.
 * Actualización de información en tiempo real.
 * Arquitectura preparada para nuevas capacidades.
 
 ---
 
-#  Problema tecnológico
+## Problema tecnológico
 
 Los procesos físicos de pequeños negocios suelen depender de herramientas que fueron diseñadas para oficinas: hojas de cálculo, libretas, aplicaciones administrativas o sistemas POS tradicionales.
 
@@ -92,7 +104,7 @@ En el escenario utilizado para validar ARRAX aparecen problemas como:
 
 * Información distribuida entre registros manuales.
 * Dificultad para conocer el estado actual de una operación.
-* Errores al convertir unidades de dinero y peso.
+* Errores al convertir entre dinero y peso.
 * Procesos repetitivos durante el pesado.
 * Necesidad de consultar información mientras las manos están ocupadas.
 * Falta de trazabilidad entre una solicitud y su procesamiento.
@@ -100,65 +112,26 @@ En el escenario utilizado para validar ARRAX aparecen problemas como:
 * Dificultad para representar operaciones parcialmente completadas.
 * Poca visibilidad sobre el estado global de una jornada de trabajo.
 
-El reto, por lo tanto, no consiste únicamente en **digitalizar registros**.
-
-Consiste en **modelar digitalmente un proceso físico y convertir ese modelo en una herramienta capaz de asistir al usuario durante la operación**.
+El reto no consiste únicamente en **digitalizar registros**, sino en **modelar digitalmente un proceso físico y convertir ese modelo en una herramienta capaz de asistir al usuario durante la operación**.
 
 ---
 
-#  Propuesta
-
-ARRAX utiliza el flujo de pedidos de carne por encargo como primer caso de uso para experimentar con:
-
-```text
-INTERACCIÓN
-     ↓
-CAPTURA DE INFORMACIÓN
-     ↓
-PROCESAMIENTO
-     ↓
-ESTADO OPERATIVO
-     ↓
-AUTOMATIZACIÓN
-     ↓
-TRAZABILIDAD
-     ↓
-ANÁLISIS
-```
-
-El sistema conecta diferentes eventos que anteriormente podían estar separados:
-
-```text
-Lote
-  ↓
-Productos
-  ↓
-Pedido
-  ↓
-Líneas de pedido
-  ↓
-Pesado
-  ↓
-Inventario
-  ↓
-Entrega
-  ↓
-Pago
-  ↓
-Resultados
-```
-
-Esto permite que cada acción realizada durante el proceso produzca información útil para las siguientes etapas.
-
----
-
-#  Caso de uso inicial
+## Caso de uso inicial
 
 El primer dominio de aplicación de ARRAX es la venta de carne de cerdo por encargo.
 
-Un lote representa un conjunto de producto disponible para procesamiento y venta.
+Los animales se crían con alimento propio y la mayoría de los cortes se vende por pedido antes de procesar al animal. ARRAX gestiona el ciclo completo: desde la creación del evento hasta el pesado de cada corte, la entrega, el seguimiento de pagos y la utilidad neta.
 
-A partir de ese lote se generan productos, pedidos y operaciones de pesado.
+```text
+Evento
+  ├── Lotes (cada cerdo, como referencia)
+  ├── Cortes a vender, con su precio del evento
+  └── Pedidos
+        └── Líneas (una por corte)
+              ├── Estado de pesado
+              ├── Estado de entrega
+              └── Estado de pago
+```
 
 Este escenario permite probar problemas interesantes de ingeniería de software:
 
@@ -168,54 +141,98 @@ Este escenario permite probar problemas interesantes de ingeniería de software:
 * Conversión de unidades.
 * Consultas agregadas.
 * Trazabilidad.
+* Multi-tenencia.
 * Automatización.
 * Interacción manos libres.
-* Persistencia en la nube.
+* Persistencia en la nube con soporte sin conexión.
 * Diseño para condiciones físicas reales.
 
 El dominio puede evolucionar posteriormente hacia otros escenarios donde exista un flujo físico similar.
 
 ---
 
-#  Capacidades principales
+## Modelo de dominio
 
-##  Modelado de operaciones
+**Evento.** Es el contenedor de nivel superior. Representa una jornada de venta y puede incluir varios lotes. Al crearlo se captura su nombre, fecha y cantidad de cerdos.
 
-ARRAX representa las entidades y relaciones que forman parte del proceso operativo.
+**Lote.** Es una etiqueta de referencia ligera para cada animal. No tiene un árbol de costos propio.
 
-```text
-Lote
-├── Productos
-├── Gastos
-│
-├── Pedidos
-│   └── Líneas
-│
-└── Resultados
-```
+**Corte.** Los cortes provienen de un catálogo editable en Firestore, con ocho cortes conocidos sembrados como sugerencia: carne, costilla, espinazo, codillo, chicharra, higadilla, morcilla y manteca. Se agregó también la cabeza del cerdo. Quien crea el evento elige qué cortes vende y define su precio **para ese evento**.
 
-La información no se almacena únicamente para mostrarla en una pantalla.
+**Pedido y línea.** Un pedido pertenece a un cliente y contiene una línea por corte. El estado de procesamiento vive **a nivel de línea**, no de pedido.
 
-Cada entidad representa un estado real del proceso.
+**Cliente.** Los clientes son reutilizables entre eventos dentro del mismo negocio; no se vuelven a registrar en cada evento.
+
+### Reglas de negocio
+
+* Los dos flujos de pesado (por corte o por cliente) son mutuamente excluyentes dentro de una sesión.
+* El crédito y la deuda se manejan por evento.
+* La utilidad neta se reporta a nivel de evento.
+* Entrega y pago son estados independientes: un cliente puede pagar sin haber recibido, o recibir sin haber pagado.
+* Los precios se definen al crear el evento; agregar cortes sobre la marcha queda fuera del alcance actual.
 
 ---
 
-##  Sistema de pedidos
+## Multi-tenencia y roles
 
-Los pedidos pueden contener múltiples líneas de producto.
+ARRAX es multi-tenant: varias familias pueden usar la aplicación, cada una con sus propios clientes, eventos y catálogo de cortes, aislados entre sí.
 
-Cada línea mantiene información sobre:
+* **Crear un negocio.** El primer usuario registra el negocio durante el onboarding.
+* **Unirse a un negocio.** Otros usuarios entran con un código.
+* **Roles.** Algunas acciones, como crear o cerrar un evento, están reservadas al administrador.
+* **Sesión local.** El negocio activo y el rol se guardan en DataStore para decidir la pantalla de arranque.
+
+La pantalla inicial se resuelve al abrir la app:
+
+```mermaid
+flowchart TD
+    A["Arranque"] --> B{"¿Hay sesión?"}
+    B -- No --> C["Login"]
+    B -- Sí --> D{"¿Tiene negocio?"}
+    D -- No --> E["Onboarding del lobby"]
+    D -- Sí --> F["Lobby / Home"]
+```
+
+---
+
+## Eventos (Fase 3)
+
+### Creación en 3 pasos
+
+Disponible solo para administradores.
+
+1. **Datos básicos.** Nombre, fecha y cantidad de cerdos (mínimo 1).
+2. **Selección de cortes.** Se eligen los cortes que se venderán en el evento.
+3. **Precios.** Cada corte seleccionado necesita un precio mayor a cero para poder confirmar.
+
+La creación se ejecuta como un **write batch**: el evento y un documento por cada corte seleccionado se escriben juntos. Si algo falla, no queda un evento a medias.
+
+### Detalle del evento
+
+* Se suscribe al evento **en tiempo real**, de modo que si otro dispositivo lo cierra mientras se visualiza, la pantalla se actualiza.
+* Muestra una tarjeta de resumen del evento.
+* El botón **Cerrar evento** solo aparece para administradores y solo si el evento está abierto. Pide confirmación antes de ejecutarse, porque no se puede revertir desde la interfaz.
+
+**Criterio de salida:** un administrador crea un evento completo de punta a punta, aparece de inmediato en el lobby para todos los usuarios del negocio (incluso sin conexión, gracias a la caché de Firestore) y puede cerrarse.
+
+---
+
+## Capacidades principales
+
+### Sistema de pedidos
+
+Cada línea de pedido mantiene información sobre:
 
 ```text
-Producto
+Corte
 Cantidad
 Unidad
-Precio
+Precio vigente en el evento
 Subtotal
 Estado de procesamiento
 ```
 
-La cantidad puede expresarse mediante diferentes unidades de interacción:
+Un pedido puede expresarse en kilogramos o en pesos. El sistema calcula la conversión automáticamente con el precio del corte en ese evento (regla de tres), en ambas direcciones:
 
 ```text
 $ → kg
@@ -234,15 +251,11 @@ Conversión:
 360 / 180 = 2 kg
 ```
 
-Esta lógica permite que el usuario trabaje con la forma de solicitud que le resulte más natural.
+El usuario trabaja con la forma de solicitud que le resulte más natural.
 
----
+### Motor de procesamiento por corte
 
-#  Motor de procesamiento por corte
-
-Una de las decisiones de diseño más importantes de ARRAX es que el procesamiento no se organiza únicamente por pedido.
-
-En un entorno físico, el trabajador puede estar procesando un mismo producto para diferentes personas simultáneamente.
+Una de las decisiones de diseño más importantes es que el procesamiento no se organiza únicamente por pedido. En un entorno físico, el trabajador procesa un mismo corte para varias personas a la vez.
 
 En lugar de:
 
@@ -258,7 +271,7 @@ María
  └── Codillo
 ```
 
-ARRAX puede reorganizar dinámicamente el trabajo:
+ARRAX reorganiza el trabajo siguiendo el flujo físico:
 
 ```text
 COSTILLA
@@ -271,15 +284,11 @@ Nuera      → 2.0 kg
 TOTAL      → 6.5 kg
 ```
 
-Esto permite que la aplicación siga el **flujo físico de trabajo**, en lugar de imponer un flujo administrativo.
+La cola se ordena por tipo de corte a través de todos los pedidos: primero toda la costilla, luego toda la carne, y así sucesivamente. Es un requerimiento operativo directo del trabajo físico.
 
----
+### Estado granular
 
-#  Estado granular
-
-Los pedidos no siempre se completan de manera uniforme.
-
-Un mismo pedido puede encontrarse en este estado:
+Los pedidos no siempre se completan de manera uniforme:
 
 ```text
 Juan Pérez
@@ -289,21 +298,38 @@ Juan Pérez
 ○ Carne
 ```
 
-Por esta razón, ARRAX maneja el estado de procesamiento **a nivel de línea de pedido**, no únicamente a nivel de pedido.
-
-Esto permite representar operaciones parcialmente completadas y mantener una trazabilidad más precisa.
+Por eso cada línea tiene un indicador de pesado (`sacado`) y el estado se maneja a nivel de línea. Esto permite representar operaciones parcialmente completadas y mantener una trazabilidad precisa.
 
 ---
 
-#  Interacción manos libres
+## Interacción manos libres (Fase 4, en desarrollo)
 
-Una de las líneas de evolución más importantes de ARRAX es la interacción mediante voz.
+El objetivo no es agregar un asistente virtual decorativo, sino permitir que el sistema **participe en el flujo de trabajo sin exigir interacción constante con la pantalla**.
 
-El objetivo no es agregar un asistente virtual como elemento decorativo.
+### Implementación actual
 
-El objetivo es permitir que el sistema pueda **participar en el flujo de trabajo sin exigir interacción constante con la pantalla**.
+* **Disparador físico.** Un botón Bluetooth HID confirma el pesado sin tocar la pantalla. La actividad de pesado captura las teclas `ENTER`, `HEADSETHOOK`, `MEDIA_PLAY_PAUSE` y `VOLUME_UP` a través de `dispatchKeyEvent()`.
+* **Confirmación por voz.** `TtsHelper` envuelve `android.speech.tts.TextToSpeech`. Funciona en el dispositivo, sin API externa y sin permiso de micrófono.
+* **Flujo de confirmación.** Una vibración corta de 150 ms y después el anuncio hablado con el corte y el peso confirmados.
+* **Hardware.** Se prototipa con un clicker Bluetooth económico y está previsto migrar a un pedal para uso en producción.
 
-Ejemplo:
+```text
+Botón Bluetooth
+      ↓
+Vibración (150 ms)
+      ↓
+"Confirmado: costilla, 2.0 kilos."
+      ↓
+Actualizar línea → siguiente pedido
+```
+
+### Siguientes pasos
+
+* Reconocimiento de voz con el micrófono del dispositivo para comandos contextuales.
+* Consultar el siguiente pedido, repetir instrucciones, cambiar de corte y corregir una operación.
+* Reflejar en el listado manos libres los pedidos especificados por monto, mostrando el peso objetivo calculado.
+
+Ejemplo del flujo previsto:
 
 ```text
 Usuario:
@@ -322,25 +348,13 @@ Siguiente: María López,
 1.5 kilos de costilla."
 ```
 
-La interacción contempla conceptualmente:
-
-* Consultar el siguiente pedido.
-* Confirmar una operación.
-* Repetir instrucciones.
-* Cambiar de corte.
-* Consultar información.
-* Corregir una operación.
-* Avanzar automáticamente al siguiente elemento.
-
-La interacción por voz está planteada como una **capa de asistencia sobre el flujo operativo**, no como un módulo aislado.
+La voz está planteada como una **capa de asistencia sobre el flujo operativo**, no como un módulo aislado.
 
 ---
 
-#  Automatización del flujo
+## Automatización del flujo
 
-ARRAX busca reducir la cantidad de decisiones manuales necesarias durante operaciones repetitivas.
-
-Por ejemplo:
+ARRAX busca reducir la cantidad de decisiones manuales necesarias durante operaciones repetitivas:
 
 ```text
 Confirmar pesado
@@ -356,175 +370,171 @@ Determinar siguiente operación
 Mostrar / anunciar siguiente pedido
 ```
 
-El usuario no necesita regresar constantemente a diferentes pantallas.
-
-El sistema mantiene el contexto y continúa el flujo.
+El usuario no necesita regresar constantemente a diferentes pantallas. El sistema mantiene el contexto y continúa el flujo.
 
 ---
 
-#  Persistencia y consistencia
+## Persistencia y consistencia
 
-ARRAX utiliza **Cloud Firestore** como capa de persistencia.
+ARRAX usa **Cloud Firestore** como capa de persistencia. El modelo está orientado a documentos y diseñado alrededor de las consultas que necesita el flujo operativo.
 
-El modelo está orientado a documentos y diseñado alrededor de las consultas necesarias para resolver el flujo operativo.
+El aislamiento entre negocios se resuelve **en la ruta de Firestore** (`tenants/{tenantId}/...`), no como un campo dentro de los modelos de dominio.
 
 ```text
-/lotes/{loteId}
-    ├── productos/{productoId}
-    └── gastos/{gastoId}
-
-/clientes/{clienteId}
-
-/pedidos/{pedidoId}
-    └── lineas/{lineaId}
+/tenants/{tenantId}
+    ├── events/{eventId}       → nombre, fecha, cantidad de cerdos, estado
+    │     └── cortes del evento con su precio
+    ├── clientes
+    └── catálogo de cortes
 ```
 
-Las líneas de pedido conservan información relevante del producto para reducir lecturas innecesarias.
+*(Estructura conceptual; los nombres exactos de las colecciones pueden variar.)*
 
-Las operaciones críticas de inventario utilizan **transacciones de Firestore**, evitando inconsistencias cuando diferentes operaciones modifican el inventario.
-
-La cola de procesamiento por corte puede resolverse mediante consultas `collectionGroup` sobre las líneas de pedido.
+* **Write batch** para crear un evento con sus cortes: todo o nada.
+* **Transacciones** para las operaciones críticas de inventario, evitando condiciones de carrera.
+* **Consultas `collectionGroup`** sobre las líneas de pedido para construir la cola por corte.
+* **Listeners en tiempo real** para el detalle del evento y la lista del lobby.
+* **Caché sin conexión** de Firestore: lo creado sin red aparece de inmediato para el usuario.
+* **Líneas desnormalizadas.** Las líneas conservan información relevante del corte para reducir lecturas.
 
 ---
 
-#  Arquitectura
+## Arquitectura
 
-ARRAX utiliza una arquitectura por capas:
+ARRAX usa una arquitectura por capas con inyección de dependencias mediante Hilt.
 
-```text
-┌──────────────────────────────────┐
-│          PRESENTATION            │
-│                                  │
-│  Compose · Screens · ViewModel   │
-└────────────────┬─────────────────┘
-                 │
-                 ▼
-┌──────────────────────────────────┐
-│             DOMAIN               │
-│                                  │
-│ Models · Use Cases · Rules       │
-└────────────────┬─────────────────┘
-                 │
-                 ▼
-┌──────────────────────────────────┐
-│              DATA                │
-│                                  │
-│ Repository · Firebase · Auth     │
-└──────────────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph P["PRESENTATION"]
+        P1["Compose · Screens · ViewModel · Navegación"]
+    end
+    subgraph D["DOMAIN"]
+        D1["Models · Use Cases · Repository (interfaces)"]
+    end
+    subgraph DA["DATA"]
+        DA1["Repository (impl) · Firestore · Auth · DataStore · Mappers"]
+    end
+    P --> D
+    DA --> D
 ```
 
-La separación permite que la lógica de negocio no dependa directamente de la interfaz.
-
-Esto facilita:
+La capa de dominio no depende de la interfaz ni de Firebase; la capa de datos implementa sus interfaces. Esto facilita:
 
 * Pruebas.
 * Mantenimiento.
 * Sustitución de fuentes de datos.
 * Incorporación de nuevas interfaces.
 * Evolución hacia nuevos dominios.
-* Integración de nuevas capacidades de automatización.
+
+### Estructura del proyecto
+
+```text
+com.example.arrax
+├── ArraxApplication          → @HiltAndroidApp
+├── core
+│   ├── common
+│   ├── designsystem          → componentes Arx* y tema
+│   └── navigation            → Routes
+├── data
+│   ├── local                 → sesión (DataStore)
+│   ├── mapper
+│   ├── remote                → data sources de Firestore
+│   └── repository
+├── di                        → módulos de Hilt
+├── domain
+│   ├── model                 → Event, EventCut, EventWithCuts, User...
+│   ├── repository
+│   └── usecase               → event/create, event/detail...
+└── ui
+    ├── root                  → MainActivity, AppStartViewmodel y NavHost
+    └── screen
+        ├── auth              → login, register, forgotpassword
+        ├── lobby             → onboarding, home
+        └── events            → create, detail
+              └── cada feature: Screen + State + Viewmodel + component/
+```
+
+### Arranque de la app
+
+`MainActivity` es la única actividad con el filtro `LAUNCHER`. Está anotada con `@AndroidEntryPoint` y monta `ArraxNavHost`, que consulta a `AppStartViewmodel` para decidir la pantalla inicial según la sesión y el negocio guardado.
 
 ---
 
-#  Stack tecnológico
+## Stack tecnológico
 
-| Tecnología                       | Uso                        |
-| -------------------------------- | -------------------------- |
-| **Kotlin**                       | Lenguaje principal         |
-| **Android**                      | Plataforma                 |
-| **Jetpack Compose**              | UI declarativa             |
-| **Firebase Authentication**      | Autenticación              |
-| **Cloud Firestore**              | Persistencia               |
-| **Android Studio**               | Desarrollo                 |
-| **Clean / Layered Architecture** | Organización del sistema   |
-| **Firestore Transactions**       | Consistencia de inventario |
-| **Collection Group Queries**     | Consultas agregadas        |
+| Tecnología | Uso |
+| ---------- | --- |
+| **Kotlin 2.1** | Lenguaje principal |
+| **Android** (minSdk 26, compileSdk 36) | Plataforma |
+| **Jetpack Compose** (BOM 2024.09) + **Material 3** | UI declarativa |
+| **Navigation Compose** | Navegación |
+| **Hilt** + **KSP** | Inyección de dependencias |
+| **Firebase Authentication** | Autenticación |
+| **Cloud Firestore** (Firebase BoM 34) | Persistencia |
+| **Firebase Crashlytics** | Reporte de errores |
+| **DataStore Preferences** | Sesión local |
+| **Android TextToSpeech** | Confirmaciones por voz |
+| **Clean / Layered Architecture** | Organización del sistema |
+| **Firestore Transactions / Write Batch** | Consistencia |
+| **Collection Group Queries** | Consultas agregadas |
 
 ---
 
-#  Diseño de experiencia
+## Diseño de experiencia
 
-La interfaz está diseñada bajo un principio:
+La interfaz sigue un principio:
 
 > **La tecnología debe adaptarse al contexto físico del usuario.**
 
-Por ello se utiliza una combinación de:
+Se utiliza una combinación de:
 
 * Neominimalismo.
 * Glassmorphism sutil.
-* Alto contraste.
+* Alto contraste, como decisión funcional para lectura bajo el sol y no solo estética.
 * Tipografía de lectura rápida.
-* Elementos táctiles grandes.
+* Elementos táctiles grandes, pensados para manos ocupadas o sucias.
 * Jerarquía visual fuerte.
 * Estados claros.
 * Animaciones discretas.
-* Información contextual.
 
-El diseño considera escenarios donde el usuario puede encontrarse:
+El diseño considera escenarios donde el usuario puede estar trabajando de pie, con una sola mano disponible, con las manos sucias, bajo iluminación exterior o moviéndose constantemente entre tareas.
 
-* Trabajando de pie.
-* Con una sola mano disponible.
-* Con las manos sucias.
-* Bajo iluminación exterior.
-* Moviéndose constantemente entre diferentes tareas.
-
-La pantalla no debe exigir atención innecesaria.
+Los componentes reutilizables viven en un design system propio, con prefijo `Arx` (botones, campos, tarjetas, chips de estado, diálogos, selector de cantidad, estados vacíos y barra superior).
 
 ---
 
-#  Interfaces principales
+## Interfaces
 
-### Dashboard
+El diseño completo contempla **21 pantallas en 8 módulos**. Las principales:
 
-Proporciona una visión contextual del estado actual:
-
-* Lote activo.
-* Inventario.
-* Pedidos pendientes.
-* Pedidos por cobrar.
-* Próximas operaciones.
-
-### Nuevo pedido
-
-Permite crear un pedido rápidamente sin convertir la operación en un formulario extenso.
-
-### Cola operativa
-
-Presenta las operaciones pendientes agrupadas según el flujo físico de trabajo.
-
-### Cuenta del cliente
-
-Mantiene trazabilidad de pedidos, visitas, entregas y pagos.
-
-### Gastos
-
-Permite registrar los costos asociados al procesamiento.
-
-### Reporte
-
-Transforma los eventos registrados durante la operación en información financiera y operativa.
+* **Autenticación:** inicio de sesión, registro y recuperación de contraseña.
+* **Lobby:** onboarding (crear o unirse a un negocio) y lista de eventos.
+* **Eventos:** creación en 3 pasos y detalle con acciones de administrador.
+* **Nuevo pedido:** captura rápida de un pedido en kg o en pesos.
+* **Cola operativa:** pendientes agrupados por corte, con pesado manos libres.
+* **Cuenta del cliente:** trazabilidad de pedidos, entregas y pagos.
+* **Gastos:** costos asociados al procesamiento.
+* **Reporte:** resultados financieros y operativos del evento.
 
 ---
 
-#  Flujo operativo
+## Flujo operativo
 
 ```mermaid
 flowchart LR
-    A["Lote"] --> B["Productos"]
+    A["Evento"] --> B["Cortes y precios"]
     B --> C["Pedido"]
-    C --> D["Procesamiento"]
-    D --> E["Inventario"]
-    E --> F["Entrega"]
-    F --> G["Pago"]
-    G --> H["Análisis"]
+    C --> D["Pesado por corte"]
+    D --> E["Entrega"]
+    E --> F["Pago"]
+    F --> G["Utilidad neta"]
 ```
 
-A diferencia de un flujo administrativo tradicional, el procesamiento y el pago no necesariamente ocurren de manera lineal.
+Procesamiento, entrega y pago no necesariamente ocurren de manera lineal:
 
 ```mermaid
 flowchart TD
-    P["Pedido"] --> A["Apartado"]
-    A --> S["Procesamiento / Pesado"]
+    P["Pedido"] --> S["Procesamiento / Pesado"]
     S --> E["Entregado"]
     S --> G["Pagado"]
     E -.-> G
@@ -542,105 +552,88 @@ El modelo de datos representa estos escenarios sin forzar una secuencia artifici
 
 ---
 
-#  Información generada
+## Información generada
 
-Uno de los objetivos de ARRAX es que las operaciones cotidianas generen información reutilizable.
+Las operaciones cotidianas generan información reutilizable:
 
 ```text
-OPERACIÓN
-    ↓
-EVENTO
-    ↓
-ESTADO
-    ↓
-DATOS
-    ↓
-MÉTRICAS
-    ↓
-DECISIONES
+OPERACIÓN → EVENTO → ESTADO → DATOS → MÉTRICAS → DECISIONES
 ```
 
 A partir de los datos registrados se pueden obtener:
 
 * Ventas.
 * Inventario.
-* Productos con mayor movimiento.
+* Cortes con mayor movimiento.
 * Pedidos pendientes.
 * Cuentas por cobrar.
 * Gastos.
-* Utilidad.
-* Rendimiento por lote.
+* Utilidad neta del evento.
 
-Esto permite que el sistema evolucione desde una herramienta de registro hacia una **plataforma de asistencia y análisis operativo**.
-
----
-
-#  Roadmap
-
-## Fase 1 — Core Platform
-
-* [ ] Configuración de Firebase
-* [ ] Modelo de datos
-* [ ] Arquitectura base
-* [ ] Gestión de lotes
-* [ ] Gestión de productos
-* [ ] Gestión de clientes
-* [ ] Gestión de pedidos
+La exportación de datos para decisiones operativas es una consideración de diseño, no un bloqueo actual.
 
 ---
 
-## Fase 2 — Operational Engine
+## Roadmap
 
-* [ ] Conversión `$ ↔ kg`
-* [ ] Estados de pedidos
-* [ ] Estado granular por línea
-* [ ] Inventario dinámico
-* [ ] Transacciones de Firestore
-* [ ] Cola consolidada por corte
-* [ ] Cuenta acumulada por cliente
+### Fase 0 — Cimientos
 
----
+- [x] Arquitectura por capas y estructura de paquetes
+- [x] Design system `Arx*`
+- [x] Configuración de Firebase
+- [x] Inyección de dependencias con Hilt
+- [x] Proyecto compilando sin UI
 
-## Fase 3 — Financial Layer
+### Fase 1 — Autenticación
 
-* [ ] Registro de gastos
-* [ ] Cálculo de ventas
-* [ ] Cálculo de utilidad
-* [ ] Cierre de lote
-* [ ] Reportes operativos
-* [ ] Indicadores de rendimiento
+- [x] Inicio de sesión
+- [x] Registro
+- [x] Recuperación de contraseña
 
----
+### Fase 2 — Lobby multi-tenant
 
-## Fase 4 — Assisted Interaction
+- [x] Onboarding: crear negocio
+- [x] Onboarding: unirse con código
+- [x] Sesión local y pantalla de arranque según estado
+- [x] Lista de eventos del negocio
 
-* [ ] Reconocimiento de voz
-* [ ] Texto a voz
-* [ ] Comandos contextuales
-* [ ] Flujo manos libres
-* [ ] Confirmaciones por voz
-* [ ] Navegación contextual
-* [ ] Integración con botón físico / Bluetooth
+### Fase 3 — Eventos
 
----
+- [x] Creación de evento en 3 pasos (solo administrador)
+- [x] Selección de cortes y precios por evento
+- [x] Escritura atómica del evento con sus cortes
+- [x] Detalle del evento en tiempo real
+- [x] Cierre de evento con confirmación
 
-## Fase 5 — Intelligence & Automation
+### Fase 4 — Pedidos, pesaje y manos libres *(en desarrollo)*
 
-* [ ] Recomendaciones operativas
-* [ ] Detección de patrones
-* [ ] Predicción de demanda
-* [ ] Automatización de tareas repetitivas
-* [ ] Alertas contextuales
-* [ ] Análisis histórico
-* [ ] Personalización del flujo
+- [ ] Gestión de clientes reutilizables
+- [ ] Creación de pedidos con conversión `$ ↔ kg`
+- [ ] Estado granular por línea
+- [ ] Cola consolidada por corte
+- [ ] Inventario dinámico con transacciones
+- [ ] Cuenta acumulada por cliente
+- [ ] Disparador Bluetooth y confirmación por TTS
+- [ ] Reconocimiento de voz y comandos contextuales
 
----
+### Fase 5 — Capa financiera
 
-## Fase 6 — Extensibilidad
+- [ ] Registro de gastos
+- [ ] Cálculo de ventas y utilidad neta
+- [ ] Reportes operativos
+- [ ] Indicadores de rendimiento
 
-La arquitectura de ARRAX está planteada para que el dominio inicial pueda evolucionar.
+### Fase 6 — Inteligencia y automatización
 
-Posibles líneas futuras:
+- [ ] Recomendaciones operativas
+- [ ] Detección de patrones
+- [ ] Predicción de demanda
+- [ ] Alertas contextuales
+- [ ] Análisis histórico
+
+### Fase 7 — Extensibilidad
+
+La arquitectura está planteada para que el dominio inicial pueda evolucionar hacia otros contextos con un flujo físico similar:
 
 ```text
                  ARRAX CORE
@@ -658,122 +651,62 @@ Posibles líneas futuras:
              Inteligencia
 ```
 
-La intención es que las capacidades desarrolladas para un escenario puedan reutilizarse en otros contextos donde exista un flujo físico susceptible de digitalización.
-
 ---
 
-#  Alcance actual
-
-ARRAX se encuentra en desarrollo.
-
-El primer escenario de validación está orientado a operaciones internas y familiares de venta por encargo.
-
-Actualmente el proyecto prioriza:
-
-* Arquitectura.
-* Modelado de datos.
-* Flujo operativo.
-* Gestión de pedidos.
-* Inventario.
-* Procesamiento por corte.
-* Persistencia cloud.
-* Experiencia de usuario.
-* Preparación para interacción manos libres.
-
-Funcionalidades avanzadas como inteligencia contextual, automatización extendida y análisis predictivo forman parte de la evolución futura del proyecto.
-
----
-
-#  Retos técnicos
+## Retos técnicos
 
 ARRAX permite explorar problemas de ingeniería que van más allá de un CRUD tradicional.
 
-### Consultas agregadas
+* **Consultas agregadas.** La cola necesita información distribuida entre pedidos; se resuelve con `collectionGroup` sobre las líneas.
+* **Consistencia.** El inventario es un recurso compartido; las operaciones críticas usan transacciones.
+* **Atomicidad.** Crear un evento implica varios documentos que deben escribirse juntos.
+* **Estados parciales.** Un pedido no termina de procesarse de forma simultánea; el estado vive en la línea.
+* **Estados independientes.** Entrega y pago se modelan por separado.
+* **Multi-tenencia.** El aislamiento se resuelve en la estructura de datos y no depende de filtros en la interfaz.
+* **Trabajo sin conexión.** El negocio opera en condiciones de conectividad variable, por lo que la app se apoya en la caché de Firestore.
+* **Diseño contextual.** La interfaz se diseña para las condiciones físicas donde se usa.
+* **Interacción asistida.** La voz y el botón físico convierten la app en una interfaz multimodal.
 
-La cola de procesamiento requiere obtener información distribuida entre diferentes pedidos.
+### Aprendizajes técnicos
 
-Para ello se contempla el uso de consultas `collectionGroup` sobre la subcolección `lineas`.
-
-### Consistencia
-
-El inventario representa un recurso compartido.
-
-Las operaciones críticas utilizan transacciones para reducir el riesgo de condiciones de carrera.
-
-### Estados parciales
-
-Un pedido no necesariamente termina de procesarse de forma simultánea.
-
-El estado a nivel de línea permite representar correctamente esta situación.
-
-### Estados independientes
-
-Entrega y pago se manejan como estados independientes para representar escenarios reales.
-
-### Diseño contextual
-
-La interfaz se diseña considerando las condiciones físicas donde se utilizará.
-
-### Interacción asistida
-
-La futura integración de voz transforma la aplicación de una interfaz puramente visual a una interfaz multimodal.
+* Desde Firebase BoM 34, las extensiones de Kotlin están integradas en los módulos principales, por lo que ya no se usan los artefactos con sufijo `-ktx`.
+* Hilt exige una clase `Application` con `@HiltAndroidApp` registrada en el manifest y `@AndroidEntryPoint` en la actividad que usa `hiltViewModel()`.
+* Con `enableEdgeToEdge()`, cada pantalla debe manejar sus propios insets; un `Scaffold` extra en la actividad duplica el relleno.
+* Registrar las rutas de navegación antes de habilitar los botones que llevan a ellas evita cierres por rutas inexistentes.
+* Modelar el tenant en la ruta de Firestore mantiene el dominio limpio.
 
 ---
 
-#  Evolución del proyecto
+## Cómo ejecutar el proyecto
 
-ARRAX está planteado como un proyecto evolutivo.
+1. Clona el repositorio y ábrelo con Android Studio.
+2. Crea un proyecto en Firebase y activa **Authentication** y **Cloud Firestore**.
+3. Agrega tu `google-services.json` en `app/`.
+4. Sincroniza Gradle y ejecuta la app en un dispositivo o emulador con Android 8.0 (API 26) o superior.
 
-La primera versión resuelve un problema concreto, pero su arquitectura busca evitar que el sistema quede limitado al dominio inicial.
-
-La evolución prevista es:
-
-```text
-Registro
-   ↓
-Gestión
-   ↓
-Asistencia
-   ↓
-Automatización
-   ↓
-Inteligencia
-```
-
-El objetivo final no es crear simplemente otra aplicación de administración.
-
-Es explorar cómo una aplicación móvil puede convertirse en una **capa digital de asistencia sobre procesos físicos reales**.
+Para probar el pesado manos libres se necesita un dispositivo físico y un disparador Bluetooth HID.
 
 ---
 
-# Sobre el proyecto
+## Sobre el proyecto (portafolio)
 
-ARRAX forma parte de mi portafolio de desarrollo de software.
-
-El proyecto funciona como un entorno práctico para aplicar y experimentar con:
+ARRAX forma parte de mi portafolio de desarrollo de software. Funciona como un entorno práctico para aplicar y experimentar con:
 
 * Desarrollo Android moderno.
-* Kotlin.
-* Jetpack Compose.
-* Arquitectura por capas.
-* Modelado NoSQL.
-* Cloud Firestore.
-* Transacciones distribuidas.
-* Consultas agregadas.
-* Diseño de sistemas orientados a eventos operativos.
+* Kotlin y Jetpack Compose.
+* Arquitectura por capas e inyección de dependencias.
+* Modelado NoSQL y Cloud Firestore.
+* Transacciones y consultas agregadas.
+* Sistemas multi-tenant.
 * Automatización.
-* Interacción humano-computadora.
-* Interfaces multimodales.
+* Interacción humano-computadora e interfaces multimodales.
 * Diseño UX contextual.
-* Sistemas extensibles.
 
-El principal aprendizaje del proyecto no consiste únicamente en construir una aplicación funcional.
-
-Consiste en aprender a **transformar un proceso físico en un modelo digital capaz de evolucionar**.
+El principal aprendizaje no es solo construir una aplicación funcional, sino aprender a **transformar un proceso físico en un modelo digital capaz de evolucionar**.
 
 ---
 
-#  Filosofía
+## Filosofía
 
 > **ARRAX no le dice al usuario cómo trabajar.**
 >
@@ -785,52 +718,35 @@ El sistema comienza con un caso concreto y evoluciona alrededor de una pregunta:
 
 ---
 
-#  Capturas
+## Capturas
 
-Las interfaces se incorporarán conforme avance la implementación.
+Las capturas de pantalla se incorporarán conforme avance la implementación.
 
-La dirección visual utiliza:
-
-* Neominimalismo suave.
-* Glassmorphism sutil.
-* Alto contraste.
-* Componentes táctiles amplios.
-* Diseño contextual.
-* Interacción manos libres.
+La dirección visual utiliza neominimalismo suave, glassmorphism sutil, alto contraste, componentes táctiles amplios y diseño contextual.
 
 ---
 
-#  Documentación
+## Documentación
 
-La documentación técnica del proyecto incluye:
-
-* Requerimientos.
-* Arquitectura.
-* Modelo de datos.
-* Flujo operativo.
-* Diseño de interfaz.
-* Roadmap.
-* Decisiones técnicas.
+La documentación técnica del proyecto incluye requerimientos, arquitectura, modelo de datos, flujo operativo, diseño de interfaz, roadmap y decisiones técnicas.
 
 ---
 
-#  Estado
+## Estado
 
-**En desarrollo activo.**
-
-ARRAX se encuentra en evolución y algunas capacidades descritas en este documento pertenecen al roadmap del producto.
+**En desarrollo activo.** Las fases 0 a 3 están implementadas. Algunas capacidades descritas en este documento pertenecen al roadmap y aún no están disponibles.
 
 ---
 
-# Contacto
+## Contacto
 
-**GitHub:** [tu perfil de GitHub](https://github.com/BehLik)
+**GitHub:** [BehLik](https://github.com/BehLik)
 
-**LinkedIn:** [tu perfil de LinkedIn](www.linkedin.com/in/likbeh-alejandro-caamal-sabido-6811b7370)
+**LinkedIn:** [Likbeh Alejandro Caamal Sabido](https://www.linkedin.com/in/likbeh-alejandro-caamal-sabido-6811b7370)
 
 ---
 
-# Licencia
+## Licencia
 
 Proyecto personal desarrollado como parte de mi portafolio profesional.
 
