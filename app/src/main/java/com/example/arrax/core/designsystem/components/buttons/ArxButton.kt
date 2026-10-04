@@ -197,7 +197,7 @@ fun ArxButtonsPreview() {
 
             ArxSecondaryButton(text = "Editar Perfil", onClick = {})
 
-            ArxTextButton(text = "¿Olvidaste tu contraseña?", onClick = {})
+            ArxTextButton(text = "¿Olvidast tu contraseña?", onClick = {})
         }
     }
 }

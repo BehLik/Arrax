@@ -32,7 +32,8 @@ object ArxIcons {
 
     /** Abandona el flujo o pantalla actual. */
     val Exit = R.drawable.ic_goout
-
+    /** Restricción o advertencia para no retroceder o abandonar el flujo actual. */
+    val DontGoBack = R.drawable.ic_dont_go_back
     // ============================================================
     // ACCIONES PRINCIPALES
     // ============================================================
@@ -66,8 +67,12 @@ object ArxIcons {
     val List =R.drawable.ic_list
     /**Unirse a un Grupo*/
     val GroupAdd=R.drawable.ic_group_add
-    /**Evento*/
+    /**Evento <--nivel operativo*/
     val Event=R.drawable.ic_event
+
+    val Handshake=R.drawable.ic_handshake
+val OrderRegistered=R.drawable.ic_clipboard_check
+val Piggy=R.drawable.ic_piggy
     // ============================================================
     // NAVEGACIÓN PRINCIPAL
     // ============================================================
@@ -99,7 +104,7 @@ object ArxIcons {
     /** Perfil del usuario. */
     val Profile = R.drawable.ic_nav_profile_outline
 
-    /** Actividades o tareas operativas. */
+    /** Actividades o tareas operativas.Pedido u orden <--nivel transaccional */
     val Tasks = R.drawable.ic_nav_tasks_outline
 
     /** Equipo — estado activo. */
@@ -107,6 +112,7 @@ object ArxIcons {
 
     /** Equipo — estado inactivo. */
     val TeamOutline = R.drawable.ic_nav_team_outline
+
 
     // ============================================================
     // OPERACIÓN
@@ -156,11 +162,14 @@ object ArxIcons {
     /** Representa procesamiento o flujo de trabajo. */
     val Workflow = R.drawable.ic_timeline
 
+    val PaymentDone=R.drawable.ic_payment_done
+    /** Vehículo, ruta o estado de entrega de un pedido. */
+    val Delivery = R.drawable.ic_delivery
     // ============================================================
     // INVENTARIO
     // ============================================================
 
-    /** Inventario disponible. */
+    /** Inventario disponible.o pedido preparado para entregar */
     val Inventory = R.drawable.ic_inventory
 
     /** Existencias o stock actual. */
@@ -196,7 +205,8 @@ object ArxIcons {
 
     /** Balance disponible. */
     val Wallet = R.drawable.ic_wallet
-
+    /** Representación de moneda, divisa o valores monetarios. */
+    val Dollar = R.drawable.ic_dollar
     // ============================================================
     // ANALÍTICA
     // ============================================================
@@ -218,7 +228,8 @@ object ArxIcons {
 
     /** Predicción o estimación generada por el sistema. */
     val Prediction = R.drawable.ic_prediction
-
+    /** Gráfica de barras para representación de datos. */
+    val ChartBar = R.drawable.ic_chart_bar
     // ============================================================
     // USUARIOS Y EQUIPO
     // ============================================================
@@ -291,7 +302,8 @@ object ArxIcons {
 
     /** Sincronización en progreso. */
     val Sync = R.drawable.ic_sync
-
+    /** Sincronización desactivada, pausada o fallida. */
+    val SyncOff = R.drawable.ic_sync_off
     // ============================================================
     // INTERACCIÓN Y HARDWARE
     // ============================================================
@@ -332,6 +344,8 @@ object ArxIcons {
 
     /** Repite una operación o proceso. */
     val Repeat = R.drawable.ic_repeat
+    /** Pesaje de  una operación o proceso. */
+    val Balance=R.drawable.ic_balance
 
     // ============================================================
     // SEGURIDAD Y SISTEMA
@@ -386,10 +400,12 @@ object ArxIcons {
     val Delivered = R.drawable.ic_send
 
     /** Pago pendiente. */
-    val PaymentPending = R.drawable.ic_schedule
+    val PaymentPending = R.drawable.ic_payment_pending
+    /** Estado de seguridad, protección o permisos verificados. */
+    val Shield = R.drawable.ic_shield
 
     /** Pago completado. */
-    val PaymentDone = R.drawable.ic_paid
+    val Payment = R.drawable.ic_paid
 
     // ============================================================
     // APARIENCIA

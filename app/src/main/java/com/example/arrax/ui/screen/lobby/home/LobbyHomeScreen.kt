@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -33,12 +34,15 @@ import com.example.arrax.ui.screen.lobby.home.component.LobbyEmptyEventos
 fun LobbyHomeScreen(
     onEventoClick: (String) -> Unit,
     onNuevoEventoClick: () -> Unit,
-    viewModel: LobbyHomeViewmodel = hiltViewModel()
+    viewModel: LobbyHomeViewmodel = hiltViewModel(),
+
 ) {
     val state by viewModel.state.collectAsState()
 
-    ArxBackground(modifier = Modifier.fillMaxSize()) {
+    ArxBackground(modifier = Modifier.fillMaxSize(),showMountains = true) {
         Scaffold(
+
+            containerColor = Color.Transparent,
             topBar = { ArxTopBar(title = "Mis eventos") },
             floatingActionButton = {
                 if (state.esAdmin && !state.isLoading) {

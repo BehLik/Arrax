@@ -11,6 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -18,6 +19,7 @@ import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
 import com.example.arrax.core.designsystem.components.cards.ArxActionCard
 import com.example.arrax.core.designsystem.components.display.ArxLoading
 import com.example.arrax.core.designsystem.icons.ArxIcons
+import com.example.arrax.core.designsystem.theme.ColorFamily
 import com.example.arrax.ui.screen.lobby.onboarding.component.CrearNegocioForm
 import com.example.arrax.ui.screen.lobby.onboarding.component.UnirseNegocioForm
 
@@ -61,10 +63,11 @@ private fun SeleccionModo(onCrearClick: () -> Unit, onUnirseClick: () -> Unit) {
         modifier = Modifier.fillMaxSize().padding(24.dp),
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = "Bienvenido a Arrax", style = MaterialTheme.typography.headlineSmall)
+        Text(text = "Bienvenido a Arrax", style = MaterialTheme.typography.headlineSmall,color= MaterialTheme.colorScheme.primary)
         Text(
             text = "¿Cómo quieres empezar?",
             style = MaterialTheme.typography.bodyMedium,
+            color= MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(bottom = 24.dp, top = 8.dp)
         )
         ArxActionCard(
