@@ -23,19 +23,18 @@ import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.arrax.core.designsystem.theme.ArxTheme
-import kotlin.math.PI
 import kotlin.math.abs
-import kotlin.math.sin
+import kotlin.math.floor
 import kotlin.random.Random
 
 /**
  * Paisaje de montañas en capas con bruma y bosque de pinos, dibujado 100% en Canvas.
  *
- * - Sin imágenes externas: todo se genera proceduralmente (determinista, siempre igual).
- * - Colores derivados de MaterialTheme (background + primary) -> Light/Dark automático.
- * - Se adapta al ancho disponible; el alto lo define [aspectRatio] (ancho / alto).
- * - Se cachea con drawWithCache: solo se reconstruye si cambia el tamaño o el tema.
- * - graphicsLayer lo aísla para que la animación del glow de ArxBackground no lo redibuje.
+ * - Abajo oscuro; hacia arriba cada capa se aclara hasta casi igualar el background,
+ *   así las crestas lejanas se funden con el fondo (sin cortes ni líneas de color).
+ * - Relieve con ruido fractal (no se ve repetitivo ni "de seno").
+ * - Colores derivados de MaterialTheme (background + primary) -> Light/Dark.
+ * - Se adapta al ancho; el alto lo define [aspectRatio] (ancho / alto).
  */
 @Composable
 fun ArxMountains(
@@ -51,10 +50,10 @@ fun ArxMountains(
         modifier = modifier
             .fillMaxWidth()
             .aspectRatio(aspectRatio)
-            .graphicsLayer { }
+            .graphicsLayer { } // aísla: el glow animado de ArxBackground no lo redibuja
             .drawWithCache {
-                val shapes = buildShapes(size, palette)
-                onDrawBehind { shapes.forEach { it.draw(this) } }
+                val scene = buildScene(size, palette)
+                onDrawBehind { scene.draw(this) }
             }
     )
 }
@@ -62,34 +61,37 @@ fun ArxMountains(
 // ───────────────────────────── Paleta ─────────────────────────────
 
 private class MountainPalette(
-    val fog: Color,   // tono más lejano / bruma
-    val mid: Color,   // tono intermedio
-    val deep: Color,  // tono del primer plano
-    val mist: Color,  // bandas de niebla entre capas
+    val far: Color,    // casi igual al background (capa más lejana)
+    val mid: Color,    // verde medio
+    val deep: Color,   // verde casi negro (primer plano)
+    val mist: Color,   // bandas de niebla
+    val scrimAlpha: Float,
 ) {
-    /** t = 0 (lejano) .. 1 (primer plano) */
-    fun depth(t: Float): Color =
-        if (t < 0.55f) lerp(fog, mid, t / 0.55f)
-        else lerp(mid, deep, (t - 0.55f) / 0.45f)
+    /** t = 0 (lejano) .. 1 (primer plano). La curva t² mantiene las lejanas muy tenues. */
+    fun depth(t: Float): Color {
+        val e = t * t
+        return if (e < 0.55f) lerp(far, mid, e / 0.55f)
+        else lerp(mid, deep, (e - 0.55f) / 0.45f)
+    }
 
     companion object {
         fun from(background: Color, primary: Color): MountainPalette {
             val dark = background.luminance() < 0.5f
             return if (dark) {
-                val fog = lerp(background, primary, 0.22f)
                 MountainPalette(
-                    fog = fog,
-                    mid = lerp(background, primary, 0.10f),
-                    deep = lerp(background, Color.Black, 0.70f),
-                    mist = fog.copy(alpha = 0.28f),
+                    far = lerp(background, primary, 0.14f),
+                    mid = lerp(background, primary, 0.07f),
+                    deep = lerp(background, Color.Black, 0.75f),
+                    mist = lerp(background, primary, 0.18f).copy(alpha = 0.30f),
+                    scrimAlpha = 0.30f,
                 )
             } else {
-                val fog = lerp(background, primary, 0.28f)
                 MountainPalette(
-                    fog = fog,
+                    far = lerp(background, primary, 0.20f),
                     mid = lerp(primary, Color.Black, 0.35f),
-                    deep = lerp(primary, Color.Black, 0.86f),
-                    mist = fog.copy(alpha = 0.40f),
+                    deep = lerp(primary, Color.Black, 0.88f),
+                    mist = lerp(background, primary, 0.25f).copy(alpha = 0.45f),
+                    scrimAlpha = 0.35f,
                 )
             }
         }
@@ -98,35 +100,31 @@ private class MountainPalette(
 
 // ───────────────────────────── Capas ─────────────────────────────
 
-/**
- * base/amp/treeH son fracciones del alto del lienzo.
- * sharp: 0 = lomas suaves, 1 = picos filosos.
- * haze: cuánto se aclara la capa hacia abajo (degradado vertical).
- */
+/** base / amp / treeH son fracciones del alto. sharp: 0 lomas suaves .. 1 picos. freq: detalle. */
 private data class LayerSpec(
     val seed: Int,
     val base: Float,
     val amp: Float,
     val sharp: Float,
-    val haze: Float,
+    val freq: Float,
     val treeH: Float = 0f,
     val mist: Boolean = false,
 )
 
 private val LAYERS = listOf(
-    // Lejanas: sin árboles, tonos tenues
-    LayerSpec(1, 0.36f, 0.12f, 0.35f, haze = 0.45f),
-    LayerSpec(2, 0.43f, 0.15f, 0.40f, haze = 0.45f),
-    LayerSpec(3, 0.50f, 0.17f, 0.35f, haze = 0.40f),
-    LayerSpec(4, 0.57f, 0.18f, 0.30f, haze = 0.40f),
-    // Intermedias: curvas suaves con arbolitos diminutos en la cresta
-    LayerSpec(5, 0.64f, 0.20f, 0.25f, haze = 0.35f, treeH = 0.030f),
-    LayerSpec(6, 0.72f, 0.20f, 0.20f, haze = 0.30f, treeH = 0.035f, mist = true),
-    // Bosque: pinos de distintas alturas
-    LayerSpec(7, 0.84f, 0.16f, 0.15f, haze = 0.25f, treeH = 0.10f, mist = true),
-    LayerSpec(8, 0.93f, 0.12f, 0.10f, haze = 0.20f, treeH = 0.13f, mist = true),
-    LayerSpec(9, 1.03f, 0.08f, 0.10f, haze = 0f, treeH = 0.17f),
+    LayerSpec(11, 0.36f, 0.13f, 0.30f, 1.6f),
+    LayerSpec(23, 0.43f, 0.15f, 0.35f, 2.0f),
+    LayerSpec(37, 0.50f, 0.17f, 0.30f, 2.4f),
+    LayerSpec(41, 0.57f, 0.18f, 0.30f, 2.8f),
+    LayerSpec(53, 0.64f, 0.20f, 0.25f, 3.2f, treeH = 0.030f),
+    LayerSpec(67, 0.72f, 0.20f, 0.20f, 3.6f, treeH = 0.035f, mist = true),
+    LayerSpec(71, 0.84f, 0.16f, 0.15f, 4.0f, treeH = 0.10f, mist = true),
+    LayerSpec(89, 0.93f, 0.12f, 0.10f, 4.5f, treeH = 0.13f, mist = true),
+    LayerSpec(97, 1.03f, 0.08f, 0.10f, 5.0f, treeH = 0.17f),
 )
+
+/** Cuánto se acerca el fondo de cada capa al color de la siguiente (suaviza las uniones). */
+private const val BLEED_TO_NEXT = 0.6f
 
 private class Band(val top: Float, val height: Float, val brush: Brush)
 
@@ -136,53 +134,80 @@ private class LayerShape(
     val brush: Brush,
     val treeColor: Color,
     val band: Band?,
-) {
+)
+
+private class Scene(val layers: List<LayerShape>, val scrim: Brush) {
     fun draw(scope: DrawScope) = with(scope) {
-        drawPath(fill, brush)
-        trees?.let { drawPath(it, treeColor) }
-        band?.let {
-            drawRect(
-                brush = it.brush,
-                topLeft = Offset(0f, it.top),
-                size = Size(size.width, it.height),
-            )
+        layers.forEach { l ->
+            drawPath(l.fill, l.brush)
+            l.trees?.let { drawPath(it, l.treeColor) }
+            l.band?.let {
+                drawRect(
+                    brush = it.brush,
+                    topLeft = Offset(0f, it.top),
+                    size = Size(size.width, it.height),
+                )
+            }
         }
+        // Oscurece progresivamente hacia abajo; arriba es 100% transparente.
+        drawRect(scrim)
     }
 }
 
-// ───────────────────────────── Geometría ─────────────────────────────
+// ───────────────────────────── Ruido y geometría ─────────────────────────────
 
-private val TAU = (2.0 * PI).toFloat()
-private val PI_F = PI.toFloat()
-
-/** Altura normalizada (0..1) de la cresta en x (0..1). Mezcla de lomas suaves y picos. */
-private fun ridge(x: Float, seed: Int, sharp: Float): Float {
-    val s = seed * 1.7f
-    val smooth = 0.50f * sin(TAU * 1.3f * x + s) +
-            0.30f * sin(TAU * 2.9f * x + s * 2.3f) +
-            0.20f * sin(TAU * 5.7f * x + s * 3.1f)
-    val r1 = 1f - 2f * abs(sin(PI_F * 2.2f * x + s * 1.3f))
-    val r2 = 1f - 2f * abs(sin(PI_F * 3.7f * x + s * 0.7f))
-    val ridged = 0.6f * r1 + 0.4f * r2
-    val v = smooth * (1f - sharp) + ridged * sharp
-    return ((v * 1.25f + 1f) / 2f).coerceIn(0f, 1f)
+private fun hash(i: Int, seed: Int): Float {
+    var h = i * 374761393 + seed * 668265263
+    h = (h xor (h ushr 13)) * 1274126177
+    h = h xor (h ushr 16)
+    return (h and 0xFFFF) / 65535f
 }
 
-/** Pino de varios pisos (triángulos del mismo sentido -> se unen con fill NonZero). */
-private fun Path.pine(cx: Float, baseY: Float, h: Float) {
+private fun noise1(x: Float, seed: Int): Float {
+    val i = floor(x).toInt()
+    val f = x - i
+    val u = f * f * (3f - 2f * f)
+    return hash(i, seed) * (1f - u) + hash(i + 1, seed) * u
+}
+
+/** Ruido fractal (4 octavas) en 0..1. */
+private fun fbm(x: Float, seed: Int): Float {
+    var amp = 0.5f
+    var freq = 1f
+    var sum = 0f
+    var norm = 0f
+    for (o in 0 until 4) {
+        sum += amp * noise1(x * freq, seed + o * 31)
+        norm += amp
+        amp *= 0.5f
+        freq *= 2f
+    }
+    return sum / norm
+}
+
+/** Altura normalizada (0..1) de la cresta en x (0..1): mezcla de lomas y crestas filosas. */
+private fun ridge(x: Float, spec: LayerSpec): Float {
+    val n = fbm(x * spec.freq, spec.seed)
+    val r = 1f - abs(2f * fbm(x * spec.freq * 0.8f + 10f, spec.seed + 7) - 1f)
+    val m = n * (1f - spec.sharp) + r * spec.sharp
+    return ((m - 0.5f) * 2f + 0.5f).coerceIn(0f, 1f)
+}
+
+/** Pino de varios pisos. Todos los subpaths giran igual -> se unen con fill NonZero. */
+private fun Path.pine(cx: Float, baseY: Float, h: Float, widthK: Float, tiers: Int) {
     val top = baseY - h
-    val half = h * 0.17f
-    val tiers = 5
+    val half = h * 0.16f * widthK
+    val step = h * 0.74f / tiers
+    val tierH = h * 0.30f
     for (k in 0 until tiers) {
-        val tt = top + h * 0.16f * k
-        val tb = tt + h * 0.30f
-        val hw = half * (0.45f + 0.55f * (k + 1) / tiers)
+        val tt = top + step * k
+        val tb = tt + tierH
+        val hw = half * (0.4f + 0.6f * (k + 1) / tiers)
         moveTo(cx, tt)
         lineTo(cx + hw, tb)
         lineTo(cx - hw, tb)
         close()
     }
-    // tronco (mismo sentido de giro que los triángulos)
     val t = h * 0.015f
     val y0 = top + h * 0.80f
     moveTo(cx - t, y0)
@@ -192,17 +217,18 @@ private fun Path.pine(cx: Float, baseY: Float, h: Float) {
     close()
 }
 
-private fun buildShapes(size: Size, palette: MountainPalette): List<LayerShape> {
+private fun buildScene(size: Size, palette: MountainPalette): Scene {
     val w = size.width
     val h = size.height
-    val steps = 160
+    val steps = 200
+    val last = LAYERS.size - 1
 
-    return LAYERS.mapIndexed { index, spec ->
-        val t = index / (LAYERS.size - 1f)
-        val color = palette.depth(t)
+    val layers = LAYERS.mapIndexed { index, spec ->
+        val color = palette.depth(index / last.toFloat())
+        val nextColor = palette.depth(minOf(index + 1, last) / last.toFloat())
 
         val ys = FloatArray(steps + 1) { s ->
-            (spec.base - spec.amp * ridge(s / steps.toFloat(), spec.seed, spec.sharp)) * h
+            (spec.base - spec.amp * ridge(s / steps.toFloat(), spec)) * h
         }
 
         val fill = Path().apply {
@@ -220,19 +246,27 @@ private fun buildShapes(size: Size, palette: MountainPalette): List<LayerShape> 
                 while (x < w + treeH * 0.2f) {
                     val xi = (x / w).coerceIn(0f, 1f)
                     val ridgeY = ys[(xi * steps).toInt()]
-                    val cluster = 0.8f + 0.2f * sin(TAU * 6f * xi + spec.seed)
-                    val th = treeH * (0.55f + 0.6f * rnd.nextFloat()) * cluster
-                    pine(x, ridgeY + treeH * 0.25f, th)
-                    x += treeH * (0.16f + 0.20f * rnd.nextFloat())
+                    // racimos: zonas con árboles más altos y otras más bajos
+                    val cluster = 0.65f + 0.35f * fbm(xi * 9f, spec.seed + 5)
+                    val th = treeH * (0.5f + 0.7f * rnd.nextFloat()) * cluster * 1.3f
+                    pine(
+                        cx = x,
+                        baseY = ridgeY + treeH * 0.25f,
+                        h = th,
+                        widthK = 0.8f + 0.4f * rnd.nextFloat(),
+                        tiers = 4 + rnd.nextInt(3),
+                    )
+                    x += treeH * (0.14f + 0.20f * rnd.nextFloat())
                 }
             }
         } else null
 
-        // Con árboles: la parte visible arriba del valle más bajo es color sólido
-        // (para que cuadre con las siluetas); sin árboles: degradado desde la cresta.
+        // Con árboles: sólido hasta el valle más bajo (cuadra con las siluetas) y luego se
+        // funde con la capa siguiente. Sin árboles: se funde desde la cresta.
         val startY = if (spec.treeH > 0f) ys.max() else ys.min()
+        val bottom = if (index == last) color else lerp(color, nextColor, BLEED_TO_NEXT)
         val brush = Brush.verticalGradient(
-            colors = listOf(color, lerp(color, palette.fog, spec.haze)),
+            colors = listOf(color, bottom),
             startY = startY,
             endY = h,
         )
@@ -240,11 +274,12 @@ private fun buildShapes(size: Size, palette: MountainPalette): List<LayerShape> 
         val band = if (spec.mist) {
             val bandH = h * 0.16f
             val top = spec.base * h - bandH * 0.5f
+            val clear = palette.mist.copy(alpha = 0f) // mismo tono, evita franjas oscuras
             Band(
                 top = top,
                 height = bandH,
                 brush = Brush.verticalGradient(
-                    colors = listOf(Color.Transparent, palette.mist, Color.Transparent),
+                    colors = listOf(clear, palette.mist, clear),
                     startY = top,
                     endY = top + bandH,
                 ),
@@ -253,6 +288,16 @@ private fun buildShapes(size: Size, palette: MountainPalette): List<LayerShape> 
 
         LayerShape(fill, trees, brush, color, band)
     }
+
+    val deepClear = palette.deep.copy(alpha = 0f)
+    val scrim = Brush.verticalGradient(
+        0f to deepClear,
+        0.45f to deepClear,
+        1f to palette.deep.copy(alpha = palette.scrimAlpha),
+        startY = 0f,
+        endY = h,
+    )
+    return Scene(layers, scrim)
 }
 
 // ───────────────────────────── Previews ─────────────────────────────
