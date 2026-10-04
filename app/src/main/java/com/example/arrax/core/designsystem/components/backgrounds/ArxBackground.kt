@@ -94,7 +94,7 @@ fun ArxBackground(
 fun ArxBackgroundPreviewLight() {
     ArxTheme {
         ArxBackground(
-            showMountains = false,
+            showMountains =true,
             animated = false // Apagado en preview para mejor rendimiento
         ) {
             Text(
