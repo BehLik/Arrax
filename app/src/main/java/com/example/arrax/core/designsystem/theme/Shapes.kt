@@ -20,4 +20,5 @@ val ArxShapes = Shapes(
 
     // Extra Grande (32dp): Para componentes muy amplios, como una hoja que cubre casi toda la pantalla.
     extraLarge = RoundedCornerShape(32.dp)
+
 )

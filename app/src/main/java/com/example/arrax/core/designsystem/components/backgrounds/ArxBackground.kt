@@ -30,6 +30,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.arrax.core.designsystem.components.backgrounds.montain.ArxMountains
+import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
 
 /**
@@ -106,7 +107,7 @@ private fun ArxBackgroundPreviewLightOn() {
         ArxBackground(showMountains = true, animated = false) {
             Text(
                 text = "Arx Background (Light)",
-                modifier = Modifier.align(Alignment.TopCenter).padding(top = 64.dp),
+                modifier = Modifier.align(Alignment.TopCenter).padding(ArxSpacing.giant),
                 color = MaterialTheme.colorScheme.onBackground,
             )
         }
@@ -134,7 +135,7 @@ private fun ArxBackgroundPreviewDark() {
         ArxBackground(showMountains = true, animated = false) {
             Text(
                 text = "Arx Background (Dark)",
-                modifier = Modifier.align(Alignment.TopCenter).padding(top = 64.dp),
+                modifier = Modifier.align(Alignment.TopCenter).padding(ArxSpacing.giant),
                 color = MaterialTheme.colorScheme.onBackground,
             )
         }

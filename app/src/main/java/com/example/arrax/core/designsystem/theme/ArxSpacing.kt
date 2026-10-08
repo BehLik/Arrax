@@ -12,4 +12,5 @@ object ArxSpacing {
     val xl = 24.dp
     val xxl = 32.dp
     val huge = 40.dp
+    val giant=64.dp
 }
