@@ -1,19 +1,22 @@
 package com.example.arrax.core.designsystem.components.backgrounds
 
+import android.content.res.Configuration
 import android.provider.Settings
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Canvas
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -23,24 +26,28 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-import android.content.res.Configuration
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.arrax.core.designsystem.components.backgrounds.montain.ArxMountains
 import com.example.arrax.core.designsystem.theme.ArxTheme
 
 /**
  * Fondo de pantalla de Arrax.
- * Utiliza MaterialTheme.colorScheme para garantizar compatibilidad Light/Dark.
+ *
+ * @param showMountains true = muestra la ilustración de montañas (res/drawable/bg_mountains.xml)
+ *                      abajo, recoloreada con el tema; false = la oculta.
+ * @param invertMountains pon true si en tu SVG lo cercano es blanco y lo lejano negro.
+ * @param animated      true = el glow superior se mueve (se apaga solo si el sistema
+ *                      tiene las animaciones desactivadas).
+ *
+ * Usa MaterialTheme.colorScheme para ser compatible con Light/Dark.
  */
 @Composable
 fun ArxBackground(
     modifier: Modifier = Modifier,
     showMountains: Boolean = false,
+    invertMountains: Boolean = false,
     animated: Boolean = true,
     content: @Composable BoxScope.() -> Unit,
 ) {
@@ -59,9 +66,8 @@ fun ArxBackground(
         label = "arxBgPhase",
     )
 
-    // Tokens de color basados en el Theme de Arrax
     val backgroundColor = MaterialTheme.colorScheme.background
-    val glowColor = MaterialTheme.colorScheme.primary // Emerald action color para el glow
+    val glowColor = MaterialTheme.colorScheme.primary
 
     Box(
         modifier = modifier
@@ -78,53 +84,58 @@ fun ArxBackground(
                 )
             }
     ) {
-        if (showMountains) {
-            ArxMountains(Modifier.align(Alignment.BottomCenter))
+        // El booleano decide si las montañas aparecen (con fundido suave).
+        AnimatedVisibility(
+            visible = showMountains,
+            enter = fadeIn(tween(400)),
+            exit = fadeOut(tween(300)),
+            modifier = Modifier.align(Alignment.BottomCenter),
+        ) {
+            ArxMountains(invert = invertMountains)
         }
         content()
     }
 }
 
-@Preview(
-    name = "Light Mode - No Mountains",
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO
-)
+// ───────────────────────────── Previews ─────────────────────────────
+
+@Preview(name = "Light - Mountains ON", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun ArxBackgroundPreviewLight() {
+private fun ArxBackgroundPreviewLightOn() {
     ArxTheme {
-        ArxBackground(
-            showMountains =true,
-            animated = false // Apagado en preview para mejor rendimiento
-        ) {
+        ArxBackground(showMountains = true, animated = false) {
             Text(
                 text = "Arx Background (Light)",
-                modifier = Modifier.align(Alignment.Center),
-                color = MaterialTheme.colorScheme.onBackground
+                modifier = Modifier.align(Alignment.TopCenter).padding(top = 64.dp),
+                color = MaterialTheme.colorScheme.onBackground,
             )
         }
     }
 }
 
-// Preview: Modo Oscuro con montañas
-@Preview(
-    name = "Dark Mode - Mountains",
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
+@Preview(name = "Light - Mountains OFF", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun ArxBackgroundPreviewDark() {
-    ArxTheme(darkTheme = true) {
-        ArxBackground(
-            showMountains = true,
-            animated = false
-        ) {
+private fun ArxBackgroundPreviewLightOff() {
+    ArxTheme {
+        ArxBackground(showMountains = false, animated = false) {
             Text(
-                text = "Arx Background + Mountains (Dark)",
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = 64.dp),
-                color = MaterialTheme.colorScheme.onBackground
+                text = "Sin montañas",
+                modifier = Modifier.align(Alignment.Center),
+                color = MaterialTheme.colorScheme.onBackground,
+            )
+        }
+    }
+}
+
+@Preview(name = "Dark - Mountains ON", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun ArxBackgroundPreviewDark() {
+    ArxTheme(darkTheme = true) {
+        ArxBackground(showMountains = true, animated = false) {
+            Text(
+                text = "Arx Background (Dark)",
+                modifier = Modifier.align(Alignment.TopCenter).padding(top = 64.dp),
+                color = MaterialTheme.colorScheme.onBackground,
             )
         }
     }

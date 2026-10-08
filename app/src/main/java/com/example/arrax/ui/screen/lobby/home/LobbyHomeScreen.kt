@@ -39,7 +39,7 @@ fun LobbyHomeScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
-    ArxBackground(modifier = Modifier.fillMaxSize(),showMountains = true) {
+    ArxBackground(modifier = Modifier.fillMaxSize()) {
         Scaffold(
 
             containerColor = Color.Transparent,
