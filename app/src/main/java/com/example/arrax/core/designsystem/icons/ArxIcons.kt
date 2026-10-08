@@ -12,6 +12,8 @@ import com.example.arrax.R
  * ArraxIcons.Search
  * ArraxIcons.Order
  * ArraxIcons.Inventory
+ * flujo de la app
+ *Negocio->Evento->Area de trabajo
  *
  * Esto permite cambiar el recurso gráfico sin modificar las pantallas.
  */
@@ -44,10 +46,6 @@ object ArxIcons {
     /**Quita registros u operacion*/
     val Remove = R.drawable.ic_remove
 
-
-    /** Escanea un código QR. */
-    val Qr = R.drawable.ic_fab_qr
-
     /** Confirma una acción u operación. */
     val Check = R.drawable.ic_check
 
@@ -70,9 +68,9 @@ object ArxIcons {
     /**Evento <--nivel operativo*/
     val Event=R.drawable.ic_event
 
-    val Handshake=R.drawable.ic_handshake
-val OrderRegistered=R.drawable.ic_clipboard_check
-val Piggy=R.drawable.ic_piggy
+    val Handshake = R.drawable.ic_handshake
+    val OrderRegistered = R.drawable.ic_clipboard_check
+    val Piggy = R.drawable.ic_piggy
     // ============================================================
     // NAVEGACIÓN PRINCIPAL
     // ============================================================
@@ -145,7 +143,7 @@ val Piggy=R.drawable.ic_piggy
      * Si no existe un drawable específico, puede reutilizarse
      * un icono de inventario/producto.
      */
-    val Order = R.drawable.ic_invoice
+    val Order = R.drawable.ic_orders
 
     /** Representa una línea o elemento de pedido. */
     val OrderLine = R.drawable.ic_box
@@ -201,7 +199,7 @@ val Piggy=R.drawable.ic_piggy
     val Sale = R.drawable.ic_sell
 
     /** Factura o comprobante. */
-    val Invoice = R.drawable.ic_invoice
+    val Invoice = R.drawable.ic_receipt
 
     /** Balance disponible. */
     val Wallet = R.drawable.ic_wallet
@@ -311,8 +309,8 @@ val Piggy=R.drawable.ic_piggy
     /** Cámara del dispositivo. */
     val Camera = R.drawable.ic_camera
 
-    /** Escaneo de códigos o elementos físicos. */
-    val Scan = R.drawable.ic_scan
+    /** Escaneo de códigos QR o elementos físicos. */
+    val ScanQr = R.drawable.ic_scan_qr
 
     /** Activación del micrófono para interacción por voz. */
     val Mic = R.drawable.ic_mic
@@ -394,10 +392,10 @@ val Piggy=R.drawable.ic_piggy
     val Processing = R.drawable.ic_scale
 
     /** Pedido listo para entregar. */
-    val Ready = R.drawable.ic_check
+    val Ready = R.drawable.ic_takeout
 
     /** Pedido entregado al cliente. */
-    val Delivered = R.drawable.ic_send
+    val Delivered = R.drawable.ic_hand_package
 
     /** Pago pendiente. */
     val PaymentPending = R.drawable.ic_payment_pending
@@ -405,7 +403,7 @@ val Piggy=R.drawable.ic_piggy
     val Shield = R.drawable.ic_shield
 
     /** Pago completado. */
-    val Payment = R.drawable.ic_paid
+    val Payment = R.drawable.ic_payment_done
 
     // ============================================================
     // APARIENCIA
