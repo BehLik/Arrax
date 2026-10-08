@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.arrax.R
@@ -94,7 +95,7 @@ private fun Modifier.topFade(): Modifier = this
         drawRect(
             brush = Brush.verticalGradient(
                 0f to Color.Transparent,
-                0.35f to Color.Black,
+                0.99f to Color.Black,
                 startY = 0f,
                 endY = size.height,
             ),

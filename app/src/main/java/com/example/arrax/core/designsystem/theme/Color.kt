@@ -139,7 +139,7 @@ val onErrorDark = Color(0xFF690005)
 val errorContainerDark = Color(0xFF93000A)
 val onErrorContainerDark = Color(0xFFFFDAD6)
 
-val backgroundDark = Color(0xFF071F1C)
+val backgroundDark = Color(0xFF020A0A)
 val onBackgroundDark = Color(0xFFE8F5EF)
 
 val surfaceDark = Color(0xFF0D302A)
