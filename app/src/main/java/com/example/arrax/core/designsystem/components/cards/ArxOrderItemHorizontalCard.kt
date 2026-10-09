@@ -1,5 +1,6 @@
 package com.example.arrax.core.designsystem.components.cards
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,17 +11,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.arrax.core.designsystem.components.feedback.ArxStatusChip
 import com.example.arrax.core.designsystem.components.voice.ArxVoiceStatusIndicator
+import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
 
+/**
+ * Ítem de pedido en fila. Normal = glass sutil; si es el siguiente en la cola de voz
+ * se resalta con primaryContainer.
+ */
 @Composable
 fun ArxOrderItemHorizontalCard(
     productName: String,
@@ -31,21 +36,34 @@ fun ArxOrderItemHorizontalCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val containerColor = if (isCurrentInVoiceQueue) {
-        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
+    val titleColor = if (isCurrentInVoiceQueue) {
+        MaterialTheme.colorScheme.onPrimaryContainer
     } else {
-        MaterialTheme.colorScheme.surface
+        MaterialTheme.colorScheme.onSurface
+    }
+    val secondaryColor = if (isCurrentInVoiceQueue) {
+        MaterialTheme.colorScheme.onPrimaryContainer
+    } else {
+        MaterialTheme.colorScheme.onSurfaceVariant
     }
 
     ArxCard(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = containerColor)
+        variant = if (isCurrentInVoiceQueue) ArxCardVariant.Standard else ArxCardVariant.Glass,
+        colors = if (isCurrentInVoiceQueue) {
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        } else {
+            null
+        }
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(ArxSpacing.md),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -53,21 +71,21 @@ fun ArxOrderItemHorizontalCard(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = productName,
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                        color = MaterialTheme.colorScheme.onSurface
+                        style = MaterialTheme.typography.titleMedium,
+                        color = titleColor
                     )
                     if (isCurrentInVoiceQueue) {
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(ArxSpacing.xs))
                         ArxVoiceStatusIndicator(isListening = true)
                     }
                 }
 
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(ArxSpacing.xxs))
 
                 Text(
                     text = "Requerido: $targetWeight",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = secondaryColor
                 )
             }
 
@@ -75,10 +93,10 @@ fun ArxOrderItemHorizontalCard(
                 if (isWeighed && actualWeight != null) {
                     Text(
                         text = actualWeight,
-                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.ExtraBold),
+                        style = MaterialTheme.typography.headlineMedium,
                         color = MaterialTheme.colorScheme.primary
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(ArxSpacing.xxs))
                     ArxStatusChip(
                         text = "Pesado",
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -96,33 +114,56 @@ fun ArxOrderItemHorizontalCard(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun ArxOrderItemHorizontalCardPreview() {
-    ArxTheme {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            // Item activo en cola de voz
-            ArxOrderItemHorizontalCard(
-                productName = "Pechuga Deshuesada",
-                targetWeight = "15.0 kg",
-                actualWeight = null,
-                isCurrentInVoiceQueue = true,
-                isWeighed = false,
-                onClick = {}
-            )
+// ───────────────────────── Previews (Light / Dark) ─────────────────────────
 
-            // Item ya completado
-            ArxOrderItemHorizontalCard(
-                productName = "Muslo y Pierna",
-                targetWeight = "20.0 kg",
-                actualWeight = "20.2 kg",
-                isCurrentInVoiceQueue = false,
-                isWeighed = true,
-                onClick = {}
-            )
+@Composable
+private fun ArxOrderItemPreviewContent() {
+    ArxTheme {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            Column(
+                modifier = Modifier.padding(ArxSpacing.md),
+                verticalArrangement = Arrangement.spacedBy(ArxSpacing.sm)
+            ) {
+                // Siguiente en la cola de voz
+                ArxOrderItemHorizontalCard(
+                    productName = "Costilla",
+                    targetWeight = "1.5 kg",
+                    actualWeight = null,
+                    isCurrentInVoiceQueue = true,
+                    isWeighed = false,
+                    onClick = {}
+                )
+                // Ya pesado
+                ArxOrderItemHorizontalCard(
+                    productName = "Codillo",
+                    targetWeight = "2.0 kg",
+                    actualWeight = "2.02 kg",
+                    isCurrentInVoiceQueue = false,
+                    isWeighed = true,
+                    onClick = {}
+                )
+                // Pendiente
+                ArxOrderItemHorizontalCard(
+                    productName = "Espinazo",
+                    targetWeight = "1.0 kg",
+                    actualWeight = null,
+                    isCurrentInVoiceQueue = false,
+                    isWeighed = false,
+                    onClick = {}
+                )
+            }
         }
     }
 }
+
+@Preview(name = "Ítem de pedido – Light", showBackground = false)
+@Composable
+fun ArxOrderItemHorizontalCardPreviewLight() = ArxOrderItemPreviewContent()
+
+@Preview(
+    name = "Ítem de pedido – Dark",
+    showBackground = false,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun ArxOrderItemHorizontalCardPreviewDark() = ArxOrderItemPreviewContent()

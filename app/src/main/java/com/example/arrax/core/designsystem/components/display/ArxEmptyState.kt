@@ -1,6 +1,8 @@
 package com.example.arrax.core.designsystem.components.display
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,23 +12,25 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.arrax.core.designsystem.components.buttons.ArxPrimaryButton
 import com.example.arrax.core.designsystem.icons.ArxIcons
+import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
+import com.example.arrax.core.designsystem.theme.extendedColors
 
+/** Estado vacío: icono en círculo glass + título + descripción + acción opcional. */
 @Composable
 fun ArxEmptyState(
     title: String,
@@ -39,39 +43,37 @@ fun ArxEmptyState(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(32.dp),
+            .padding(ArxSpacing.xxl),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // Contenedor decorativo circular para el icono
         Box(
             modifier = Modifier
                 .size(96.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)),
+                .background(MaterialTheme.extendedColors.glass)
+                .border(1.dp, MaterialTheme.extendedColors.glassBorder, CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 painter = painterResource(id = iconRes),
-                contentDescription = null,
+                contentDescription = null, // decorativo: el título ya lo describe
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(48.dp)
             )
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(ArxSpacing.xl))
 
-        // Título Principal
         Text(
             text = title,
-            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+            style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.onBackground,
             textAlign = TextAlign.Center
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(ArxSpacing.xs))
 
-        // Descripción secundaria
         Text(
             text = description,
             style = MaterialTheme.typography.bodyMedium,
@@ -79,48 +81,49 @@ fun ArxEmptyState(
             textAlign = TextAlign.Center
         )
 
-        // Botón de acción (opcional)
         if (actionText != null && onActionClick != null) {
-            Spacer(modifier = Modifier.height(24.dp))
-            Button(
-                onClick = onActionClick,
-                shape = MaterialTheme.shapes.small, // 8.dp de tus ArxShapes
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
+            Spacer(modifier = Modifier.height(ArxSpacing.xl))
+            // Reutiliza el botón global en vez de un Button propio.
+            ArxPrimaryButton(
+                text = actionText,
+                onClick = onActionClick
+            )
+        }
+    }
+}
+
+// ───────────────────────── Previews (Light / Dark) ─────────────────────────
+
+@Composable
+private fun ArxEmptyStatePreviewContent() {
+    ArxTheme {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            Column {
+                ArxEmptyState(
+                    title = "No hay cortes registrados",
+                    description = "Aún no has registrado ningún corte para este pedido.",
+                    iconRes = ArxIcons.Box,
+                    actionText = "Registrar corte",
+                    onActionClick = {}
                 )
-            ) {
-                Text(
-                    text = actionText.uppercase(),
-                    style = MaterialTheme.typography.labelLarge
+                ArxEmptyState(
+                    title = "Sin resultados",
+                    description = "Intenta buscar con otros términos.",
+                    iconRes = ArxIcons.Search
                 )
             }
         }
     }
 }
 
-@Preview(showBackground = true, name = "Estado Vacío con Acción")
+@Preview(name = "Estado vacío – Light", showBackground = false)
 @Composable
-fun ArxEmptyStatePreview() {
-    ArxTheme {
-        ArxEmptyState(
-            title = "No hay cortes registrados",
-            description = "Aún no has registrado ninguna extracción de carne para este lote.",
-            iconRes = ArxIcons.Box, // Asegúrate de tener este icono o usa uno que exista
-            actionText = "Registrar Corte",
-            onActionClick = {}
-        )
-    }
-}
+fun ArxEmptyStatePreviewLight() = ArxEmptyStatePreviewContent()
 
-@Preview(showBackground = true, name = "Estado Vacío Simple")
+@Preview(
+    name = "Estado vacío – Dark",
+    showBackground = false,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
-fun ArxEmptyStateSimplePreview() {
-    ArxTheme {
-        ArxEmptyState(
-            title = "Sin resultados",
-            description = "Intenta buscar con otros términos.",
-            iconRes = ArxIcons.Search
-        )
-    }
-}
+fun ArxEmptyStatePreviewDark() = ArxEmptyStatePreviewContent()

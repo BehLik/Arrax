@@ -1,5 +1,6 @@
 package com.example.arrax.core.designsystem.components.cards
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,19 +9,19 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.arrax.core.designsystem.components.feedback.ArxStatusChip
+import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
+import com.example.arrax.core.designsystem.theme.extendedColors
 import java.util.Locale
 
 /**
@@ -59,18 +60,14 @@ fun ArxOrderSummaryCard(
     val taxAmount = subtotal * (taxRatePercentage / 100.0)
     val grandTotal = (subtotal + taxAmount - discountMxn).coerceAtLeast(0.0)
 
-    ArxCard(
-        modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
-    ) {
+    // Variante Standard (sólida): es un ticket con muchas cifras, la legibilidad manda.
+    ArxCard(modifier = modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(ArxSpacing.md)
         ) {
-            // --- ENCABEZADO DE LA CARD ---
+            // --- ENCABEZADO ---
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -78,13 +75,13 @@ fun ArxOrderSummaryCard(
             ) {
                 Column {
                     Text(
-                        text = "Ticket de Pedido",
+                        text = "Ticket de pedido",
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
                         text = orderId,
-                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                        style = MaterialTheme.typography.headlineMedium,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
@@ -95,52 +92,52 @@ fun ArxOrderSummaryCard(
                 )
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(ArxSpacing.sm))
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(ArxSpacing.sm))
 
-            // --- LISTA DE PRODUCTOS Y PESAJES ---
+            // --- PRODUCTOS Y PESAJES ---
             Text(
-                text = "Desglose de Productos",
-                style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
+                text = "Desglose de productos",
+                style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = ArxSpacing.xs)
             )
 
             items.forEach { item ->
                 SummaryItemRow(item = item)
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(ArxSpacing.xs))
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(ArxSpacing.xs))
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(ArxSpacing.sm))
 
             // --- RESUMEN DE PESO Y CANTIDAD ---
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+                        color = MaterialTheme.colorScheme.surfaceVariant,
                         shape = MaterialTheme.shapes.extraSmall
                     )
-                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                    .padding(horizontal = ArxSpacing.sm, vertical = ArxSpacing.xs),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = "${items.size} producto(s)",
-                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                    style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = "Peso Total: ${formatDouble(totalWeightKg)} kg",
-                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                    text = "Peso total: ${formatDouble(totalWeightKg)} kg",
+                    style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.onSurface
                 )
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(ArxSpacing.sm))
 
             // --- DESGLOSE FINANCIERO ---
             FinancialRow(label = "Subtotal", amount = subtotal)
@@ -160,9 +157,9 @@ fun ArxOrderSummaryCard(
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(ArxSpacing.xs))
             HorizontalDivider(color = MaterialTheme.colorScheme.outline)
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(ArxSpacing.xs))
 
             // --- TOTAL GENERAL ---
             Row(
@@ -171,13 +168,13 @@ fun ArxOrderSummaryCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "TOTAL",
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.ExtraBold),
+                    text = "Total",
+                    style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = "$${formatCurrency(grandTotal)} MXN",
-                    style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.ExtraBold),
+                    style = MaterialTheme.typography.headlineLarge,
                     color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.End
                 )
@@ -196,7 +193,7 @@ private fun SummaryItemRow(item: OrderSummaryItem) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = item.name,
-                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
@@ -207,7 +204,7 @@ private fun SummaryItemRow(item: OrderSummaryItem) {
         }
         Text(
             text = "$${formatCurrency(item.totalPrice)}",
-            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+            style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.End
         )
@@ -223,7 +220,7 @@ private fun FinancialRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 2.dp),
+            .padding(vertical = ArxSpacing.xxs),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
@@ -231,12 +228,15 @@ private fun FinancialRow(
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+        // El descuento es algo bueno para el cliente: va en success, no en error.
         Text(
             text = "${if (isDiscount) "-" else ""}$${formatCurrency(kotlin.math.abs(amount))}",
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontWeight = if (isDiscount) FontWeight.Bold else FontWeight.Normal
-            ),
-            color = if (isDiscount) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
+            style = MaterialTheme.typography.bodyMedium,
+            color = if (isDiscount) {
+                MaterialTheme.extendedColors.success.color
+            } else {
+                MaterialTheme.colorScheme.onSurface
+            }
         )
     }
 }
@@ -249,25 +249,37 @@ private fun formatCurrency(value: Double): String {
     return String.format(Locale.US, "%,.2f", value)
 }
 
-// --- PREVIEW ---
+// ───────────────────────── Previews (Light / Dark) ─────────────────────────
 
-@Preview(showBackground = true)
 @Composable
-fun ArxOrderSummaryCardPreview() {
+private fun ArxOrderSummaryCardPreviewContent() {
     ArxTheme {
-        val sampleItems = listOf(
-            OrderSummaryItem("1", "Pechuga Deshuesada", 15.4, 110.0),
-            OrderSummaryItem("2", "Muslo y Pierna", 22.0, 75.5),
-            OrderSummaryItem("3", "Alitas Marinadas", 8.2, 95.0)
-        )
-
-        Column(modifier = Modifier.padding(16.dp)) {
-            ArxOrderSummaryCard(
-                orderId = "#PED-804",
-                items = sampleItems,
-                discountMxn = 0.0,
-                statusLabel = "Listo para Entrega"
+        Surface(color = MaterialTheme.colorScheme.background) {
+            val sampleItems = listOf(
+                OrderSummaryItem("1", "Costilla", 3.5, 140.0),
+                OrderSummaryItem("2", "Codillo", 2.0, 120.0),
+                OrderSummaryItem("3", "Manteca", 1.2, 90.0)
             )
+            Column(modifier = Modifier.padding(ArxSpacing.md)) {
+                ArxOrderSummaryCard(
+                    orderId = "#PED-804",
+                    items = sampleItems,
+                    discountMxn = 20.0,
+                    statusLabel = "Listo para entrega"
+                )
+            }
         }
     }
 }
+
+@Preview(name = "Resumen de pedido – Light", showBackground = false)
+@Composable
+fun ArxOrderSummaryCardPreviewLight() = ArxOrderSummaryCardPreviewContent()
+
+@Preview(
+    name = "Resumen de pedido – Dark",
+    showBackground = false,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun ArxOrderSummaryCardPreviewDark() = ArxOrderSummaryCardPreviewContent()

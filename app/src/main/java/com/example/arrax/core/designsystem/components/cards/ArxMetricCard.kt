@@ -16,9 +16,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.arrax.core.designsystem.theme.ArxSpacing
 
+/**
+ * Tarjeta de métrica. Normal = glass sutil; [isHighlighted] = primaryContainer (métrica importante).
+ */
 @Composable
 fun ArxMetricCard(
     title: String,
@@ -26,36 +29,32 @@ fun ArxMetricCard(
     iconRes: Int,
     modifier: Modifier = Modifier,
     subtitle: String? = null,
-    isHighlighted: Boolean = false // Cambia los colores si es una métrica crítica o importante
+    isHighlighted: Boolean = false
 ) {
-    val containerColor = if (isHighlighted) {
-        MaterialTheme.colorScheme.primaryContainer
+    val titleColor = if (isHighlighted) {
+        MaterialTheme.colorScheme.onPrimaryContainer
     } else {
-        MaterialTheme.colorScheme.surface
+        MaterialTheme.colorScheme.onSurfaceVariant
     }
-
-    val contentColor = if (isHighlighted) {
+    val valueColor = if (isHighlighted) {
         MaterialTheme.colorScheme.onPrimaryContainer
     } else {
         MaterialTheme.colorScheme.onSurface
     }
 
-    val iconTint = if (isHighlighted) {
-        MaterialTheme.colorScheme.primary
-    } else {
-        MaterialTheme.colorScheme.primary
-    }
-
     ArxCard(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = containerColor,
-            contentColor = contentColor
-        )
+        variant = if (isHighlighted) ArxCardVariant.Standard else ArxCardVariant.Glass,
+        colors = if (isHighlighted) {
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        } else {
+            null
+        }
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
+        Column(modifier = Modifier.padding(ArxSpacing.md)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -64,27 +63,27 @@ fun ArxMetricCard(
                 Text(
                     text = title,
                     style = MaterialTheme.typography.titleMedium,
-                    color = contentColor.copy(alpha = 0.8f)
+                    color = titleColor
                 )
                 Icon(
                     painter = painterResource(id = iconRes),
-                    contentDescription = null,
-                    tint = iconTint,
+                    contentDescription = null, // decorativo: el título ya lo describe
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(24.dp)
                 )
             }
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(ArxSpacing.sm))
             Text(
                 text = value,
-                style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold),
-                color = contentColor
+                style = MaterialTheme.typography.headlineLarge,
+                color = valueColor
             )
             if (subtitle != null) {
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(ArxSpacing.xxs))
                 Text(
                     text = subtitle,
                     style = MaterialTheme.typography.bodySmall,
-                    color = contentColor.copy(alpha = 0.7f)
+                    color = titleColor
                 )
             }
         }

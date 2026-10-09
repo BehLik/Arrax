@@ -1,5 +1,6 @@
 package com.example.arrax.core.designsystem.components.feedback
 
+import android.content.res.Configuration
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,27 +25,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.arrax.core.designsystem.icons.ArxIcons
+import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
 
-/**
- * Modelo de datos para definir cada etapa dentro del stepper de pedido.
- */
+// Tamaño del nodo: el conector se alinea con su centro (NodeSize / 2).
+private val StepNodeSize = 28.dp
+
+/** Modelo de datos para cada etapa del stepper de pedido. */
 data class ArxOrderStep(
     val title: String,
     val description: String? = null
 )
 
 /**
- * Visualizador horizontal del ciclo de vida y avance del pedido.
+ * Visualizador horizontal del avance del pedido.
  *
- * @param steps Lista de etapas por las que pasa el pedido.
- * @param currentStepIndex Índice base 0 de la etapa activa actual.
- * @param modifier Modificador de diseño Compose.
+ * @param steps Etapas por las que pasa el pedido.
+ * @param currentStepIndex Índice base 0 de la etapa activa.
  */
 @Composable
 fun ArxOrderStepper(
@@ -54,7 +56,7 @@ fun ArxOrderStepper(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 12.dp, horizontal = 8.dp),
+            .padding(vertical = ArxSpacing.sm, horizontal = ArxSpacing.xs),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Top
     ) {
@@ -66,7 +68,6 @@ fun ArxOrderStepper(
                 modifier = Modifier.weight(1f),
                 verticalAlignment = Alignment.Top
             ) {
-                // Nodo e información del paso
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.weight(1f)
@@ -77,23 +78,23 @@ fun ArxOrderStepper(
                         isActive = isActive
                     )
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(ArxSpacing.xs))
 
+                    // El estado se distingue por color y por el nodo (check / anillo / número),
+                    // no solo por el peso del texto.
                     Text(
                         text = step.title,
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            fontWeight = if (isActive || isCompleted) FontWeight.Bold else FontWeight.Normal
-                        ),
+                        style = MaterialTheme.typography.labelMedium,
                         color = when {
                             isActive -> MaterialTheme.colorScheme.primary
                             isCompleted -> MaterialTheme.colorScheme.onSurface
-                            else -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                            else -> MaterialTheme.colorScheme.onSurfaceVariant
                         },
                         textAlign = TextAlign.Center
                     )
 
                     if (!step.description.isNullOrEmpty() && isActive) {
-                        Spacer(modifier = Modifier.height(2.dp))
+                        Spacer(modifier = Modifier.height(ArxSpacing.xxs))
                         Text(
                             text = step.description,
                             style = MaterialTheme.typography.bodySmall,
@@ -103,7 +104,7 @@ fun ArxOrderStepper(
                     }
                 }
 
-                // Línea conectora horizontal (excepto en el último paso)
+                // Conector (excepto tras el último paso)
                 if (index < steps.size - 1) {
                     val lineColor by animateColorAsState(
                         targetValue = if (index < currentStepIndex) {
@@ -117,7 +118,7 @@ fun ArxOrderStepper(
                     Box(
                         modifier = Modifier
                             .weight(0.8f)
-                            .padding(top = 14.dp) // Alineación con el centro del círculo (28dp / 2)
+                            .padding(top = StepNodeSize / 2)
                     ) {
                         HorizontalDivider(
                             thickness = 3.dp,
@@ -148,7 +149,7 @@ private fun StepCircleNode(
     val contentColor by animateColorAsState(
         targetValue = when {
             isCompleted -> MaterialTheme.colorScheme.onPrimary
-            isActive -> MaterialTheme.colorScheme.primary
+            isActive -> MaterialTheme.colorScheme.onPrimaryContainer
             else -> MaterialTheme.colorScheme.onSurfaceVariant
         },
         label = "contentColor"
@@ -156,13 +157,15 @@ private fun StepCircleNode(
 
     Box(
         modifier = Modifier
-            .size(28.dp)
+            .size(StepNodeSize)
             .clip(CircleShape)
             .background(circleBgColor)
             .then(
                 if (isActive) {
                     Modifier.border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
-                } else Modifier
+                } else {
+                    Modifier
+                }
             ),
         contentAlignment = Alignment.Center
     ) {
@@ -176,32 +179,40 @@ private fun StepCircleNode(
         } else {
             Text(
                 text = stepNumber.toString(),
-                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.labelMedium,
                 color = contentColor
             )
         }
     }
 }
 
-// --- PREVIEWS ---
+// ───────────────────────── Previews (Light / Dark) ─────────────────────────
 
-@Preview(showBackground = true)
 @Composable
-fun ArxOrderStepperPreview() {
+private fun ArxOrderStepperPreviewContent() {
     ArxTheme {
-        val steps = listOf(
-            ArxOrderStep("Generado"),
-            ArxOrderStep("En Pesaje", "Estación 2"),
-            ArxOrderStep("Empacado"),
-            ArxOrderStep("Despachado")
-        )
-
-        Column(modifier = Modifier.padding(16.dp)) {
-            // Estado: En Pesaje (Paso 2 activo)
-            ArxOrderStepper(
-                steps = steps,
-                currentStepIndex = 1
+        Surface(color = MaterialTheme.colorScheme.background) {
+            val steps = listOf(
+                ArxOrderStep("Generado"),
+                ArxOrderStep("En pesaje", "Báscula 1"),
+                ArxOrderStep("Empacado"),
+                ArxOrderStep("Entregado")
             )
+            Column(modifier = Modifier.padding(ArxSpacing.md)) {
+                ArxOrderStepper(steps = steps, currentStepIndex = 1)
+            }
         }
     }
 }
+
+@Preview(name = "Stepper – Light", showBackground = false)
+@Composable
+fun ArxOrderStepperPreviewLight() = ArxOrderStepperPreviewContent()
+
+@Preview(
+    name = "Stepper – Dark",
+    showBackground = false,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun ArxOrderStepperPreviewDark() = ArxOrderStepperPreviewContent()

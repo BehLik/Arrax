@@ -101,7 +101,7 @@ fun ArxBottomBarPreview() {
         )
     )
 
-    ArxTheme {
+    ArxTheme(darkTheme = true) {
         ArxBottomBar(
             items = sampleItems,
             currentRoute = sampleItems[currentRoute].route,

@@ -4,21 +4,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Shapes
 import androidx.compose.ui.unit.dp
 
-// Definimos la personalidad de los bordes
 val ArxShapes = Shapes(
-    // Extra Pequeño (4dp): Para etiquetas muy chiquitas, tooltips o badges
-    extraSmall = RoundedCornerShape(4.dp),
-
-    // Pequeño (8dp): Para Botones, Chips de selección
-    small = RoundedCornerShape(8.dp),
-
-    // Medio (16dp): El estándar para Tarjetas (Cards)
-    medium = RoundedCornerShape(16.dp),
-
-    // Grande (24dp): Ideal para los BottomSheets
-    large = RoundedCornerShape(24.dp),
-
-    // Extra Grande (32dp): Para componentes muy amplios, como una hoja que cubre casi toda la pantalla.
+    // Badges, tooltips
+    extraSmall = RoundedCornerShape(6.dp),
+    // Campos de texto (10dp en el JSON) y chips: usa small
+    small = RoundedCornerShape(10.dp),
+    // Botones (12dp) y tarjetas (14-16dp)
+    medium = RoundedCornerShape(14.dp),
+    // Diálogos (16dp) y BottomSheets
+    large = RoundedCornerShape(20.dp),
+    // Hojas casi a pantalla completa
     extraLarge = RoundedCornerShape(32.dp)
-
 )

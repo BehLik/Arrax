@@ -1,166 +1,154 @@
 package com.example.arrax.core.designsystem.components.cards
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.arrax.core.designsystem.theme.ArxTheme
-import com.example.arrax.core.designsystem.icons.ArxIcons
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.example.arrax.core.designsystem.icons.ArxIcons
+import com.example.arrax.core.designsystem.theme.ArxSpacing
+import com.example.arrax.core.designsystem.theme.ArxTheme
+import com.example.arrax.core.designsystem.theme.extendedColors
+
+/** Variantes visuales de [ArxCard]. Glass es un efecto, no otra tarjeta. */
+enum class ArxCardVariant { Standard, Glass }
+
+/**
+ * Tarjeta base de Arrax.
+ * - Standard: superficie sólida con elevación suave.
+ * - Glass: superficie translúcida + borde sutil (tokens extendedColors.glass / glassBorder).
+ *
+ * [colors] y [elevation] ahora son opcionales: si no los pasas, los decide la [variant].
+ * Quien ya los pasaba sigue funcionando igual.
+ */
 @Composable
 fun ArxCard(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
-    colors: CardColors = CardDefaults.cardColors(
-        containerColor = MaterialTheme.colorScheme.surface,
-        contentColor = MaterialTheme.colorScheme.onSurface
-    ),
-    elevation: CardElevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+    colors: CardColors? = null,
+    elevation: CardElevation? = null,
+    variant: ArxCardVariant = ArxCardVariant.Standard,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    // Si la tarjeta tiene una acción de clic, usamos la variante interactiva de M3
+    val shape = MaterialTheme.shapes.medium
+    val isGlass = variant == ArxCardVariant.Glass
+
+    val resolvedColors = colors ?: CardDefaults.cardColors(
+        containerColor = if (isGlass) MaterialTheme.extendedColors.glass else MaterialTheme.colorScheme.surface,
+        contentColor = MaterialTheme.colorScheme.onSurface
+    )
+    val resolvedElevation = elevation ?: CardDefaults.cardElevation(
+        defaultElevation = if (isGlass) 0.dp else 2.dp
+    )
+    val border = if (isGlass) BorderStroke(1.dp, MaterialTheme.extendedColors.glassBorder) else null
+
     if (onClick != null) {
         Card(
             onClick = onClick,
             modifier = modifier,
-            shape = MaterialTheme.shapes.medium, // Toma el 16.dp de tu ArxShapes
-            colors = colors,
-            elevation = elevation,
+            shape = shape,
+            colors = resolvedColors,
+            elevation = resolvedElevation,
+            border = border,
             content = content
         )
     } else {
-        // Si no es interactiva, usamos la variante estática
         Card(
             modifier = modifier,
-            shape = MaterialTheme.shapes.medium,
-            colors = colors,
-            elevation = elevation,
+            shape = shape,
+            colors = resolvedColors,
+            elevation = resolvedElevation,
+            border = border,
             content = content
         )
     }
 }
 
-
+/**
+ * Obsoleto: usa `ArxCard(variant = ArxCardVariant.Glass)`.
+ * Se mantiene para que las llamadas existentes compilen. [baseColor] y [borderColor]
+ * ya no se usan: el glass sale de los tokens del tema (y se adapta solo a Light/Dark).
+ */
+@Deprecated(
+    message = "Usa ArxCard con variant = ArxCardVariant.Glass",
+    replaceWith = ReplaceWith(
+        "ArxCard(modifier = modifier, onClick = onClick, variant = ArxCardVariant.Glass, content = content)"
+    )
+)
 @Composable
 fun ArxGlassCard(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
-    // Dejamos que el componente decida internamente según el tema si no se le pasa un color explícito
     baseColor: Color = Color.Unspecified,
     borderColor: Color = Color.Unspecified,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    val isDark = isSystemInDarkTheme()
-    val shape = MaterialTheme.shapes.medium
-
-    // 1. Ajuste de colores dinámico
-    // En modo oscuro, surfaceVariant (0xFF3F4945) da un mejor tono de cristal que el surface (muy negro).
-    val actualBaseColor = if (baseColor != Color.Unspecified) baseColor else {
-        if (isDark) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
-    }
-
-    val actualBorderColor = if (borderColor != Color.Unspecified) borderColor else {
-        MaterialTheme.colorScheme.outlineVariant
-    }
-
-    // 2. Ajuste de opacidades (Alpha)
-    // En dark mode usamos menos alpha (0.2f) para no blanquear la tarjeta, manteniendo el cristal sutil.
-    // En light mode usamos más alpha (0.45f) para que el blanco esmerilado se note.
-    val backgroundAlpha = if (isDark) 0.2f else 0.45f
-    val borderAlpha = if (isDark) 0.15f else 0.3f
-
-    val cardColors = CardDefaults.cardColors(
-        containerColor = actualBaseColor.copy(alpha = backgroundAlpha),
-        contentColor = MaterialTheme.colorScheme.onSurface
+    ArxCard(
+        modifier = modifier,
+        onClick = onClick,
+        variant = ArxCardVariant.Glass,
+        content = content
     )
-
-    val cardElevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-
-    val baseModifier = modifier
-        .border(
-            width = 1.dp,
-            color = actualBorderColor.copy(alpha = borderAlpha),
-            shape = shape
-        )
-
-    if (onClick != null) {
-        Card(
-            onClick = onClick,
-            modifier = baseModifier,
-            shape = shape,
-            colors = cardColors,
-            elevation = cardElevation,
-            content = content
-        )
-    } else {
-        Card(
-            modifier = baseModifier,
-            shape = shape,
-            colors = cardColors,
-            elevation = cardElevation,
-            content = content
-        )
-    }
 }
 
+// ───────────────────────── Previews (Light / Dark) ─────────────────────────
 
-
-
-@Preview(showBackground = true, name = "Familia de Cards Arrax")
 @Composable
-fun ArxCardsPreview() {
-    ArxTheme() {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            // Ejemplo de métricas lado a lado..
-            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                ArxMetricCard(
-                    title = "Animales",
-                    value = "1,450",
-                    subtitle = "+5% este mes",
-                    iconRes = ArxIcons.Camera, // Reemplaza con tus íconos reales
-                    modifier = Modifier.weight(1f),
-                    isHighlighted = true
-                )
-                ArxMetricCard(
-                    title = "Bajas",
-                    value = "12",
-                    iconRes = ArxIcons.NfcOutline, // Reemplaza con tus íconos reales
-                    modifier = Modifier.weight(1f),
-
+private fun ArxCardsPreviewContent() {
+    ArxTheme {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            Column(
+                modifier = Modifier.padding(ArxSpacing.md),
+                verticalArrangement = Arrangement.spacedBy(ArxSpacing.md)
+            ) {
+                Row(horizontalArrangement = Arrangement.spacedBy(ArxSpacing.md)) {
+                    ArxMetricCard(
+                        title = "Pedidos",
+                        value = "24",
+                        subtitle = "+5% esta semana",
+                        iconRes = ArxIcons.Camera,
+                        modifier = Modifier.weight(1f),
+                        isHighlighted = true
+                    )
+                    ArxMetricCard(
+                        title = "Pendientes",
+                        value = "6",
+                        iconRes = ArxIcons.NfcOutline,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                ArxActionCard(
+                    title = "Registrar nuevo pedido",
+                    description = "Anota el corte, el precio por kilo y el peso a entregar.",
+                    iconRes = ArxIcons.Camera,
+                    onClick = {}
                 )
             }
-
-            // Ejemplo de tarjeta de acción...
-            ArxActionCard(
-                title = "Registrar nuevo lote",
-                description = "Ingresa los datos del nuevo grupo de animales al sistema.",
-                iconRes = ArxIcons.Camera, // Reemplaza con tus íconos reales
-                onClick = {}
-            )
         }
     }
 }
+
+@Preview(name = "Cards – Light", showBackground = false)
+@Composable
+fun ArxCardsPreviewLight() = ArxCardsPreviewContent()
+
+@Preview(
+    name = "Cards – Dark",
+    showBackground = false,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun ArxCardsPreviewDark() = ArxCardsPreviewContent()
