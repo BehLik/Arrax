@@ -165,6 +165,7 @@ object ArxIcons {
     /** Vehículo, ruta o estado de entrega de un pedido. */
     val Delivery = R.drawable.ic_delivery
 
+    val Sort=R.drawable.ic_sort
     /**repetir instruccion*/
     val Replay = R.drawable.ic_replay
 

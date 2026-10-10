@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.arrax.core.designsystem.components.feedback.ArxChipStatus
 import com.example.arrax.core.designsystem.components.feedback.ArxStatusChip
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
@@ -44,6 +45,7 @@ data class OrderSummaryItem(
  * @param discountMxn Descuento opcional aplicado en moneda local.
  * @param taxRatePercentage Porcentaje de impuestos aplicable (por defecto 0%).
  * @param statusLabel Etiqueta de estado del pedido para el encabezado.
+ * @param statusType Tipo semántico del chip de estado (success, warning, info...).
  * @param modifier Modificador de diseño Compose.
  */
 @Composable
@@ -53,7 +55,8 @@ fun ArxOrderSummaryCard(
     modifier: Modifier = Modifier,
     discountMxn: Double = 0.0,
     taxRatePercentage: Double = 0.0,
-    statusLabel: String = "Completado"
+    statusLabel: String = "Completado",
+    statusType: ArxChipStatus = ArxChipStatus.Success
 ) {
     val totalWeightKg = items.sumOf { it.weightKg }
     val subtotal = items.sumOf { it.totalPrice }
@@ -87,8 +90,7 @@ fun ArxOrderSummaryCard(
                 }
                 ArxStatusChip(
                     text = statusLabel,
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    status = statusType
                 )
             }
 

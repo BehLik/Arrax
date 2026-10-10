@@ -26,39 +26,44 @@ import androidx.compose.ui.unit.dp
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
+import com.example.arrax.core.designsystem.theme.ColorFamily
 import com.example.arrax.core.designsystem.theme.extendedColors
 
-/** Estado semántico del chip. Neutral = sin significado de estado (outlined / surfaceVariant). */
+/** Estado semántico del chip. Neutral = sin significado de estado (surfaceVariant / outlined). */
 enum class ArxChipStatus { Neutral, Success, Warning, Info, Error }
 
 /**
  * Chip de estado.
  *
- * Dos formas de usarlo:
- * 1. Semántica (recomendada): `ArxStatusChip(text = "Pesado", status = ArxChipStatus.Success)`.
- *    Muestra un punto del color del estado + borde del estado + texto legible (onSurface).
- *    Así el estado nunca depende solo del color: siempre va acompañado del texto.
+ * 1. Semántico (recomendado): `ArxStatusChip(text = "Pesado", status = ArxChipStatus.Success)`.
+ *    Usa los tokens colorContainer / onColorContainer del tema y un punto del color del estado.
+ *    El texto siempre acompaña al color (el estado no depende solo del color).
  * 2. Colores explícitos (compatibilidad): pasa [containerColor] y [contentColor] como antes.
- *un paso mas... :/
  */
 @Composable
 fun ArxStatusChip(
     text: String,
-    modifier: Modifier = Modifier,
     containerColor: Color = Color.Unspecified,
     contentColor: Color = Color.Unspecified,
+    modifier: Modifier = Modifier,
     iconRes: Int? = null,
     isOutlined: Boolean = false,
     status: ArxChipStatus = ArxChipStatus.Neutral
 ) {
     val shape = MaterialTheme.shapes.small
     val explicitColors = containerColor != Color.Unspecified && contentColor != Color.Unspecified
-    val statusColor: Color? = when (status) {
-        ArxChipStatus.Success -> MaterialTheme.extendedColors.success.color
-        ArxChipStatus.Warning -> MaterialTheme.extendedColors.warning.color
-        ArxChipStatus.Info -> MaterialTheme.extendedColors.info.color
-        ArxChipStatus.Error -> MaterialTheme.colorScheme.error
-        ArxChipStatus.Neutral -> null
+
+    val family: ColorFamily? = when (status) {
+        ArxChipStatus.Success -> MaterialTheme.extendedColors.success
+        ArxChipStatus.Warning -> MaterialTheme.extendedColors.warning
+        ArxChipStatus.Info -> MaterialTheme.extendedColors.info
+        else -> null
+    }
+    val isError = status == ArxChipStatus.Error
+    val accent: Color? = when {
+        family != null -> family.color
+        isError -> MaterialTheme.colorScheme.error
+        else -> null
     }
 
     val resolvedContainer: Color
@@ -70,10 +75,15 @@ fun ArxStatusChip(
             resolvedContent = contentColor
             resolvedBorder = if (isOutlined) contentColor else null
         }
-        statusColor != null -> {
-            resolvedContainer = Color.Transparent
-            resolvedContent = MaterialTheme.colorScheme.onSurface
-            resolvedBorder = statusColor
+        family != null -> {
+            resolvedContainer = family.colorContainer
+            resolvedContent = family.onColorContainer
+            resolvedBorder = null
+        }
+        isError -> {
+            resolvedContainer = MaterialTheme.colorScheme.errorContainer
+            resolvedContent = MaterialTheme.colorScheme.onErrorContainer
+            resolvedBorder = null
         }
         else -> {
             resolvedContainer = if (isOutlined) Color.Transparent else MaterialTheme.colorScheme.surfaceVariant
@@ -93,12 +103,12 @@ fun ArxStatusChip(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        if (statusColor != null && !explicitColors) {
+        if (accent != null && !explicitColors) {
             Box(
                 modifier = Modifier
                     .size(8.dp)
                     .clip(CircleShape)
-                    .background(statusColor)
+                    .background(accent)
             )
             Spacer(modifier = Modifier.width(ArxSpacing.xs))
         }
@@ -148,11 +158,7 @@ private fun ArxStatusChipExtrasPreviewContent() {
             ) {
                 ArxStatusChip(text = "Neutral")
                 ArxStatusChip(text = "Neutral outlined", isOutlined = true)
-                ArxStatusChip(
-                    text = "Con icono",
-                    iconRes = ArxIcons.Check,
-                    status = ArxChipStatus.Success
-                )
+                ArxStatusChip(text = "Con icono", iconRes = ArxIcons.Check, status = ArxChipStatus.Success)
             }
         }
     }
@@ -162,11 +168,7 @@ private fun ArxStatusChipExtrasPreviewContent() {
 @Composable
 fun ArxStatusChipPreviewLight() = ArxStatusChipPreviewContent()
 
-@Preview(
-    name = "Chips – Dark",
-    showBackground = false,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
+@Preview(name = "Chips – Dark", showBackground = false, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun ArxStatusChipPreviewDark() = ArxStatusChipPreviewContent()
 
