@@ -160,10 +160,19 @@ object ArxIcons {
     /** Representa procesamiento o flujo de trabajo. */
     val Workflow = R.drawable.ic_timeline
 
-    val PaymentDone=R.drawable.ic_payment_done
+    val PaymentDone = R.drawable.ic_payment_done
+
     /** Vehículo, ruta o estado de entrega de un pedido. */
     val Delivery = R.drawable.ic_delivery
-    // ============================================================
+
+    /**repetir instruccion*/
+    val Replay = R.drawable.ic_replay
+
+    /**Volumen */
+    val VolumeUp = R.drawable.ic_volume_up
+
+    /**Volumen Apagado*/
+    val VolumeOff = R.drawable.ic_volume_off    // ============================================================
     // INVENTARIO
     // ============================================================
 
@@ -205,6 +214,7 @@ object ArxIcons {
     val Wallet = R.drawable.ic_wallet
     /** Representación de moneda, divisa o valores monetarios. */
     val Dollar = R.drawable.ic_dollar
+
     // ============================================================
     // ANALÍTICA
     // ============================================================
