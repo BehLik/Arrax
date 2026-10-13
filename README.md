@@ -1,5 +1,6 @@
 <p align="center">
   <img src="https://img.shields.io/badge/estado-en%20desarrollo-yellow" alt="Estado" />
+  <img src="https://img.shields.io/badge/fase%20actual-F1%20Autenticaci%C3%B3n-orange" alt="Fase actual" />
   <img src="https://img.shields.io/badge/plataforma-Android-3DDC84?logo=android&logoColor=white" alt="Plataforma" />
   <img src="https://img.shields.io/badge/Kotlin-100%25-7F52FF?logo=kotlin&logoColor=white" alt="Kotlin" />
   <img src="https://img.shields.io/badge/Firebase-Firestore%20%7C%20Auth-FFCA28?logo=firebase&logoColor=black" alt="Firebase" />
@@ -39,16 +40,16 @@ La plataforma busca que la tecnología se adapte al ritmo del trabajador, en lug
 
 ## Estado de implementación
 
+> **Fase actual: F1 — Autenticación.** La F0 está en etapa de cierre (verificaciones, diagramas y pulido del design system). Las fases F2 y F3 cuentan con una implementación inicial que todavía debe validarse, probarse e integrarse visualmente antes de darse por completadas.
+
 | Fase | Alcance | Estado |
 | ---- | ------- | ------ |
-| **0** | Cimientos: arquitectura por capas, design system, inyección de dependencias, configuración de Firebase | Completada |
-| **1** | Autenticación: inicio de sesión, registro y recuperación de contraseña contra Firebase Auth | Completada |
-| **2** | Lobby multi-tenant: crear un negocio o unirse a uno con código, y lista de eventos | Completada |
-| **3** | Eventos: creación en 3 pasos, detalle en tiempo real y cierre de evento | Completada |
-| **4** | Pedidos, pesaje por corte y modo manos libres | En desarrollo |
-| **5** | Capa financiera: gastos, ventas, utilidad neta y reportes | Planeada |
-| **6** | Inteligencia y automatización | Planeada |
-| **7** | Extensibilidad a otros dominios | Planeada |
+| **F0** | Cimientos: arquitectura por capas, design system `Arx*` (tema claro y oscuro), Hilt, Firebase, modelo NoSQL, estados globales, Crashlytics, diagramas | En cierre |
+| **F1** | Autenticación con Firebase Auth: inicio de sesión, registro, recuperación de contraseña, estados de carga y error, restauración y cierre de sesión | **En curso** |
+| **F2** | Lobby multi-tenant: selección de negocio, membresías y roles, invitaciones seguras, reglas de seguridad, piloto en el negocio familiar | Implementación inicial, por validar |
+| **F3** | Eventos: creación y detalle, catálogo editable de cortes, validación de precios, creación atómica, cierre de evento | Implementación inicial, por validar |
+| **F4** | Pedidos, clientes, cola de pesado por corte, entregas, pagos y cuenta por cliente, manos libres (Bluetooth, TTS y voz) | Planeada |
+| **F5** | Gastos, utilidad neta y reportes; pruebas de extremo a extremo, concurrencia, versión beta; evaluación de automatización y de un segundo caso de uso | Planeada |
 
 ---
 
@@ -161,7 +162,7 @@ El dominio puede evolucionar posteriormente hacia otros escenarios donde exista 
 
 **Pedido y línea.** Un pedido pertenece a un cliente y contiene una línea por corte. El estado de procesamiento vive **a nivel de línea**, no de pedido.
 
-**Cliente.** Los clientes son reutilizables entre eventos dentro del mismo negocio; no se vuelven a registrar en cada evento.
+**Cliente.** Los clientes son reutilizables entre eventos dentro del mismo negocio; no se vuelven a registrar en cada evento. Los clientes no ingresan al sistema: solo los usuarios (administrador u operador) registran y administran sus pedidos.
 
 ### Reglas de negocio
 
@@ -170,6 +171,7 @@ El dominio puede evolucionar posteriormente hacia otros escenarios donde exista 
 * La utilidad neta se reporta a nivel de evento.
 * Entrega y pago son estados independientes: un cliente puede pagar sin haber recibido, o recibir sin haber pagado.
 * Los precios se definen al crear el evento; agregar cortes sobre la marcha queda fuera del alcance actual.
+* El peso se maneja internamente en gramos (entero) y el dinero en centavos (entero), nunca en punto flotante.
 
 ---
 
@@ -177,9 +179,9 @@ El dominio puede evolucionar posteriormente hacia otros escenarios donde exista 
 
 ARRAX es multi-tenant: varias familias pueden usar la aplicación, cada una con sus propios clientes, eventos y catálogo de cortes, aislados entre sí.
 
-* **Crear un negocio.** El primer usuario registra el negocio durante el onboarding.
-* **Unirse a un negocio.** Otros usuarios entran con un código.
-* **Roles.** Algunas acciones, como crear o cerrar un evento, están reservadas al administrador.
+* **Crear un negocio.** El primer usuario registra el negocio durante el onboarding y queda como administrador.
+* **Unirse a un negocio.** Otros usuarios entran con un código de invitación y quedan como operadores.
+* **Roles.** Algunas acciones, como crear o cerrar un evento, están reservadas al administrador. Las reglas de permisos todavía se están refinando (F2).
 * **Sesión local.** El negocio activo y el rol se guardan en DataStore para decidir la pantalla de arranque.
 
 La pantalla inicial se resuelve al abrir la app:
@@ -195,7 +197,9 @@ flowchart TD
 
 ---
 
-## Eventos (Fase 3)
+## Eventos (F3)
+
+> Implementación inicial; pendiente de pruebas de creación atómica, detalle en tiempo real y cierre.
 
 ### Creación en 3 pasos
 
@@ -219,7 +223,7 @@ La creación se ejecuta como un **write batch**: el evento y un documento por ca
 
 ## Capacidades principales
 
-### Sistema de pedidos
+### Sistema de pedidos *(F4)*
 
 Cada línea de pedido mantiene información sobre:
 
@@ -251,9 +255,9 @@ Conversión:
 360 / 180 = 2 kg
 ```
 
-El usuario trabaja con la forma de solicitud que le resulte más natural.
+El usuario trabaja con la forma de solicitud que le resulte más natural. Los pedidos expresados en pesos muestran el **peso objetivo** calculado, y se distingue entre peso exacto (pedido en kg) y aproximado (pedido en pesos).
 
-### Motor de procesamiento por corte
+### Motor de procesamiento por corte *(F4)*
 
 Una de las decisiones de diseño más importantes es que el procesamiento no se organiza únicamente por pedido. En un entorno físico, el trabajador procesa un mismo corte para varias personas a la vez.
 
@@ -286,7 +290,7 @@ TOTAL      → 6.5 kg
 
 La cola se ordena por tipo de corte a través de todos los pedidos: primero toda la costilla, luego toda la carne, y así sucesivamente. Es un requerimiento operativo directo del trabajo físico.
 
-### Estado granular
+### Estado granular *(F4)*
 
 Los pedidos no siempre se completan de manera uniforme:
 
@@ -298,15 +302,15 @@ Juan Pérez
 ○ Carne
 ```
 
-Por eso cada línea tiene un indicador de pesado (`sacado`) y el estado se maneja a nivel de línea. Esto permite representar operaciones parcialmente completadas y mantener una trazabilidad precisa.
+Por eso cada línea tiene un indicador de pesado (`sacado`) y el estado se maneja a nivel de línea. Esto permite representar operaciones parcialmente completadas y mantener una trazabilidad precisa. Las correcciones de un pesado quedan registradas, y la confirmación es idempotente para evitar duplicados.
 
 ---
 
-## Interacción manos libres (Fase 4, en desarrollo)
+## Interacción manos libres *(F4)*
 
 El objetivo no es agregar un asistente virtual decorativo, sino permitir que el sistema **participe en el flujo de trabajo sin exigir interacción constante con la pantalla**.
 
-### Implementación actual
+### Alcance previsto
 
 * **Disparador físico.** Un botón Bluetooth HID confirma el pesado sin tocar la pantalla. La actividad de pesado captura las teclas `ENTER`, `HEADSETHOOK`, `MEDIA_PLAY_PAUSE` y `VOLUME_UP` a través de `dispatchKeyEvent()`.
 * **Confirmación por voz.** `TtsHelper` envuelve `android.speech.tts.TextToSpeech`. Funciona en el dispositivo, sin API externa y sin permiso de micrófono.
@@ -325,7 +329,7 @@ Actualizar línea → siguiente pedido
 
 ### Siguientes pasos
 
-* Reconocimiento de voz con el micrófono del dispositivo para comandos contextuales.
+* Reconocimiento de voz con el micrófono del dispositivo para comandos contextuales y seguros.
 * Consultar el siguiente pedido, repetir instrucciones, cambiar de corte y corregir una operación.
 * Reflejar en el listado manos libres los pedidos especificados por monto, mostrando el peso objetivo calculado.
 
@@ -376,7 +380,7 @@ El usuario no necesita regresar constantemente a diferentes pantallas. El sistem
 
 ## Persistencia y consistencia
 
-ARRAX usa **Cloud Firestore** como capa de persistencia. El modelo está orientado a documentos y diseñado alrededor de las consultas que necesita el flujo operativo.
+ARRAX usa **Cloud Firestore** como capa de persistencia. El modelo está orientado a documentos y diseñado alrededor de las consultas que necesita el flujo operativo. El cierre del modelo NoSQL es parte de la F0.
 
 El aislamiento entre negocios se resuelve **en la ruta de Firestore** (`tenants/{tenantId}/...`), no como un campo dentro de los modelos de dominio.
 
@@ -388,14 +392,15 @@ El aislamiento entre negocios se resuelve **en la ruta de Firestore** (`tenants/
     └── catálogo de cortes
 ```
 
-*(Estructura conceptual; los nombres exactos de las colecciones pueden variar.)*
+*(Estructura conceptual; los nombres exactos de las colecciones pueden variar mientras se cierra el modelo.)*
 
 * **Write batch** para crear un evento con sus cortes: todo o nada.
 * **Transacciones** para las operaciones críticas de inventario, evitando condiciones de carrera.
 * **Consultas `collectionGroup`** sobre las líneas de pedido para construir la cola por corte.
 * **Listeners en tiempo real** para el detalle del evento y la lista del lobby.
-* **Caché sin conexión** de Firestore: lo creado sin red aparece de inmediato para el usuario.
+* **Caché sin conexión** de Firestore: lo creado sin red aparece de inmediato para el usuario. Su verificación, junto con la sincronización y la reconexión, está planeada en la F0.
 * **Líneas desnormalizadas.** Las líneas conservan información relevante del corte para reducir lecturas.
+* **Reglas de seguridad multi-tenant** para garantizar el aislamiento entre negocios (F2).
 
 ---
 
@@ -499,7 +504,7 @@ Se utiliza una combinación de:
 
 El diseño considera escenarios donde el usuario puede estar trabajando de pie, con una sola mano disponible, con las manos sucias, bajo iluminación exterior o moviéndose constantemente entre tareas.
 
-Los componentes reutilizables viven en un design system propio, con prefijo `Arx` (botones, campos, tarjetas, chips de estado, diálogos, selector de cantidad, estados vacíos y barra superior).
+Los componentes reutilizables viven en un design system propio, con prefijo `Arx` (botones, campos, tarjetas, chips de estado, diálogos, selector de cantidad, estados vacíos y barra superior). Se consolida para **tema claro y oscuro**, con tokens de diseño en lugar de valores fijos, y con estados globales de carga, error, vacío y éxito. Los fondos son estáticos con formas orgánicas en los bordes, definidas en su propio archivo y con variantes por pantalla.
 
 ---
 
@@ -519,6 +524,8 @@ El diseño completo contempla **21 pantallas en 8 módulos**. Las principales:
 ---
 
 ## Flujo operativo
+
+> Los diagramas de navegación y de flujos están **en elaboración** (tarea de cierre de la F0). Los siguientes son versiones preliminares.
 
 ```mermaid
 flowchart LR
@@ -545,7 +552,7 @@ Un pedido puede:
 
 * Ser procesado y posteriormente entregado.
 * Ser entregado y quedar pendiente de pago.
-* Ser pagado anticipadamente.
+* Ser pagado anticipadamente (anticipos, pagos parciales y saldos).
 * Permanecer parcialmente procesado.
 
 El modelo de datos representa estos escenarios sin forzar una secuencia artificial.
@@ -570,68 +577,107 @@ A partir de los datos registrados se pueden obtener:
 * Gastos.
 * Utilidad neta del evento.
 
-La exportación de datos para decisiones operativas es una consideración de diseño, no un bloqueo actual.
+La exportación o el uso compartido de reportes es parte de la F5.
 
 ---
 
 ## Roadmap
 
-### Fase 0 — Cimientos
+### F0 — Cimientos *(en cierre)*
 
-- [x] Arquitectura por capas y estructura de paquetes
-- [x] Design system `Arx*`
-- [x] Configuración de Firebase
-- [x] Inyección de dependencias con Hilt
-- [x] Proyecto compilando sin UI
+- [*] Cimientos de arquitectura por capas y configuración de Firebase
+- [*] Verificar configuración de Gradle, Hilt y arranque
+- [*] Definir convenciones de modelos, repositorios y casos de uso
+- [*] Definir y cerrar el modelo NoSQL de Firestore
+- [*] Añadir manejo consistente de errores remotos
+- [*] Verificar caché, sincronización y reconexión
+- [*] Configurar y revisar Firebase Crashlytics
+- [*] Consolidar el design system `Arx*` para tema claro y oscuro
+- [*] Integrar tema claro y oscuro en componentes `Arx*`
+- [*] Crear estados globales de carga, error, vacío y éxito
+- [*] Crear previews de componentes y pantallas
+- [*] Integrar fondos orgánicos en pantallas reales
+- [*] Completar diagramas de navegación y flujos
 
-### Fase 1 — Autenticación
+### F1 — Autenticación *(fase actual)*
 
-- [x] Inicio de sesión
-- [x] Registro
-- [x] Recuperación de contraseña
+- [*] Autenticación con Firebase Auth (inicio de sesión, registro y recuperación de contraseña)
+- [*] Añadir estados de carga y errores de autenticación
+- [*] Completar diseño e integración visual de Auth
+- [*] Probar restauración y cierre de sesión
 
-### Fase 2 — Lobby multi-tenant
+### F2 — Lobby multi-tenant
 
-- [x] Onboarding: crear negocio
-- [x] Onboarding: unirse con código
-- [x] Sesión local y pantalla de arranque según estado
-- [x] Lista de eventos del negocio
+- [*] Lobby multi-tenant y selección de negocio
+- [ ] Diseñar e implementar membresías y roles por negocio
+- [ ] Implementar invitaciones seguras para unirse a un negocio
+- [ ] Definir y probar reglas de seguridad multi-tenant
+- [ ] Integrar las pantallas principales de Lobby, Business y Evento
+- [ ] Verificar el flujo de arranque según sesión y negocio
+- [ ] Ejecutar piloto en el negocio familiar
 
-### Fase 3 — Eventos
+### F3 — Eventos
 
-- [x] Creación de evento en 3 pasos (solo administrador)
-- [x] Selección de cortes y precios por evento
-- [x] Escritura atómica del evento con sus cortes
-- [x] Detalle del evento en tiempo real
-- [x] Cierre de evento con confirmación
+- [ ] Creación y detalle de eventos
+- [ ] Implementar catálogo editable de cortes
+- [ ] Crear iconos o imágenes predeterminadas de cortes
+- [ ] Validar precios y cortes del evento
+- [ ] Probar creación atómica de evento y cortes
+- [ ] Probar detalle en tiempo real y cierre de evento
 
-### Fase 4 — Pedidos, pesaje y manos libres *(en desarrollo)*
+### F4 — Pedidos, pesaje y manos libres
 
-- [ ] Gestión de clientes reutilizables
-- [ ] Creación de pedidos con conversión `$ ↔ kg`
-- [ ] Estado granular por línea
-- [ ] Cola consolidada por corte
-- [ ] Inventario dinámico con transacciones
-- [ ] Cuenta acumulada por cliente
-- [ ] Disparador Bluetooth y confirmación por TTS
-- [ ] Reconocimiento de voz y comandos contextuales
+**Modelo y pedidos**
+- [ ] Definir modelo de pedido y línea de pedido
+- [ ] Implementar alta, edición y búsqueda de clientes
+- [ ] Implementar gestión de clientes y captura de pedidos
+- [ ] Implementar creación y edición controlada de pedidos
+- [ ] Implementar conversión automática entre pesos y kilogramos
+- [ ] Implementar validaciones de cantidades y subtotales
+- [ ] Mostrar peso objetivo para pedidos expresados en pesos
 
-### Fase 5 — Capa financiera
+**Cola y pesado**
+- [ ] Diseñar cola operativa agrupada por corte
+- [ ] Implementar consultas para cola consolidada
+- [ ] Completar cola de pesado por corte y estados por línea
+- [ ] Implementar estados parciales de procesamiento por línea
+- [ ] Implementar confirmación idempotente del pesado
+- [ ] Implementar corrección trazable de un pesado
 
-- [ ] Registro de gastos
-- [ ] Cálculo de ventas y utilidad neta
-- [ ] Reportes operativos
-- [ ] Indicadores de rendimiento
+**Entregas y pagos**
+- [ ] Implementar estado de entrega por línea
+- [ ] Implementar entregas, pagos y cuenta por cliente
+- [ ] Implementar pagos parciales, anticipos y saldos
+- [ ] Crear historial de pagos y cambios
 
-### Fase 6 — Inteligencia y automatización
+**Manos libres**
+- [ ] Probar funcionamiento del botón Bluetooth HID
+- [ ] Validar vibración y anuncio TTS
+- [ ] Validar flujo manos libres con botón Bluetooth y TTS
+- [ ] Implementar reconocimiento de voz contextual
+- [ ] Implementar comandos de voz seguros
 
-- [ ] Recomendaciones operativas
-- [ ] Detección de patrones
-- [ ] Predicción de demanda
-- [ ] Alertas contextuales
-- [ ] Análisis histórico
+### F5 — Capa financiera, validación y extensibilidad
 
-### Fase 7 — Extensibilidad
+**Finanzas y reportes**
+- [ ] Implementar registro de gastos por evento
+- [ ] Calcular ventas, cobros, deuda y utilidad neta
+- [ ] Implementar gastos, utilidad neta y reporte del evento
+- [ ] Crear reporte operativo del evento
+- [ ] Exportar o compartir reporte
+
+**Validación y beta**
+- [ ] Crear plan de pruebas de extremo a extremo
+- [ ] Probar concurrencia desde varios dispositivos
+- [ ] Preparar versión beta y notas de limitaciones
+
+**Automatización y extensibilidad**
+- [ ] Definir métricas históricas para automatización
+- [ ] Evaluar recomendaciones y alertas operativas
+- [ ] Separar conceptos genéricos y específicos del dominio
+- [ ] Evaluar un segundo caso de uso físico
+
+### Visión a futuro
 
 La arquitectura está planteada para que el dominio inicial pueda evolucionar hacia otros contextos con un flujo físico similar:
 
@@ -662,8 +708,9 @@ ARRAX permite explorar problemas de ingeniería que van más allá de un CRUD tr
 * **Atomicidad.** Crear un evento implica varios documentos que deben escribirse juntos.
 * **Estados parciales.** Un pedido no termina de procesarse de forma simultánea; el estado vive en la línea.
 * **Estados independientes.** Entrega y pago se modelan por separado.
-* **Multi-tenencia.** El aislamiento se resuelve en la estructura de datos y no depende de filtros en la interfaz.
+* **Multi-tenencia.** El aislamiento se resuelve en la estructura de datos y se refuerza con reglas de seguridad; no depende de filtros en la interfaz.
 * **Trabajo sin conexión.** El negocio opera en condiciones de conectividad variable, por lo que la app se apoya en la caché de Firestore.
+* **Concurrencia.** Varios dispositivos pueden operar sobre el mismo evento al mismo tiempo.
 * **Diseño contextual.** La interfaz se diseña para las condiciones físicas donde se usa.
 * **Interacción asistida.** La voz y el botón físico convierten la app en una interfaz multimodal.
 
@@ -674,6 +721,7 @@ ARRAX permite explorar problemas de ingeniería que van más allá de un CRUD tr
 * Con `enableEdgeToEdge()`, cada pantalla debe manejar sus propios insets; un `Scaffold` extra en la actividad duplica el relleno.
 * Registrar las rutas de navegación antes de habilitar los botones que llevan a ellas evita cierres por rutas inexistentes.
 * Modelar el tenant en la ruta de Firestore mantiene el dominio limpio.
+* Un fondo animado de paisaje resultó costoso en recursos; un fondo estático con formas orgánicas ofrece identidad visual sin ese costo.
 
 ---
 
@@ -730,11 +778,13 @@ La dirección visual utiliza neominimalismo suave, glassmorphism sutil, alto con
 
 La documentación técnica del proyecto incluye requerimientos, arquitectura, modelo de datos, flujo operativo, diseño de interfaz, roadmap y decisiones técnicas.
 
+Los diagramas (navegación, flujos y modelo de datos) se encuentran **en elaboración** y se publicarán al cerrar la F0.
+
 ---
 
 ## Estado
 
-**En desarrollo activo.** Las fases 0 a 3 están implementadas. Algunas capacidades descritas en este documento pertenecen al roadmap y aún no están disponibles.
+**En desarrollo activo. Fase actual: F1 — Autenticación.** La F0 está en cierre y las fases F2 y F3 tienen una implementación inicial pendiente de validación. Las capacidades de F4 en adelante pertenecen al roadmap y aún no están disponibles.
 
 ---
 

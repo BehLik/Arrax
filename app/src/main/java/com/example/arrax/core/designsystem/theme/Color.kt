@@ -22,6 +22,7 @@ object ArxBrand {
 // LIGHT — Default
 // -----------------------------------------------------------------------------
 
+//val primaryLight = Color(0xFF0B1412)
 val primaryLight = Color(0xFF00C896)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFE6FFF4)
