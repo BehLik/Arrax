@@ -29,6 +29,7 @@ object ArxWordmarkDefaults {
 
     /** Colores originales del XML: texto y triángulo de la "A". */
     val AssetText = Color(0xFF16292B)
+//    val AssetAccent = Color(0xFFFFFFFF)
     val AssetAccent = Color(0xFF0BAA91)
 }
 

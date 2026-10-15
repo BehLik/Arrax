@@ -35,11 +35,11 @@ fun EventDetailScreen(
             // PENDIENTE: onBackClick no existe en tu ArxTopBar real. Necesito el
             // nombre real del callback de "atras" (o si se maneja distinto, p. ej.
             // via navigationType + un solo callback) para dejar esto compilable.
-            ArxTopBar(
-                title = state.eventWithCuts?.event?.name ?: "Evento",
-                navigationType = ArxTopBarNavigationType.BACK,
-                onNavigationClick = onBack
-            )
+//            ArxTopBar(
+//                title = state.eventWithCuts?.event?.name ?: "Evento",
+//                navigationType = ArxTopBarNavigationType.BACK,
+//                onNavigationClick = onBack
+//            )
         }
     ) { padding ->
         Box(modifier = Modifier.fillMaxSize().padding(padding)) {

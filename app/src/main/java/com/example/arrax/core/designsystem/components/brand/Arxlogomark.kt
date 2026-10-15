@@ -30,6 +30,8 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -56,6 +58,13 @@ object ArxLogoMarkDefaults {
 
     @Composable
     fun glow(): Float = if (isDark()) 0.35f else 0f
+
+    /**
+     * Color del chevron exterior cuando NO hay contenedor:
+     * oscuro en Light (contraste sobre fondo claro), Unspecified = original (blanco) en Dark.
+     */
+    @Composable
+    fun outerColor(): Color = if (isDark()) Color.Unspecified else ArxBrand.Forest
 }
 
 @Composable
@@ -69,20 +78,31 @@ fun ArxLogoMark(
     glow: Float = ArxLogoMarkDefaults.glow(),
     glowColor: Color = ArxBrand.Primary,
     contentPadding: Float = ArxLogoMarkDefaults.ContentPadding,
-    animatedSweep: Boolean = true, // ← Nuevo parámetro para apagar/encender el barrido
+    animatedSweep: Boolean = true,
+    outerColor: Color = ArxLogoMarkDefaults.outerColor(), // solo aplica con withContainer = false
     contentDescription: String? = null,
 ) {
-    val painter = painterResource(R.drawable.logo_mark)
-
     if (!withContainer) {
-        Image(
-            painter = painter,
-            contentDescription = contentDescription,
-            contentScale = ContentScale.Fit,
+        // Dos capas para teñir solo el chevron exterior sin tocar el interior verde.
+        Box(
             modifier = modifier
                 .height(size)
                 .aspectRatio(ArxLogoMarkDefaults.Aspect),
-        )
+        ) {
+            Image(
+                painter = painterResource(R.drawable.logo_mark_inner),
+                contentDescription = contentDescription,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.fillMaxSize(),
+            )
+            Image(
+                painter = painterResource(R.drawable.logo_mark_outer),
+                contentDescription = null,
+                contentScale = ContentScale.Fit,
+                colorFilter = if (outerColor.isSpecified) ColorFilter.tint(outerColor) else null,
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
     } else {
         val borderBrush = Brush.linearGradient(
             listOf(borderColor, borderColor.copy(alpha = borderColor.alpha * 0.35f), borderColor)
@@ -93,12 +113,12 @@ fun ArxLogoMark(
                 .arxGlow(glow, glowColor)
                 .clip(shape)
                 .background(containerColor)
-                .arxSweepLight(glowColor, enabled = animatedSweep && glow > 0f) // ← Inyección del barrido
+                .arxSweepLight(glowColor, enabled = animatedSweep && glow > 0f)
                 .border(1.dp, borderBrush, shape),
             contentAlignment = Alignment.Center,
         ) {
             Image(
-                painter = painter,
+                painter = painterResource(R.drawable.logo_mark),
                 contentDescription = contentDescription,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
@@ -116,12 +136,12 @@ private fun Modifier.arxSweepLight(color: Color, enabled: Boolean): Modifier =
         val transition = rememberInfiniteTransition(label = "arxSweep")
         val progress by transition.animateFloat(
             initialValue = -0.5f,
-            targetValue = 1.5f, // Va más allá de 1.0 para que el barrido salga completamente del contenedor
+            targetValue = 1.5f, // más allá de 1.0 para que el barrido salga completo del contenedor
             animationSpec = infiniteRepeatable(
                 animation = tween(4000, easing = LinearEasing),
-                repeatMode = RepeatMode.Restart // Reinicia el barrido desde arriba a la izquierda
+                repeatMode = RepeatMode.Restart,
             ),
-            label = "sweepProgress"
+            label = "sweepProgress",
         )
 
         drawWithCache {
@@ -133,11 +153,11 @@ private fun Modifier.arxSweepLight(color: Color, enabled: Boolean): Modifier =
             val sweepBrush = Brush.linearGradient(
                 colors = listOf(
                     Color.Transparent,
-                    color.copy(alpha = 0.40f), // Intensidad de la franja de luz central
-                    Color.Transparent
+                    color.copy(alpha = 0.40f),
+                    Color.Transparent,
                 ),
                 start = Offset(posX - w * 0.4f, posY - h * 0.4f),
-                end = Offset(posX + w * 0.4f, posY + h * 0.4f)
+                end = Offset(posX + w * 0.4f, posY + h * 0.4f),
             )
 
             onDrawBehind {
@@ -170,11 +190,13 @@ private fun ArxLogoMarkPreviewLight() {
     ArxTheme {
         Row(
             Modifier.padding(ArxSpacing.xl),
-            horizontalArrangement = Arrangement.spacedBy(ArxSpacing.md)
+            horizontalArrangement = Arrangement.spacedBy(ArxSpacing.md),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             ArxLogoMark(size = 40.dp, shape = ArxShapes.small)
             ArxLogoMark(size = 72.dp, shape = ArxShapes.medium)
             ArxLogoMark(size = 112.dp)
+            ArxLogoMark(size = 72.dp, withContainer = false) // chevron exterior oscuro
         }
     }
 }
@@ -186,13 +208,14 @@ private fun ArxLogoMarkPreviewDark() {
         Row(
             Modifier
                 .background(MaterialTheme.colorScheme.background)
-                .padding(32.dp),
-            horizontalArrangement = Arrangement.spacedBy(24.dp),
+                .padding(ArxSpacing.xl),
+            horizontalArrangement = Arrangement.spacedBy(ArxSpacing.lg),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             ArxLogoMark(size = 40.dp, shape = ArxShapes.small)
             ArxLogoMark(size = 72.dp, shape = ArxShapes.medium)
             ArxLogoMark(size = 112.dp)
+            ArxLogoMark(size = 72.dp, withContainer = false) // chevron exterior blanco
         }
     }
 }

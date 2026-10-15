@@ -1,6 +1,5 @@
 package com.example.arrax.ui.screen.auth.register
 
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -14,9 +13,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
+import com.example.arrax.core.designsystem.theme.ArxTheme
 import com.example.arrax.ui.screen.auth.register.component.RegisterActions
 import com.example.arrax.ui.screen.auth.register.component.RegisterForm
 import com.example.arrax.ui.screen.auth.register.component.RegisterHeader
@@ -29,6 +30,27 @@ fun AuthRegisterScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    AuthRegisterContent(
+        uiState = uiState,
+        onNameChange = viewModel::onNameChange,
+        onEmailChange = viewModel::onEmailChange,
+        onPasswordChange = viewModel::onPasswordChange,
+        onConfirmPasswordChange = viewModel::onConfirmPasswordChange,
+        onRegisterClick = { viewModel.register(onRegisterSuccess) },
+        onLoginClick = onNavigateToLogin
+    )
+}
+
+@Composable
+internal fun AuthRegisterContent(
+    uiState: AuthRegisterState, // Asegúrate de que este sea el nombre de tu clase de estado
+    onNameChange: (String) -> Unit,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onConfirmPasswordChange: (String) -> Unit,
+    onRegisterClick: () -> Unit,
+    onLoginClick: () -> Unit
+) {
     ArxBackground {
         Column(
             modifier = Modifier
@@ -50,10 +72,10 @@ fun AuthRegisterScreen(
                 emailError = uiState.emailError,
                 passwordError = uiState.passwordError,
                 confirmPasswordError = uiState.confirmPasswordError,
-                onNameChange = viewModel::onNameChange,
-                onEmailChange = viewModel::onEmailChange,
-                onPasswordChange = viewModel::onPasswordChange,
-                onConfirmPasswordChange = viewModel::onConfirmPasswordChange
+                onNameChange = onNameChange,
+                onEmailChange = onEmailChange,
+                onPasswordChange = onPasswordChange,
+                onConfirmPasswordChange = onConfirmPasswordChange
             )
 
             uiState.errorGeneral?.let { message ->
@@ -66,9 +88,34 @@ fun AuthRegisterScreen(
             RegisterActions(
                 isLoading = uiState.isLoading,
                 isButtonEnabled = !uiState.isLoading,
-                onRegisterClick = { viewModel.register(onRegisterSuccess) },
-                onLoginClick = onNavigateToLogin
+                onRegisterClick = onRegisterClick,
+                onLoginClick = onLoginClick
             )
         }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun AuthRegisterScreenPreview() {
+    // Aquí puedes simular el estado inicial o con datos de prueba
+    val previewState = AuthRegisterState(
+        name = "",
+        email = "",
+        password = "",
+        confirmPassword = "",
+        isLoading = false
+    )
+
+    ArxTheme {
+        AuthRegisterContent(
+            uiState = previewState,
+            onNameChange = {},
+            onEmailChange = {},
+            onPasswordChange = {},
+            onConfirmPasswordChange = {},
+            onRegisterClick = {},
+            onLoginClick = {}
+        )
     }
 }

@@ -22,7 +22,7 @@ object ArxIcons {
     // ============================================================
     // NAVEGACIÓN
     // ============================================================
-
+    val Menu = R.drawable.ic_menu
     /** Regresa a la pantalla anterior. */
     val Back = R.drawable.ic_arrow_back
 

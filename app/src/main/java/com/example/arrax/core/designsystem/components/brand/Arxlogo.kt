@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
+import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
 
@@ -55,9 +56,10 @@ fun ArxTagline(
 /**
  * Logo completo = [ArxLogoMark] + [ArxWordmark] + [ArxTagline], cada pieza apagable.
  *
- * @param markSize      tamaño base; el wordmark y el tagline se escalan a partir de él.
- * @param withContainer contenedor oscuro alrededor del isotipo (Stacked sí, Horizontal no).
- *                      Sin contenedor el isotipo solo se ve sobre fondo oscuro.
+ * @param markSize       tamaño base; el wordmark y el tagline se escalan a partir de él.
+ * @param withContainer  contenedor oscuro alrededor del isotipo (Stacked sí, Horizontal no).
+ * @param markOuterColor color del chevron exterior cuando no hay contenedor. Por defecto es
+ *                       oscuro en Light y blanco en Dark (ver [ArxLogoMarkDefaults.outerColor]).
  *
  * Para un banner siempre oscuro en modo Light, envuélvelo en `ArxTheme(darkTheme = true) { … }`.
  */
@@ -75,6 +77,7 @@ fun ArxLogo(
     accentColor: Color = MaterialTheme.colorScheme.primary,
     taglineColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     glow: Float = ArxLogoMarkDefaults.glow(),
+    markOuterColor: Color = ArxLogoMarkDefaults.outerColor(),
 ) {
     val stackedGap = ArxSpacing.sm
     val horizontalGap = ArxSpacing.md
@@ -82,10 +85,15 @@ fun ArxLogo(
     val taglineStyle = MaterialTheme.typography.labelMedium.copy(
         fontSize = (markSize.value * 0.13f).coerceIn(10f, 16f).sp
     )
-    val description = if (showTagline) "Arrax. $tagline" else "Arrax"
+    val description = if (showTagline) "ARRAX. $tagline" else "ARRAX"
 
     val mark: @Composable () -> Unit = {
-        ArxLogoMark(size = markSize, withContainer = withContainer, glow = glow)
+        ArxLogoMark(
+            size = markSize,
+            withContainer = withContainer,
+            glow = glow,
+            outerColor = markOuterColor,
+        )
     }
 
     when (layout) {
@@ -142,7 +150,7 @@ fun ArxLogo(
 @Composable
 private fun ArxLogoPreviewStackedLight() {
     ArxTheme {
-        ArxBackground(showMountains = true, animated = true) {
+        ArxBackground(decoration = ArxDecoration.None) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { ArxLogo() }
         }
     }
@@ -152,7 +160,7 @@ private fun ArxLogoPreviewStackedLight() {
 @Composable
 private fun ArxLogoPreviewStackedDark() {
     ArxTheme(darkTheme = true) {
-        ArxBackground(showMountains = true, animated = true) {
+        ArxBackground(decoration = ArxDecoration.None) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { ArxLogo() }
         }
     }
@@ -162,7 +170,7 @@ private fun ArxLogoPreviewStackedDark() {
 @Composable
 private fun ArxLogoPreviewHorizontalDark() {
     ArxTheme(darkTheme = true) {
-        ArxBackground(showMountains = false, animated = false) {
+        ArxBackground(decoration = ArxDecoration.Mountains) {
             Column(
                 Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(ArxSpacing.xxl, Alignment.CenterVertically),
@@ -171,6 +179,22 @@ private fun ArxLogoPreviewHorizontalDark() {
                 ArxLogo(layout = ArxLogoLayout.Horizontal, markSize = 64.dp)
                 // Variante compacta tipo top bar del Lobby: sin tagline.
                 //ArxLogo(layout = ArxLogoLayout.Horizontal, markSize = 28.dp, showTagline = false)
+            }
+        }
+    }
+}
+
+@Preview(name = "Logo Horizontal - Light", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+private fun ArxLogoPreviewHorizontalLight() {
+    ArxTheme(darkTheme = false) {
+        ArxBackground(decoration = ArxDecoration.Mountains) {
+            Column(
+                Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(ArxSpacing.xxl, Alignment.CenterVertically),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                ArxLogo(layout = ArxLogoLayout.Horizontal, markSize = 64.dp)
             }
         }
     }

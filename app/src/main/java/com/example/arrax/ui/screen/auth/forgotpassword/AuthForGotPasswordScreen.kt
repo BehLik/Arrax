@@ -14,12 +14,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
 import com.example.arrax.core.designsystem.components.buttons.ArxPrimaryButton
-import com.example.arrax.core.designsystem.components.buttons.ArxSecondaryButton
 import com.example.arrax.core.designsystem.components.inputs.ArxTextField
+import com.example.arrax.core.designsystem.theme.ArxTheme
 
 @Composable
 fun AuthForGotPasswordScreen(
@@ -28,6 +29,21 @@ fun AuthForGotPasswordScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    AuthForGotPasswordContent(
+        uiState = uiState,
+        onEmailChange = viewModel::onEmailChange,
+        onSendReset = viewModel::sendReset,
+        onNavigateBackToLogin = onNavigateBackToLogin
+    )
+}
+
+@Composable
+internal fun AuthForGotPasswordContent(
+    uiState: AuthForGotPasswordState, // Asegúrate de que este sea el nombre de tu clase de estado
+    onEmailChange: (String) -> Unit,
+    onSendReset: () -> Unit,
+    onNavigateBackToLogin: () -> Unit
+) {
     ArxBackground {
         Column(
             modifier = Modifier
@@ -58,7 +74,7 @@ fun AuthForGotPasswordScreen(
             } else {
                 ArxTextField(
                     value = uiState.email,
-                    onValueChange = viewModel::onEmailChange,
+                    onValueChange = onEmailChange,
                     label = "Correo",
                     isError = uiState.emailError != null,
                     errorMessage = uiState.emailError
@@ -73,10 +89,42 @@ fun AuthForGotPasswordScreen(
 
                 ArxPrimaryButton(
                     text = if (uiState.isLoading) "Enviando..." else "Enviar enlace",
-                    onClick = viewModel::sendReset,
+                    onClick = onSendReset,
                     enabled = uiState.email.isNotBlank() && !uiState.isLoading
                 )
             }
         }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun AuthForGotPasswordScreenPreview() {
+    ArxTheme {
+        AuthForGotPasswordContent(
+            uiState = AuthForGotPasswordState(
+                email = "usuario@example.com",
+                isLoading = false,
+                isSent = false
+            ),
+            onEmailChange = {},
+            onSendReset = {},
+            onNavigateBackToLogin = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun AuthForGotPasswordSentScreenPreview() {
+    ArxTheme {
+        AuthForGotPasswordContent(
+            uiState = AuthForGotPasswordState(
+                isSent = true
+            ),
+            onEmailChange = {},
+            onSendReset = {},
+            onNavigateBackToLogin = {}
+        )
     }
 }

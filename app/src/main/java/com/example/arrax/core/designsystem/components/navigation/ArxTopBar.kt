@@ -1,24 +1,40 @@
 package com.example.arrax.core.designsystem.components.navigation
 
+import android.content.res.Configuration
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.example.arrax.core.designsystem.icons.ArxIcons
+import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
 
+/**
+ * Barra superior minimalista: navegación + título + acciones opcionales. Sin sombras ni títulos gigantes.
+ *
+ * @param titleIconRes icono opcional a la izquierda del título (ej. el recibo de Pedidos).
+ * @param scrollBehavior opcional, para que la barra reaccione al scroll.
+ * Para las acciones usa [ArxTopBarAction] (cada una mide 48dp).
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArxTopBar(
@@ -27,10 +43,13 @@ fun ArxTopBar(
     centeredTitle: Boolean = true,
     navigationType: ArxTopBarNavigationType = ArxTopBarNavigationType.NONE,
     onNavigationClick: () -> Unit = {},
-    actions: @Composable RowScope.() -> Unit = {}
+    actions: @Composable RowScope.() -> Unit = {},
+    titleIconRes: Int? = null,
+    scrollBehavior: TopAppBarScrollBehavior? = null
 ) {
     val colors = TopAppBarDefaults.topAppBarColors(
         containerColor = MaterialTheme.colorScheme.background,
+        scrolledContainerColor = MaterialTheme.colorScheme.background,
         titleContentColor = MaterialTheme.colorScheme.onBackground,
         navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
         actionIconContentColor = MaterialTheme.colorScheme.primary
@@ -41,7 +60,7 @@ fun ArxTopBar(
             ArxTopBarNavigationType.BACK -> {
                 IconButton(onClick = onNavigationClick) {
                     Icon(
-                        imageVector = Icons.Default.ArrowBack, // Puedes cambiarlo a ArxIcons.ChevronLeft
+                        painter = painterResource(id = ArxIcons.Back),
                         contentDescription = "Volver"
                     )
                 }
@@ -49,7 +68,7 @@ fun ArxTopBar(
             ArxTopBarNavigationType.MENU -> {
                 IconButton(onClick = onNavigationClick) {
                     Icon(
-                        imageVector = Icons.Default.Menu, // Puedes cambiarlo a ArxIcons.Menu
+                        painter = painterResource(id = ArxIcons.Menu),
                         contentDescription = "Menú principal"
                     )
                 }
@@ -59,12 +78,23 @@ fun ArxTopBar(
     }
 
     val titleContent: @Composable () -> Unit = {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            if (titleIconRes != null) {
+                Icon(
+                    painter = painterResource(id = titleIconRes),
+                    contentDescription = null, // decorativo: el título ya lo describe
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.width(ArxSpacing.xs))
+            }
+            Text(
+                text = title,
+                style = MaterialTheme.typography.headlineMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
     }
 
     if (centeredTitle) {
@@ -73,7 +103,8 @@ fun ArxTopBar(
             modifier = modifier,
             navigationIcon = navigationIcon,
             actions = actions,
-            colors = colors
+            colors = colors,
+            scrollBehavior = scrollBehavior
         )
     } else {
         TopAppBar(
@@ -81,7 +112,8 @@ fun ArxTopBar(
             modifier = modifier,
             navigationIcon = navigationIcon,
             actions = actions,
-            colors = colors
+            colors = colors,
+            scrollBehavior = scrollBehavior
         )
     }
 }
@@ -90,14 +122,56 @@ enum class ArxTopBarNavigationType {
     NONE, BACK, MENU
 }
 
-@Preview(showBackground = true)
+/** Acción de icono para el slot `actions` de [ArxTopBar] (ej. Buscar). Siempre lleva descripción. */
 @Composable
-fun ArxTopBarPreview() {
-    ArxTheme {
-        ArxTopBar(
-            title = "Extracción de Cortes",
-            navigationType = ArxTopBarNavigationType.BACK,
-            centeredTitle = true
+fun ArxTopBarAction(
+    iconRes: Int,
+    contentDescription: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    IconButton(onClick = onClick, modifier = modifier) {
+        Icon(
+            painter = painterResource(id = iconRes),
+            contentDescription = contentDescription
         )
     }
 }
+
+// ───────────────────────── Previews (Light / Dark) ─────────────────────────
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ArxTopBarPreviewContent() {
+    ArxTheme {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            Column {
+                ArxTopBar(
+                    title = "Pedidos",
+                    navigationType = ArxTopBarNavigationType.BACK,
+                    titleIconRes = ArxIcons.Invoice,
+                    centeredTitle = false,
+                    actions = {
+                        ArxTopBarAction(
+                            iconRes = ArxIcons.Search,
+                            contentDescription = "Buscar",
+                            onClick = {}
+                        )
+                    }
+                )
+                ArxTopBar(
+                    title = "Extracción de cortes",
+                    navigationType = ArxTopBarNavigationType.MENU
+                )
+            }
+        }
+    }
+}
+
+@Preview(name = "TopBar – Light", showBackground = false)
+@Composable
+fun ArxTopBarPreviewLight() = ArxTopBarPreviewContent()
+
+@Preview(name = "TopBar – Dark", showBackground = false, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun ArxTopBarPreviewDark() = ArxTopBarPreviewContent()

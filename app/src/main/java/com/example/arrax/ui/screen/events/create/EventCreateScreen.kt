@@ -3,6 +3,7 @@ package com.example.arrax.ui.screen.events.create
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,7 +19,7 @@ import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.ui.screen.events.create.component.EventBasicDataStep
 import com.example.arrax.ui.screen.events.create.component.EventCutsPriceStep
 import com.example.arrax.ui.screen.events.create.component.EventCutsSelectionStep
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EventCreateScreen(
     onBack: () -> Unit,
