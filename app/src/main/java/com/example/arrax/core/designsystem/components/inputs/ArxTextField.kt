@@ -14,6 +14,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
@@ -40,7 +41,8 @@ fun ArxTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     enabled: Boolean = true,
-    readOnly: Boolean = false
+    readOnly: Boolean = false,
+    visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
     val glass = MaterialTheme.extendedColors.glass
     val disabled = MaterialTheme.extendedColors.disabled
@@ -52,6 +54,7 @@ fun ArxTextField(
         modifier = modifier.fillMaxWidth(),
         enabled = enabled,
         readOnly = readOnly,
+        visualTransformation = visualTransformation,
         label = { Text(text = label, style = MaterialTheme.typography.bodyMedium) },
         placeholder = if (placeholder != null) {
             { Text(text = placeholder, style = MaterialTheme.typography.bodyMedium) }

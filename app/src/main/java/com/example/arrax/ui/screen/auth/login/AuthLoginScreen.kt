@@ -15,15 +15,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
 import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
+import com.example.arrax.core.designsystem.components.brand.ArxLogo
+import com.example.arrax.core.designsystem.components.brand.ArxLogoLayout
+import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
 import com.example.arrax.ui.screen.auth.login.component.LoginActions
 import com.example.arrax.ui.screen.auth.login.component.LoginForm
-import com.example.arrax.ui.screen.auth.login.component.LoginHeader
-import com.google.firebase.encoders.config.Configurator
 
 @Composable
 fun AuthLoginScreen(
@@ -34,11 +34,12 @@ fun AuthLoginScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    AuthLoginScreenPreviewContent(
+    AuthLoginContent(
         email = uiState.email,
         password = uiState.password,
         emailError = uiState.emailError,
-        errorMessage = uiState.passwordError ?: uiState.errorGeneral,
+        passwordError = uiState.passwordError,
+        generalError = uiState.errorGeneral,
         isLoading = uiState.isLoading,
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
@@ -49,11 +50,12 @@ fun AuthLoginScreen(
 }
 
 @Composable
-private fun AuthLoginScreenPreviewContent(
+private fun AuthLoginContent(
     email: String,
     password: String,
     emailError: String?,
-    errorMessage: String?,
+    passwordError: String?,
+    generalError: String?,
     isLoading: Boolean,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
@@ -65,38 +67,37 @@ private fun AuthLoginScreenPreviewContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 24.dp),
+                .padding(horizontal = ArxSpacing.xl),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            LoginHeader()
+            ArxLogo(layout = ArxLogoLayout.Stacked)
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(Modifier.height(ArxSpacing.huge))
 
             LoginForm(
                 email = email,
                 password = password,
                 emailError = emailError,
-                errorMessage = errorMessage,
+                passwordError = passwordError,
                 onEmailChange = onEmailChange,
                 onPasswordChange = onPasswordChange
             )
 
-            if (errorMessage != null) {
-                Spacer(modifier = Modifier.height(12.dp))
+            if (generalError != null) {
+                Spacer(Modifier.height(ArxSpacing.sm))
                 Text(
-                    text = errorMessage,
-                    color = MaterialTheme.colorScheme.error
+                    text = generalError,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall
                 )
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(Modifier.height(ArxSpacing.xxl))
 
             LoginActions(
                 isLoading = isLoading,
-                isButtonEnabled = email.isNotBlank() &&
-                        password.isNotBlank() &&
-                        !isLoading,
+                isButtonEnabled = email.isNotBlank() && password.isNotBlank(),
                 onLoginClick = onLoginClick,
                 onRegisterClick = onRegisterClick,
                 onForgotClick = onForgotClick
@@ -106,50 +107,41 @@ private fun AuthLoginScreenPreviewContent(
 }
 
 @Preview(
-    name = "Arrax - Login",
+    name = "Arrax - Login Dark",
     showBackground = true,
     showSystemUi = true,
     device = "spec:width=393dp,height=852dp,dpi=440",
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
-private fun AuthLoginScreenPreview() {
-    ArxTheme {
-        AuthLoginScreenPreviewContent(
-            email = "",
-            password = "12345678",
-            emailError = null,
-            errorMessage = null,
+private fun AuthLoginDarkPreview() {
+    ArxTheme(darkTheme = true) {
+        AuthLoginContent(
+            email = "", password = "12345678",
+            emailError = null, passwordError = null, generalError = null,
             isLoading = false,
-            onEmailChange = {},
-            onPasswordChange = {},
-            onLoginClick = {},
-            onRegisterClick = {},
-            onForgotClick = {}
+            onEmailChange = {}, onPasswordChange = {},
+            onLoginClick = {}, onRegisterClick = {}, onForgotClick = {}
         )
     }
 }
+
 @Preview(
-    name = "Arrax - Login",
+    name = "Arrax - Login Light",
     showBackground = true,
     showSystemUi = true,
     device = "spec:width=393dp,height=852dp,dpi=440",
     uiMode = Configuration.UI_MODE_NIGHT_NO
 )
 @Composable
-private fun AuthLoginScreen2Preview() {
+private fun AuthLoginLightPreview() {
     ArxTheme {
-        AuthLoginScreenPreviewContent(
-            email = "usuario@arrax.com",
-            password = "12345678",
-            emailError = null,
-            errorMessage = null,
+        AuthLoginContent(
+            email = "usuario@arrax.com", password = "12345678",
+            emailError = null, passwordError = null, generalError = null,
             isLoading = false,
-            onEmailChange = {},
-            onPasswordChange = {},
-            onLoginClick = {},
-            onRegisterClick = {},
-            onForgotClick = {}
+            onEmailChange = {}, onPasswordChange = {},
+            onLoginClick = {}, onRegisterClick = {}, onForgotClick = {}
         )
     }
 }

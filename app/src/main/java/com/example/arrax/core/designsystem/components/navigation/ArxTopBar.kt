@@ -1,7 +1,6 @@
 package com.example.arrax.core.designsystem.components.navigation
 
 import android.content.res.Configuration
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,9 +33,11 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.arrax.core.designsystem.components.brand.ArxLogoMark
 import com.example.arrax.core.designsystem.components.feedback.ArxConnectionIndicator
 import com.example.arrax.core.designsystem.components.feedback.ArxConnectionStatus
 import com.example.arrax.core.designsystem.icons.ArxIcons
+import com.example.arrax.core.designsystem.theme.ArxShapes
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
 
@@ -56,14 +57,8 @@ object ArxTopBarDefaults {
 /**
  * Barra superior de Arrax.
  *
- * DEFAULT (por defecto): compacta, con navegación + título + acciones. Es lo que ya usabas.
- *
- * MENU (solo Lobby): cabecera alta con [logoRes], el nombre ([title], normalmente "Arrax"),
- * el [subtitle] y, si pasas [connectionStatus], el indicador de conectividad al final.
- * En esta variante se ignoran [navigationType], [centeredTitle], [titleIconRes] y [scrollBehavior]:
- * el Lobby es la raíz y la cabecera es fija. [actions] se muestra después del indicador.
- *
- * [connectionStatus] llega ya resuelto desde el ViewModel; la barra no consulta la red.
+ * @param variant DEFAULT para pantallas secundarias, MENU para la cabecera principal del Lobby.
+ * @param connectionStatus llega ya resuelto desde el ViewModel; la barra no consulta la red.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -78,14 +73,12 @@ fun ArxTopBar(
     scrollBehavior: TopAppBarScrollBehavior? = null,
     variant: ArxTopBarVariant = ArxTopBarVariant.DEFAULT,
     subtitle: String = ArxTopBarDefaults.MenuSubtitle,
-    logoRes: Int? = null,
     connectionStatus: ArxConnectionStatus? = null
 ) {
     if (variant == ArxTopBarVariant.MENU) {
         ArxMenuHeader(
             title = title,
             subtitle = subtitle,
-            logoRes = logoRes,
             connectionStatus = connectionStatus,
             actions = actions,
             modifier = modifier
@@ -128,7 +121,7 @@ fun ArxTopBar(
             if (titleIconRes != null) {
                 Icon(
                     painter = painterResource(id = titleIconRes),
-                    contentDescription = null, // decorativo: el título ya lo describe
+                    contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(24.dp)
                 )
@@ -163,13 +156,12 @@ fun ArxTopBar(
         )
     }
 }
-@OptIn(ExperimentalMaterial3Api::class)
+
 /** Cabecera alta del Lobby. Privada: se usa solo a través de ArxTopBar(variant = MENU). */
 @Composable
 private fun ArxMenuHeader(
     title: String,
     subtitle: String,
-    logoRes: Int?,
     connectionStatus: ArxConnectionStatus?,
     actions: @Composable RowScope.() -> Unit,
     modifier: Modifier = Modifier
@@ -183,14 +175,14 @@ private fun ArxMenuHeader(
             .padding(horizontal = ArxSpacing.md, vertical = ArxSpacing.sm),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (logoRes != null) {
-            Image(
-                painter = painterResource(id = logoRes),
-                contentDescription = null, // decorativo: "Arrax" ya está escrito al lado
-                modifier = Modifier.size(48.dp)
-            )
-            Spacer(modifier = Modifier.width(ArxSpacing.sm))
-        }
+        // Integración del componente de marca de Arrax
+        ArxLogoMark(
+            size = 48.dp,
+            shape = ArxShapes.medium,
+            animatedSweep = true,
+            withContainer = false
+        )
+        Spacer(modifier = Modifier.width(ArxSpacing.sm))
 
         Column(modifier = Modifier.weight(1f)) {
             Text(
@@ -246,11 +238,10 @@ private fun ArxTopBarPreviewContent() {
     ArxTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             Column {
-                // Lobby. logoRes es un marcador: pasa aquí tu logo real.
+                // Lobby con el logo de la app (ArxLogoMark) integrado automáticamente.
                 ArxTopBar(
                     title = "Arrax",
                     variant = ArxTopBarVariant.MENU,
-                    logoRes = ArxIcons.Lot,
                     connectionStatus = ArxConnectionStatus.Online,
                     actions = {
                         ArxTopBarAction(
@@ -263,10 +254,9 @@ private fun ArxTopBarPreviewContent() {
                 ArxTopBar(
                     title = "Arrax",
                     variant = ArxTopBarVariant.MENU,
-                    logoRes = ArxIcons.Lot,
                     connectionStatus = ArxConnectionStatus.Offline
                 )
-                // Pantalla secundaria (sin cambios).
+                // Pantalla secundaria.
                 ArxTopBar(
                     title = "Pedidos",
                     navigationType = ArxTopBarNavigationType.BACK,

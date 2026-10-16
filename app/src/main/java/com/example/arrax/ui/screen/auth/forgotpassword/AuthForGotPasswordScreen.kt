@@ -1,31 +1,33 @@
 package com.example.arrax.ui.screen.auth.forgotpassword
 
-import androidx.compose.foundation.layout.Arrangement
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
-import com.example.arrax.core.designsystem.components.buttons.ArxPrimaryButton
-import com.example.arrax.core.designsystem.components.inputs.ArxTextField
+import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
+import com.example.arrax.core.designsystem.components.navigation.ArxTopBar
+import com.example.arrax.core.designsystem.components.navigation.ArxTopBarNavigationType
+import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
+import com.example.arrax.ui.screen.auth.forgotpassword.component.ForGotPasswordActions
+import com.example.arrax.ui.screen.auth.forgotpassword.component.ForGotPasswordForm
+import com.example.arrax.ui.screen.auth.forgotpassword.component.ForGotPasswordHeader
 
 @Composable
 fun AuthForGotPasswordScreen(
     viewModel: AuthForGotPasswordViewmodel = hiltViewModel(),
-    onNavigateBackToLogin: () -> Unit
+    onNavigateBackToLogin: () -> Unit,
+    onNavigateBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -33,64 +35,55 @@ fun AuthForGotPasswordScreen(
         uiState = uiState,
         onEmailChange = viewModel::onEmailChange,
         onSendReset = viewModel::sendReset,
-        onNavigateBackToLogin = onNavigateBackToLogin
+        onNavigateBackToLogin = onNavigateBackToLogin,
+        onNavigateBack = onNavigateBack
     )
 }
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun AuthForGotPasswordContent(
-    uiState: AuthForGotPasswordState, // Asegúrate de que este sea el nombre de tu clase de estado
+    uiState: AuthForGotPasswordState,
     onEmailChange: (String) -> Unit,
     onSendReset: () -> Unit,
-    onNavigateBackToLogin: () -> Unit
+    onNavigateBackToLogin: () -> Unit,
+    onNavigateBack: () -> Unit
 ) {
-    ArxBackground {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "Recuperar contraseña",
-                style = MaterialTheme.typography.headlineSmall,
-                textAlign = TextAlign.Center
+    ArxBackground(decoration = ArxDecoration.Mountains) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            ArxTopBar(
+                title = "",
+                navigationType = ArxTopBarNavigationType.BACK,
+                onNavigationClick = onNavigateBack,
+                centeredTitle = false
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = ArxSpacing.xl) // Incrementado el padding lateral a xl (24.dp)
+            ) {
+                Spacer(modifier = Modifier.height(ArxSpacing.xl)) // Espacio después de la TopBar
 
-            if (uiState.isSent) {
-                Text(
-                    text = "Si el correo existe en nuestros registros, te enviamos un enlace para restablecer tu contraseña. Revisa tu bandeja de entrada (y spam).",
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-                ArxPrimaryButton(
-                    text = "Volver a iniciar sesión",
-                    onClick = onNavigateBackToLogin
-                )
-            } else {
-                ArxTextField(
-                    value = uiState.email,
-                    onValueChange = onEmailChange,
-                    label = "Correo",
-                    isError = uiState.emailError != null,
-                    errorMessage = uiState.emailError
+                ForGotPasswordHeader()
+
+                Spacer(modifier = Modifier.height(ArxSpacing.xxl)) // Espacio entre Header y Formulario (32.dp)
+
+                ForGotPasswordForm(
+                    email = uiState.email,
+                    emailError = uiState.emailError,
+                    errorGeneral = uiState.errorGeneral,
+                    isSent = uiState.isSent,
+                    onEmailChange = onEmailChange
                 )
 
-                uiState.errorGeneral?.let { message ->
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(text = message, color = MaterialTheme.colorScheme.error)
-                }
+                Spacer(modifier = Modifier.height(ArxSpacing.huge)) // Espacio entre Formulario y Botones (40.dp)
 
-                Spacer(modifier = Modifier.height(24.dp))
-
-                ArxPrimaryButton(
-                    text = if (uiState.isLoading) "Enviando..." else "Enviar enlace",
-                    onClick = onSendReset,
-                    enabled = uiState.email.isNotBlank() && !uiState.isLoading
+                ForGotPasswordActions(
+                    isLoading = uiState.isLoading,
+                    isSent = uiState.isSent,
+                    isButtonEnabled = uiState.email.isNotBlank(),
+                    onSendReset = onSendReset,
+                    onNavigateBackToLogin = onNavigateBackToLogin
                 )
             }
         }
@@ -99,32 +92,24 @@ internal fun AuthForGotPasswordContent(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun AuthForGotPasswordScreenPreview() {
+private fun AuthForGotPasswordLightPreview() {
     ArxTheme {
         AuthForGotPasswordContent(
-            uiState = AuthForGotPasswordState(
-                email = "usuario@example.com",
-                isLoading = false,
-                isSent = false
-            ),
-            onEmailChange = {},
-            onSendReset = {},
-            onNavigateBackToLogin = {}
+            uiState = AuthForGotPasswordState(email = "usuario@example.com"),
+            onEmailChange = {}, onSendReset = {},
+            onNavigateBackToLogin = {}, onNavigateBack = {}
         )
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun AuthForGotPasswordSentScreenPreview() {
-    ArxTheme {
+private fun AuthForGotPasswordDarkPreview() {
+    ArxTheme(darkTheme = true) {
         AuthForGotPasswordContent(
-            uiState = AuthForGotPasswordState(
-                isSent = true
-            ),
-            onEmailChange = {},
-            onSendReset = {},
-            onNavigateBackToLogin = {}
+            uiState = AuthForGotPasswordState(isSent = true),
+            onEmailChange = {}, onSendReset = {},
+            onNavigateBackToLogin = {}, onNavigateBack = {}
         )
     }
 }
