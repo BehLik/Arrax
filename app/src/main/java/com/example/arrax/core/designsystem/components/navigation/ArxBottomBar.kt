@@ -1,12 +1,11 @@
-
 package com.example.arrax.core.designsystem.components.navigation
 
 import android.content.res.Configuration
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -15,43 +14,63 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.selected
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import com.example.arrax.core.designsystem.components.feedback.ArxBadge
 import com.example.arrax.core.designsystem.icons.ArxIcons
+import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
+import com.example.arrax.core.designsystem.theme.extendedColors
 
+// Medidas del componente (no son colores ni espaciado de layout).
+private val BarHeight = 76.dp
+private val ItemHeight = 66.dp
+private val BarInnerPadding = 5.dp
+
+/**
+ * Elemento de la barra. [badgeCount] es opcional: con valor > 0 muestra una insignia
+ * sobre el icono (ej. pedidos pendientes).
+ */
 data class ArxBottomBarItem(
     val label: String,
     val iconRes: Int,
     val selectedIconRes: Int = iconRes,
-    val route: String
+    val route: String,
+    val badgeCount: Int = 0
 )
 
+/**
+ * Barra de navegación flotante: píldora sólida con borde sutil, sombra mínima y un
+ * indicador primaryContainer que se desliza entre rutas (sin rebote).
+ * Cada ítem mide 66dp de alto: cumple el touch target de 48dp.
+ */
 @Composable
 fun ArxBottomBar(
     items: List<ArxBottomBarItem>,
@@ -66,36 +85,25 @@ fun ArxBottomBar(
 
     val colorScheme = MaterialTheme.colorScheme
 
-    // Superficie flotante Soft UI.
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 12.dp),
+            .windowInsetsPadding(WindowInsets.navigationBars)
+            .padding(horizontal = ArxSpacing.lg, vertical = ArxSpacing.sm),
         contentAlignment = Alignment.Center
     ) {
         Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .shadow(
-                    elevation = 12.dp,
-                    shape = CircleShape,
-                    ambientColor = Color.Black.copy(alpha = 0.10f),
-                    spotColor = Color.Black.copy(alpha = 0.16f)
-                )
-                .border(
-                    width = 1.dp,
-                    color = colorScheme.outlineVariant.copy(alpha = 0.35f),
-                    shape = CircleShape
-                ),
+            modifier = Modifier.fillMaxWidth(),
             shape = CircleShape,
             color = colorScheme.surface,
-            tonalElevation = 2.dp
+            shadowElevation = 2.dp,
+            border = BorderStroke(1.dp, MaterialTheme.extendedColors.glassBorder)
         ) {
             BoxWithConstraints(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(76.dp)
-                    .padding(horizontal = 5.dp, vertical = 5.dp)
+                    .height(BarHeight)
+                    .padding(BarInnerPadding)
             ) {
                 val itemWidth = maxWidth / items.size
 
@@ -113,7 +121,7 @@ fun ArxBottomBar(
                     modifier = Modifier
                         .offset(x = indicatorOffset)
                         .width(itemWidth)
-                        .height(66.dp)
+                        .height(ItemHeight)
                         .clip(CircleShape)
                         .background(colorScheme.primaryContainer)
                 )
@@ -124,11 +132,9 @@ fun ArxBottomBar(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     items.forEachIndexed { index, item ->
-                        val isSelected = index == selectedIndex
-
                         ArxBottomBarItemContent(
                             item = item,
-                            isSelected = isSelected,
+                            isSelected = index == selectedIndex,
                             modifier = Modifier.weight(1f),
                             onClick = { onItemClick(item.route) }
                         )
@@ -154,17 +160,13 @@ private fun ArxBottomBarItemContent(
         colorScheme.onSurfaceVariant
     }
 
-    val interactionSource = remember {
-        MutableInteractionSource()
-    }
+    val interactionSource = remember { MutableInteractionSource() }
 
     Box(
         modifier = modifier
-            .height(66.dp)
+            .height(ItemHeight)
             .clip(CircleShape)
-            .semantics {
-                selected = isSelected
-            }
+            .semantics { selected = isSelected }
             .clickable(
                 interactionSource = interactionSource,
                 indication = null,
@@ -177,67 +179,76 @@ private fun ArxBottomBarItemContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Icon(
-                painter = painterResource(
-                    id = if (isSelected) {
-                        item.selectedIconRes
-                    } else {
-                        item.iconRes
-                    }
-                ),
-                contentDescription = null,
-                tint = contentColor,
-                modifier = Modifier.size(22.dp)
-            )
+            Box {
+                Icon(
+                    painter = painterResource(
+                        id = if (isSelected) item.selectedIconRes else item.iconRes
+                    ),
+                    contentDescription = null, // la etiqueta de abajo ya lo describe
+                    tint = contentColor,
+                    modifier = Modifier.size(22.dp)
+                )
+                if (item.badgeCount > 0) {
+                    ArxBadge(
+                        count = item.badgeCount,
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .offset(x = 10.dp, y = (-8).dp)
+                    )
+                }
+            }
 
-            Spacer(modifier = Modifier.height(3.dp))
+            Spacer(modifier = Modifier.height(ArxSpacing.xxs))
 
+            // El ítem activo se distingue por el indicador y el color, no por el peso del texto.
             Text(
                 text = item.label,
                 color = contentColor,
-                style = MaterialTheme.typography.labelSmall,
-                fontWeight = if (isSelected) {
-                    FontWeight.SemiBold
-                } else {
-                    FontWeight.Normal
-                },
-                maxLines = 1
+                style = MaterialTheme.typography.labelMedium,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }
 }
 
-@Preview(
-    showBackground = true,
-    name = "Arrax Bottom Bar · Dark",
-    uiMode = Configuration.UI_MODE_NIGHT_NO
-)
+// ───────────────────────── Previews (Light / Dark) ─────────────────────────
+
 @Composable
-private fun ArxBottomBarPreview() {
+private fun ArxBottomBarPreviewContent(darkTheme: Boolean) {
     val sampleItems = listOf(
         ArxBottomBarItem(
             label = "Inicio",
             iconRes = ArxIcons.HomeOutline,
+            selectedIconRes = ArxIcons.HomeFilled,
             route = "home"
         ),
         ArxBottomBarItem(
             label = "Pedidos",
-            iconRes = ArxIcons.Lot,
-            route = "orders"
+            iconRes = ArxIcons.Order,
+            route = "orders",
+            badgeCount = 5
         ),
         ArxBottomBarItem(
-            label = "Cortes",
-            iconRes = ArxIcons.Stock,
-            route = "cuts"
+            label = "Manos libres",
+            iconRes = ArxIcons.Mic,
+            route = "handsfree"
         ),
         ArxBottomBarItem(
-            label = "Perfil",
-            iconRes = ArxIcons.User,
-            route = "profile"
+            label = "Clientes",
+            iconRes = ArxIcons.TeamOutline,
+            selectedIconRes = ArxIcons.TeamFilled,
+            route = "customers"
+        ),
+        ArxBottomBarItem(
+            label = "Más",
+            iconRes = ArxIcons.More,
+            route = "more"
         )
     )
 
-    ArxTheme(darkTheme = true) {
+    ArxTheme(darkTheme = darkTheme) {
         Surface(
             modifier = Modifier.fillMaxWidth(),
             color = MaterialTheme.colorScheme.background
@@ -250,3 +261,15 @@ private fun ArxBottomBarPreview() {
         }
     }
 }
+
+@Preview(name = "Bottom Bar – Light", showBackground = false)
+@Composable
+fun ArxBottomBarPreviewLight() = ArxBottomBarPreviewContent(darkTheme = false)
+
+@Preview(
+    name = "Bottom Bar – Dark",
+    showBackground = false,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun ArxBottomBarPreviewDark() = ArxBottomBarPreviewContent(darkTheme = true)
