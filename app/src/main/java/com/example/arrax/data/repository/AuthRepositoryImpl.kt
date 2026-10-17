@@ -31,7 +31,7 @@ class AuthRepositoryImpl @Inject constructor(
                             uid = it.uid,
                             name = it.name,
                             tenantId = it.tenantId,
-                            role = runCatching { Role.valueOf(it.role) }.getOrDefault(Role.OPERADOR)
+                            role = runCatching { Role.valueOf(it.role) }.getOrDefault(Role.OPERATOR)
                         )
                     } ?: User(uid = firebaseUser.uid)
                 }

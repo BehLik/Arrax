@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LobbyHomeViewmodel @Inject constructor(
+class LobbyHomeViewModel @Inject constructor(
     private val observeMyBusinessesUseCase: ObserveMyBusinessesUseCase,
     private val observeCurrentUserUseCase: ObserveCurrentUserUseCase,
     private val networkMonitor: NetworkMonitor
@@ -26,25 +26,27 @@ class LobbyHomeViewmodel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            // combine does NOT resubscribe the Firestore flows when connectivity changes;
+            // it only re-emits the latest values, so no flatMapLatest is needed here.
             combine(
                 observeCurrentUserUseCase(),
                 observeMyBusinessesUseCase(),
                 networkMonitor.isConnected
-            ) { usuario, negocios, online -> Triple(usuario, negocios, online) }
-                .collect { (usuario, negocios, online) ->
+            ) { user, businesses, online -> Triple(user, businesses, online) }
+                .collect { (user, businesses, online) ->
                     _state.update {
                         it.copy(
-                            nombreUsuario = usuario?.name.orEmpty(),
-                            negociosRecientes = negocios.map { b ->
-                                NegocioResumen(
+                            userName = user?.name.orEmpty(),
+                            recentBusinesses = businesses.map { b ->
+                                BusinessItem(
                                     id = b.tenant.id,
-                                    nombre = b.tenant.name,
-                                    esPropietario = b.esAdmin,
-                                    totalEventos = b.totalEventos
+                                    name = b.tenant.name,
+                                    isAdmin = b.isAdmin,
+                                    totalEvents = b.totalEvents
                                 )
                             },
                             isLoading = false,
-                            estaSinConexion = !online
+                            isOffline = !online
                         )
                     }
                 }

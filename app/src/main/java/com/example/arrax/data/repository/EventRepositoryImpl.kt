@@ -9,10 +9,12 @@ import com.example.arrax.domain.model.Event
 import com.example.arrax.domain.model.EventCut
 import com.example.arrax.domain.model.EventWithCuts
 import com.example.arrax.domain.repository.EventRepository
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
+
 @Singleton
 class EventRepositoryImpl @Inject constructor(
     private val eventDataSource: FirestoreEventDataSource
@@ -30,6 +32,8 @@ class EventRepositoryImpl @Inject constructor(
                 cutsData = cuts.map { it.toMap() }
             )
             Resource.Success(id)
+        } catch (e: CancellationException) {
+            throw e // never swallow coroutine cancellation
         } catch (e: Exception) {
             Resource.Error(e.message ?: "No se pudo crear el evento")
         }
@@ -54,6 +58,8 @@ class EventRepositoryImpl @Inject constructor(
         return try {
             eventDataSource.closeEvent(tenantId, eventId)
             Resource.Success(Unit)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Resource.Error(e.message ?: "No se pudo cerrar el evento")
         }

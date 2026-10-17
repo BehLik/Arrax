@@ -1,17 +1,24 @@
 package com.example.arrax.domain.model
 
+enum class EventStatus { OPEN, CLOSED }
 
 data class Event(
     val id: String = "",
     val name: String = "",
     val date: Long = 0L,
     val pigCount: Int = 0,
-//    val tenantId: String="",<--agregando esto se corrige "e: file:///C:/Users/likbe/AndroidStudioProjects/Arrax/app/src/main/java/com/example/arrax/data/mapper/EventMapper.kt:26:19 Unresolved reference 'tenantId'.
-//Ask Gemini"
     val status: EventStatus = EventStatus.OPEN,
     val createdBy: String = ""
 )
-enum class EventStatus {
-    OPEN,
-    CLOSED
-}
+
+/** Money is stored in integer cents, never floating point. */
+//data class EventCut(
+//    val cutId: String = "",
+//    val name: String = "",
+//    val pricePerKgCents: Long = 0L   // was: pricePerKg: Double
+//)
+
+//data class EventWithCuts(
+//    val event: Event,
+//    val cuts: List<EventCut> = emptyList()
+//)

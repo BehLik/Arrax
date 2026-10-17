@@ -5,3 +5,9 @@ data class Tenant(
     val name: String = "",
     val createdAt: Long = 0L
 )
+
+//data class BusinessSummary(
+//    val tenant: Tenant,
+//    val isAdmin: Boolean,      // was: esAdmin
+//    val totalEvents: Int       // was: totalEventos
+//)

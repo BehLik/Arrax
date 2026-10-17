@@ -1,12 +1,13 @@
 package com.example.arrax.ui.screen.auth.forgotpassword
 
-
+import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.arrax.core.common.AppError
 import com.example.arrax.core.common.Resource
+import com.example.arrax.core.common.toAppError
 import com.example.arrax.domain.usecase.auth.resetPassword.SendPasswordResetUseCase
-import com.google.firebase.FirebaseNetworkException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,13 +16,15 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private const val TAG = "ForgotPasswordVM"
+
 @HiltViewModel
-class AuthForGotPasswordViewmodel @Inject constructor(
+class ForgotPasswordViewModel @Inject constructor(
     private val sendPasswordResetUseCase: SendPasswordResetUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(AuthForGotPasswordState())
-    val uiState: StateFlow<AuthForGotPasswordState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(ForGotPasswordState())
+    val uiState: StateFlow<ForGotPasswordState> = _uiState.asStateFlow()
 
     fun onEmailChange(value: String) {
         _uiState.update { it.copy(email = value, emailError = null, errorGeneral = null) }
@@ -45,15 +48,22 @@ class AuthForGotPasswordViewmodel @Inject constructor(
             when (val result = sendPasswordResetUseCase(current.email)) {
                 is Resource.Success -> _uiState.update { it.copy(isLoading = false, isSent = true) }
                 is Resource.Error -> {
-                    // No se revela si el correo existe: solo un error real de red
-                    // se muestra como error; cualquier otro caso (incluido
-                    // "usuario no encontrado") se trata como éxito silencioso.
-                    if (result.throwable is FirebaseNetworkException) {
-                        _uiState.update {
-                            it.copy(isLoading = false, errorGeneral = "No hay conexión a internet. Intenta de nuevo.")
+                    when (result.throwable?.toAppError()) {
+                        // Do not reveal whether the email exists: user-not-found looks like success.
+                        is AppError.UserNotFound ->
+                            _uiState.update { it.copy(isLoading = false, isSent = true) }
+                        is AppError.Network ->
+                            _uiState.update {
+                                it.copy(isLoading = false, errorGeneral = "No hay conexión a internet. Intenta de nuevo.")
+                            }
+                        // Any other failure is real (quota, config, rules...): log it and show an error
+                        // instead of pretending the email was sent.
+                        else -> {
+                            Log.w(TAG, "Password reset failed: ${result.message}", result.throwable)
+                            _uiState.update {
+                                it.copy(isLoading = false, errorGeneral = "No pudimos enviar el correo. Intenta de nuevo.")
+                            }
                         }
-                    } else {
-                        _uiState.update { it.copy(isLoading = false, isSent = true) }
                     }
                 }
                 Resource.Loading -> Unit

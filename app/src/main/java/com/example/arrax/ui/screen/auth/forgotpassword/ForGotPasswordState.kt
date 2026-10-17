@@ -1,6 +1,6 @@
 package com.example.arrax.ui.screen.auth.forgotpassword
 
-data class AuthForGotPasswordState(
+data class ForGotPasswordState(
     val email: String = "",
     val emailError: String? = null,
     val isLoading: Boolean = false,

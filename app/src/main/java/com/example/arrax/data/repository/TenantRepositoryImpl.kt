@@ -1,7 +1,7 @@
 package com.example.arrax.data.repository
 
 import com.example.arrax.core.common.Resource
-import com.example.arrax.data.local.SesionLocalDataSource
+import com.example.arrax.data.local.SessionLocalDataSource
 import com.example.arrax.data.mapper.toDomain
 import com.example.arrax.data.remote.FirestoreTenantDataSource
 import com.example.arrax.domain.model.Tenant
@@ -16,7 +16,7 @@ import javax.inject.Singleton
 @Singleton
 class TenantRepositoryImpl @Inject constructor(
     private val tenantDataSource: FirestoreTenantDataSource,
-    private val sessionLocalDataSource: SesionLocalDataSource
+    private val sessionLocalDataSource: SessionLocalDataSource
 ) : TenantRepository {
 
     override fun observeCurrentTenant(): Flow<Tenant?> =

@@ -5,6 +5,7 @@ import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.arrax.core.common.Resource
+import com.example.arrax.core.common.AppError
 import com.example.arrax.core.common.mapAuthError
 import com.example.arrax.domain.usecase.auth.register.RegisterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

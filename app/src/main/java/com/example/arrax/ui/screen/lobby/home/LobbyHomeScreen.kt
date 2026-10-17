@@ -17,26 +17,28 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.arrax.R
 import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
 import com.example.arrax.core.designsystem.components.display.ArxLoading
-import com.example.arrax.ui.screen.lobby.home.component.LobbyEmptyNegocios
+import com.example.arrax.core.designsystem.theme.ArxSpacing
+import com.example.arrax.ui.screen.lobby.home.component.BusinessListItem
+import com.example.arrax.ui.screen.lobby.home.component.LobbyEmptyBusinesses
 import com.example.arrax.ui.screen.lobby.home.component.LobbyTopBar
-import com.example.arrax.ui.screen.lobby.home.component.NegocioListItem
-import com.example.arrax.ui.screen.lobby.home.component.RecientesHeader
+import com.example.arrax.ui.screen.lobby.home.component.RecentHeader
 import com.example.arrax.ui.screen.lobby.home.component.WorkspaceCard
 
 @Composable
 fun LobbyHomeScreen(
-    onNegocioClick: (String) -> Unit,
-    onCrearNegocioClick: () -> Unit,
-    onUnirmeClick: () -> Unit,
-    onVerTodosClick: () -> Unit,
-    onNotificacionesClick: () -> Unit,
-    onAjustesClick: () -> Unit,
-    onPerfilClick: () -> Unit,
-    viewModel: LobbyHomeViewmodel = hiltViewModel()
+    onBusinessClick: (String) -> Unit,
+    onCreateBusinessClick: () -> Unit,
+    onJoinClick: () -> Unit,
+    onViewAllClick: () -> Unit,
+    onNotificationsClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onProfileClick: () -> Unit,
+    viewModel: LobbyHomeViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -45,33 +47,33 @@ fun LobbyHomeScreen(
             containerColor = Color.Transparent,
             topBar = {
                 LobbyTopBar(
-                    nombreUsuario = state.nombreUsuario,
-                    notificacionesSinLeer = state.notificacionesSinLeer,
-                    onNotificacionesClick = onNotificacionesClick,
-                    onAjustesClick = onAjustesClick,
-                    onPerfilClick = onPerfilClick
+                    userName = state.userName,
+                    unreadNotifications = state.unreadNotifications,
+                    onNotificationsClick = onNotificationsClick,
+                    onSettingsClick = onSettingsClick,
+                    onProfileClick = onProfileClick
                 )
             }
         ) { padding ->
             Box(modifier = Modifier.padding(padding).fillMaxSize()) {
                 if (state.isLoading) {
-                    ArxLoading(message = "Cargando negocios...")
+                    ArxLoading(message = stringResource(R.string.lobby_loading))
                 } else {
                     Column(modifier = Modifier.fillMaxSize()) {
-                        if (state.estaSinConexion) SinConexionBadge()
+                        if (state.isOffline) OfflineBadge()
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
-                            contentPadding = PaddingValues(16.dp)
+                            contentPadding = PaddingValues(ArxSpacing.md)
                         ) {
                             item {
-                                Column(modifier = Modifier.padding(bottom = 20.dp)) {
+                                Column(modifier = Modifier.padding(bottom = ArxSpacing.lg)) {
                                     Text(
-                                        text = "Hola, ${state.nombreUsuario}",
+                                        text = stringResource(R.string.lobby_greeting, state.userName),
                                         style = MaterialTheme.typography.headlineMedium,
                                         color = MaterialTheme.colorScheme.onBackground
                                     )
                                     Text(
-                                        text = "Listo para lo que viene.",
+                                        text = stringResource(R.string.lobby_greeting_subtitle),
                                         style = MaterialTheme.typography.bodyLarge,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -79,30 +81,30 @@ fun LobbyHomeScreen(
                             }
                             item {
                                 WorkspaceCard(
-                                    onCrearNegocioClick = onCrearNegocioClick,
-                                    onUnirmeClick = onUnirmeClick,
-                                    modifier = Modifier.padding(bottom = 24.dp)
+                                    onCreateBusinessClick = onCreateBusinessClick,
+                                    onJoinClick = onJoinClick,
+                                    modifier = Modifier.padding(bottom = ArxSpacing.xl)
                                 )
                             }
                             item {
-                                RecientesHeader(
-                                    onVerTodosClick = onVerTodosClick,
-                                    modifier = Modifier.padding(bottom = 12.dp)
+                                RecentHeader(
+                                    onViewAllClick = onViewAllClick,
+                                    modifier = Modifier.padding(bottom = ArxSpacing.sm)
                                 )
                             }
-                            if (state.negociosRecientes.isEmpty()) {
+                            if (state.recentBusinesses.isEmpty()) {
                                 item {
-                                    LobbyEmptyNegocios(
-                                        onCrearNegocioClick = onCrearNegocioClick,
+                                    LobbyEmptyBusinesses(
+                                        onCreateBusinessClick = onCreateBusinessClick,
                                         modifier = Modifier.fillMaxWidth()
                                     )
                                 }
                             } else {
-                                items(state.negociosRecientes, key = { it.id }) { negocio ->
-                                    NegocioListItem(
-                                        negocio = negocio,
-                                        onClick = { onNegocioClick(negocio.id) },
-                                        modifier = Modifier.padding(bottom = 12.dp)
+                                items(state.recentBusinesses, key = { it.id }) { business ->
+                                    BusinessListItem(
+                                        business = business,
+                                        onClick = { onBusinessClick(business.id) },
+                                        modifier = Modifier.padding(bottom = ArxSpacing.sm)
                                     )
                                 }
                             }
@@ -115,13 +117,13 @@ fun LobbyHomeScreen(
 }
 
 @Composable
-private fun SinConexionBadge() {
+private fun OfflineBadge() {
     Surface(color = MaterialTheme.colorScheme.surfaceVariant, modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = "Sin conexión — mostrando datos guardados",
+            text = stringResource(R.string.lobby_offline_banner),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            modifier = Modifier.padding(horizontal = ArxSpacing.md, vertical = ArxSpacing.xs)
         )
     }
 }

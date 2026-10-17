@@ -6,7 +6,6 @@ import com.example.arrax.domain.model.EventCut
 import com.example.arrax.domain.repository.EventRepository
 import javax.inject.Inject
 
-
 class CreateEventUseCase @Inject constructor(
     private val eventRepository: EventRepository
 ) {
@@ -23,8 +22,8 @@ class CreateEventUseCase @Inject constructor(
         if (cuts.isEmpty()) {
             return Resource.Error("Selecciona al menos un corte")
         }
-        val sinPrecio = cuts.firstOrNull { it.pricePerKg <= 0.0 }
-        if (sinPrecio != null) {
+        val cutWithoutPrice = cuts.firstOrNull { it.pricePerKgCents <= 0L }
+        if (cutWithoutPrice != null) {
             return Resource.Error("Todos los cortes seleccionados necesitan un precio mayor a cero")
         }
         return eventRepository.createEventWithCuts(tenantId, event, cuts)

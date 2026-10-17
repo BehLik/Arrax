@@ -1,16 +1,15 @@
 package com.example.arrax.data.remote
 
-
+import com.example.arrax.core.common.FirestorePaths
+import com.example.arrax.domain.model.EventStatus
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.toObjects
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.tasks.await
-import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,7 +18,7 @@ data class EventDto(
     val name: String = "",
     val date: Long = 0L,
     val pigCount: Int = 0,
-    val status: String = "OPEN",
+    val status: String = EventStatus.OPEN.name,
     val createdBy: String = ""
 )
 
@@ -28,17 +27,15 @@ class FirestoreEventDataSource @Inject constructor(
     private val firestore: FirebaseFirestore
 ) {
     private fun eventsCollection(tenantId: String) =
-        firestore.collection("tenants").document(tenantId).collection("events")
+        firestore.collection(FirestorePaths.TENANTS)
+            .document(tenantId)
+            .collection(FirestorePaths.EVENTS)
 
-    // Nombre de subcoleccion en ingles para mantener consistencia con el resto del
-    // esquema (tenants/events/users). La spec de Fase 3 la llama "cortesEvento" -
-    // ajusta este nombre si ya tienes reglas de seguridad de Firestore escritas
-    // contra ese nombre en espanol.
+    // Subcollection name is fixed to "eventCuts" (English); firebase/firestore.rules matches it.
     private fun cutsCollection(tenantId: String, eventId: String) =
-        eventsCollection(tenantId).document(eventId).collection("eventCuts")
+        eventsCollection(tenantId).document(eventId).collection(FirestorePaths.EVENT_CUTS)
 
-    // Escritura atomica: crea el documento del evento y un documento por cada corte
-    // seleccionado en la subcoleccion eventCuts. Todo o nada (write batch).
+    // Atomic write: the event document plus one document per selected cut (write batch).
     suspend fun createEventWithCuts(
         tenantId: String,
         eventData: Map<String, Any>,
@@ -72,8 +69,8 @@ class FirestoreEventDataSource @Inject constructor(
         awaitClose { listener.remove() }
     }
 
-    // Combina el listener del documento del evento con el de su subcoleccion de cortes,
-    // para que EventDetail reaccione tanto a cambios de estado como de precio/cortes.
+    // Combines the event document listener with its cuts subcollection listener so
+    // EventDetail reacts to both status and price/cut changes.
     fun observeEvent(
         tenantId: String,
         eventId: String
@@ -107,7 +104,7 @@ class FirestoreEventDataSource @Inject constructor(
 
     suspend fun closeEvent(tenantId: String, eventId: String) {
         eventsCollection(tenantId).document(eventId)
-            .update("status", "CLOSED")
+            .update("status", EventStatus.CLOSED.name)
             .await()
     }
 }

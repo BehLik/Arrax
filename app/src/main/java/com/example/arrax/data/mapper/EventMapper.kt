@@ -1,11 +1,10 @@
 package com.example.arrax.data.mapper
 
-import com.example.arrax.data.remote.EventDto
 import com.example.arrax.domain.model.Event
 import com.example.arrax.domain.model.EventCut
 import com.example.arrax.domain.model.EventStatus
 import com.google.firebase.firestore.DocumentSnapshot
-
+import kotlin.math.roundToLong
 
 fun DocumentSnapshot.toEvent(): Event? {
     if (!exists()) return null
@@ -31,15 +30,19 @@ fun Event.toMap(): Map<String, Any> = mapOf(
 
 fun DocumentSnapshot.toEventCut(): EventCut? {
     if (!exists()) return null
+    // Legacy docs stored "pricePerKg" as Double; remove the fallback once old data is gone.
+    val cents = getLong("pricePerKgCents")
+        ?: getDouble("pricePerKg")?.let { (it * 100).roundToLong() }
+        ?: 0L
     return EventCut(
         cutId = getString("cutId") ?: id,
         name = getString("name") ?: "",
-        pricePerKg = getDouble("pricePerKg") ?: 0.0
+        pricePerKgCents = cents
     )
 }
 
 fun EventCut.toMap(): Map<String, Any> = mapOf(
     "cutId" to cutId,
     "name" to name,
-    "pricePerKg" to pricePerKg
+    "pricePerKgCents" to pricePerKgCents
 )

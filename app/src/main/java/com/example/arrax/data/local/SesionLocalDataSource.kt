@@ -6,17 +6,16 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-
 import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Cachea tenantId + rol en DataStore. Es lo que permite saber a qué tenant
- * hacer scoping de las queries de Firestore desde el arranque, incluso sin red,
- * antes de que /usuarios/{uid} confirme el dato en segundo plano.
+ * Caches tenantId + role in DataStore. It lets us scope Firestore queries to the right tenant
+ * from startup, even offline, before /users/{uid} confirms the data in the background.
+ * UI hint only: real authorization is enforced by firestore.rules.
  */
 @Singleton
-class SesionLocalDataSource @Inject constructor(
+class SessionLocalDataSource @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) {
     private val tenantIdKey = stringPreferencesKey("tenant_id")

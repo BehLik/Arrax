@@ -9,22 +9,28 @@ import com.example.arrax.core.navigation.ForgotPassword
 import com.example.arrax.core.navigation.LobbyGraph
 import com.example.arrax.core.navigation.Login
 import com.example.arrax.core.navigation.Register
+import com.example.arrax.ui.screen.auth.forgotpassword.ForgotPasswordScreen
 import com.example.arrax.ui.screen.auth.login.AuthLoginScreen
 
 fun NavGraphBuilder.authGraph(nav: NavController) {
     navigation<AuthGraph>(startDestination = Login) {
         composable<Login> {
             AuthLoginScreen(
-                onLoggedIn = {
+                onLoginSuccess = {
                     nav.navigate(LobbyGraph) {
                         popUpTo<AuthGraph> { inclusive = true }
                     }
                 },
-                onRegisterClick = { nav.navigate(Register) },
-                onForgotClick = { nav.navigate(ForgotPassword) }
+                onNavigateToRegister = { nav.navigate(Register) },
+                onNavigateToForgotPassword = { nav.navigate(ForgotPassword) }
             )
         }
-        composable<Register> { /* ... */ }
-        composable<ForgotPassword> { /* ... */ }
+        composable<Register> { /* AuthRegisterScreen(...) - signature not shared */ }
+        composable<ForgotPassword> {
+            ForgotPasswordScreen(
+                onNavigateBackToLogin = { nav.popBackStack() },
+                onNavigateBack = { nav.popBackStack() }
+            )
+        }
     }
 }

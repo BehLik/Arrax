@@ -110,4 +110,50 @@
     <string name="auth_forgot_password_title">Recuperar Contraseña</string>
     <string name="auth_forgot_password_description">Ingresa tu correo asociado a la cuenta</string>
 
+    <!-- Event create -->
+    <string name="event_create_title_basic">Nuevo evento - Datos</string>
+    <string name="event_create_title_cuts">Nuevo evento - Cortes</string>
+    <string name="event_create_title_prices">Nuevo evento - Precios</string>
+    <string name="event_create_no_permission_title">Sin permiso</string>
+    <string name="event_create_no_permission_description">Solo un administrador puede crear eventos.</string>
+
+    <!-- Lobby home -->
+    <string name="lobby_loading">Cargando negocios...</string>
+    <string name="lobby_greeting">Hola, %1$s</string>
+    <string name="lobby_greeting_subtitle">Listo para lo que viene.</string>
+    <string name="lobby_offline_banner">Sin conexión — mostrando datos guardados</string>
+
+    <string name="event_cut_price_label">%1$s - precio por kg</string>
+    <string name="event_confirm">Confirmar evento</string>
+
+    <!-- Lobby components -->
+    <string name="lobby_notifications_cd">Notificaciones</string>
+    <string name="lobby_settings_cd">Configuración</string>
+    <string name="lobby_empty_title">Aún no tienes negocios</string>
+    <string name="lobby_empty_description">Crea uno nuevo o únete con un código de invitación.</string>
+    <string name="lobby_empty_action">Crear negocio</string>
+    <string name="lobby_recent_title">Recientes</string>
+    <string name="lobby_view_all">Ver todo</string>
+    <string name="business_role_admin">Propietario</string>
+    <string name="business_role_member">Miembro</string>
+    <string name="workspace_title">Tus espacios de trabajo</string>
+    <string name="workspace_subtitle">Gestiona tus negocios, equipos y eventos en un solo lugar.</string>
+    <string name="workspace_create">+ Crear negocio</string>
+    <string name="workspace_join">Unirme</string>
+
+    <!-- Event detail -->
+    <string name="event_detail_title_fallback">Evento</string>
+    <string name="event_not_found_title">Evento no encontrado</string>
+    <string name="event_not_found_description">Puede que haya sido eliminado o que no tengas acceso.</string>
+    <string name="event_close_title">Cerrar evento</string>
+    <string name="event_close_message">Esta acción no se puede deshacer desde la app. ¿Seguro que quieres cerrar el evento?</string>
+    <string name="event_close_confirm">Cerrar evento</string>
+
+    <!-- Event summary -->
+    <string name="event_status_open">Abierto</string>
+    <string name="event_status_closed">Cerrado</string>
+    <string name="event_date_label">Fecha: %1$s</string>
+    <string name="event_pigs_label">Cerdos: %1$d</string>
+    <string name="event_cuts_title">Cortes:</string>
+    <string name="event_cut_line">- %1$s - %2$s / kg</string>
 </resources>

@@ -9,42 +9,47 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import com.example.arrax.R
 import com.example.arrax.core.designsystem.components.buttons.ArxPrimaryButton
 import com.example.arrax.core.designsystem.components.buttons.ArxSecondaryButton
 import com.example.arrax.core.designsystem.components.cards.ArxCard
 import com.example.arrax.core.designsystem.components.cards.ArxCardVariant
+import com.example.arrax.core.designsystem.theme.ArxSpacing
 
 @Composable
 fun WorkspaceCard(
-    onCrearNegocioClick: () -> Unit,
-    onUnirmeClick: () -> Unit,
+    onCreateBusinessClick: () -> Unit,
+    onJoinClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     ArxCard(variant = ArxCardVariant.Glass, modifier = modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Column(
+            modifier = Modifier.padding(ArxSpacing.lg),
+            verticalArrangement = Arrangement.spacedBy(ArxSpacing.md)
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(ArxSpacing.xs)) {
                 Text(
-                    text = "Tus espacios de trabajo",
+                    text = stringResource(R.string.workspace_title),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = "Gestiona tus negocios, equipos y eventos en un solo lugar.",
+                    text = stringResource(R.string.workspace_subtitle),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(ArxSpacing.sm)) {
                 ArxPrimaryButton(
-                    text = "+ Crear negocio",
-                    onClick = onCrearNegocioClick,
+                    text = stringResource(R.string.workspace_create),
+                    onClick = onCreateBusinessClick,
                     hero = true,
                     modifier = Modifier.weight(1f)
                 )
                 ArxSecondaryButton(
-                    text = "Unirme",
-                    onClick = onUnirmeClick,
+                    text = stringResource(R.string.workspace_join),
+                    onClick = onJoinClick,
                     modifier = Modifier.weight(1f)
                 )
             }

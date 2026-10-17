@@ -1,16 +1,20 @@
 package com.example.arrax.ui.screen.lobby.home
 
-data class NegocioResumen(
+import androidx.compose.runtime.Immutable
+
+@Immutable
+data class BusinessItem(
     val id: String,
-    val nombre: String,
-    val esPropietario: Boolean,
-    val totalEventos: Int
+    val name: String,
+    val isAdmin: Boolean,
+    val totalEvents: Int
 )
 
+@Immutable
 data class LobbyHomeState(
-    val nombreUsuario: String = "",
-    val negociosRecientes: List<NegocioResumen> = emptyList(),
-    val notificacionesSinLeer: Int = 0,
+    val userName: String = "",
+    val recentBusinesses: List<BusinessItem> = emptyList(),
+    val unreadNotifications: Int = 0,
     val isLoading: Boolean = true,
-    val estaSinConexion: Boolean = false
+    val isOffline: Boolean = false
 )

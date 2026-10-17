@@ -1,6 +1,7 @@
 package com.example.arrax.data.remote
 
-
+import com.example.arrax.core.common.FirestorePaths
+import com.example.arrax.domain.model.Role
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
@@ -23,20 +24,19 @@ data class UserDto(
     @DocumentId val uid: String = "",
     val name: String = "",
     val tenantId: String? = null,
-    val role: String = "OPERADOR"
+    val role: String = Role.OPERATOR.name
 )
 
 /**
- * Nota: "Firestore como remoto y local" -- no usamos Room. El SDK de Firestore
- * ya mantiene caché local persistente y la sincroniza solo; por eso los reads
- * se hacen con addSnapshotListener envuelto en callbackFlow y no con .get() suelto.
+ * Firestore is both remote and local (no Room): the SDK keeps a persistent local cache and syncs it,
+ * so reads use addSnapshotListener wrapped in callbackFlow instead of one-off .get().
  */
 @Singleton
 class FirestoreTenantDataSource @Inject constructor(
     private val firestore: FirebaseFirestore
 ) {
-    private fun tenants() = firestore.collection("tenants")
-    private fun users() = firestore.collection("usuarios")
+    private fun tenants() = firestore.collection(FirestorePaths.TENANTS)
+    private fun users() = firestore.collection(FirestorePaths.USERS)
 
     fun observeUser(uid: String): Flow<UserDto?> = callbackFlow {
         val listener = users().document(uid).addSnapshotListener { snapshot, error ->
@@ -54,23 +54,29 @@ class FirestoreTenantDataSource @Inject constructor(
         awaitClose { listener.remove() }
     }
 
+    // Atomic (batch) and merge only tenantId/role: writing a whole UserDto with merge
+    // would overwrite the existing "name" with "".
     suspend fun createTenant(name: String, adminUid: String): TenantDto {
         val tenantId = UUID.randomUUID().toString()
         val dto = TenantDto(id = tenantId, name = name, createdAt = System.currentTimeMillis())
-        tenants().document(tenantId).set(dto).await()
-        users().document(adminUid)
-            .set(UserDto(uid = adminUid, tenantId = tenantId, role = "ADMIN"), SetOptions.merge())
-            .await()
+        val batch = firestore.batch()
+        batch.set(tenants().document(tenantId), dto)
+        batch.set(
+            users().document(adminUid),
+            mapOf("tenantId" to tenantId, "role" to Role.ADMIN.name),
+            SetOptions.merge()
+        )
+        batch.commit().await()
         return dto
     }
 
-    // El código de invitación se asume igual al tenantId por ahora; el modelo real
-    // de invitaciones (códigos propios, expiración, rol asignado) queda para una fase posterior.
+    // The invitation code is assumed equal to tenantId for now; the real invitation model
+    // (own codes, expiry, assigned role) is left for a later phase.
     suspend fun joinTenant(invitationCode: String, uid: String): TenantDto {
         val snapshot = tenants().document(invitationCode).get().await()
         val dto = snapshot.toObject<TenantDto>() ?: error("Código de invitación inválido")
         users().document(uid)
-            .set(UserDto(uid = uid, tenantId = dto.id, role = "OPERADOR"), SetOptions.merge())
+            .set(mapOf("tenantId" to dto.id, "role" to Role.OPERATOR.name), SetOptions.merge())
             .await()
         return dto
     }

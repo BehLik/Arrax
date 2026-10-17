@@ -1,6 +1,7 @@
 package com.example.arrax.data.remote
 
-
+import com.example.arrax.core.common.FirestorePaths
+import com.example.arrax.core.model.DefaultCuts
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObjects
@@ -22,13 +23,9 @@ class FirestoreCatalogDataSource @Inject constructor(
     private val firestore: FirebaseFirestore
 ) {
     private fun catalog(tenantId: String) =
-        firestore.collection("tenants").document(tenantId).collection("catalogoCortes")
-
-    // Semilla de 9 cortes conocidos (incluye "cabeza").
-    val defaultCuts = listOf(
-        "carne", "costilla", "espinazo", "codillo", "chicharra",
-        "higadilla", "morcilla", "manteca", "cabeza"
-    )
+        firestore.collection(FirestorePaths.TENANTS)
+            .document(tenantId)
+            .collection(FirestorePaths.CUT_CATALOG)
 
     fun observeCatalog(tenantId: String): Flow<List<CutCatalogDto>> = callbackFlow {
         val listener = catalog(tenantId).addSnapshotListener { snapshot, error ->
@@ -38,13 +35,15 @@ class FirestoreCatalogDataSource @Inject constructor(
         awaitClose { listener.remove() }
     }
 
+    // Seeds DefaultCuts using the stable English id as document id (idempotent and matches
+    // CutOption.id), and the Spanish display name as the stored name.
     suspend fun seedIfEmpty(tenantId: String) {
         val existing = catalog(tenantId).get().await()
         if (!existing.isEmpty) return
         val batch = firestore.batch()
-        defaultCuts.forEach { cutName ->
-            val ref = catalog(tenantId).document()
-            batch.set(ref, CutCatalogDto(id = ref.id, name = cutName, active = true))
+        DefaultCuts.forEach { cut ->
+            val ref = catalog(tenantId).document(cut.id)
+            batch.set(ref, CutCatalogDto(id = cut.id, name = cut.name, active = true))
         }
         batch.commit().await()
     }

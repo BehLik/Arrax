@@ -24,14 +24,14 @@ import com.example.arrax.ui.screen.auth.forgotpassword.component.ForGotPasswordF
 import com.example.arrax.ui.screen.auth.forgotpassword.component.ForGotPasswordHeader
 
 @Composable
-fun AuthForGotPasswordScreen(
-    viewModel: AuthForGotPasswordViewmodel = hiltViewModel(),
+fun ForgotPasswordScreen(
+    viewModel: ForgotPasswordViewModel = hiltViewModel(),
     onNavigateBackToLogin: () -> Unit,
     onNavigateBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    AuthForGotPasswordContent(
+    ForgotPasswordContent(
         uiState = uiState,
         onEmailChange = viewModel::onEmailChange,
         onSendReset = viewModel::sendReset,
@@ -39,10 +39,11 @@ fun AuthForGotPasswordScreen(
         onNavigateBack = onNavigateBack
     )
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun AuthForGotPasswordContent(
-    uiState: AuthForGotPasswordState,
+internal fun ForgotPasswordContent(
+    uiState: ForGotPasswordState,
     onEmailChange: (String) -> Unit,
     onSendReset: () -> Unit,
     onNavigateBackToLogin: () -> Unit,
@@ -60,13 +61,13 @@ internal fun AuthForGotPasswordContent(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = ArxSpacing.xl) // Incrementado el padding lateral a xl (24.dp)
+                    .padding(horizontal = ArxSpacing.xl) // 24.dp
             ) {
-                Spacer(modifier = Modifier.height(ArxSpacing.xl)) // Espacio después de la TopBar
+                Spacer(modifier = Modifier.height(ArxSpacing.xl)) // after the TopBar
 
                 ForGotPasswordHeader()
 
-                Spacer(modifier = Modifier.height(ArxSpacing.xxl)) // Espacio entre Header y Formulario (32.dp)
+                Spacer(modifier = Modifier.height(ArxSpacing.xxl)) // Header -> form (32.dp)
 
                 ForGotPasswordForm(
                     email = uiState.email,
@@ -76,7 +77,7 @@ internal fun AuthForGotPasswordContent(
                     onEmailChange = onEmailChange
                 )
 
-                Spacer(modifier = Modifier.height(ArxSpacing.huge)) // Espacio entre Formulario y Botones (40.dp)
+                Spacer(modifier = Modifier.height(ArxSpacing.huge)) // form -> buttons (40.dp)
 
                 ForGotPasswordActions(
                     isLoading = uiState.isLoading,
@@ -92,10 +93,10 @@ internal fun AuthForGotPasswordContent(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-private fun AuthForGotPasswordLightPreview() {
+private fun ForgotPasswordLightPreview() {
     ArxTheme {
-        AuthForGotPasswordContent(
-            uiState = AuthForGotPasswordState(email = "usuario@example.com"),
+        ForgotPasswordContent(
+            uiState = ForGotPasswordState(email = "usuario@example.com"),
             onEmailChange = {}, onSendReset = {},
             onNavigateBackToLogin = {}, onNavigateBack = {}
         )
@@ -104,10 +105,10 @@ private fun AuthForGotPasswordLightPreview() {
 
 @Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-private fun AuthForGotPasswordDarkPreview() {
+private fun ForgotPasswordDarkPreview() {
     ArxTheme(darkTheme = true) {
-        AuthForGotPasswordContent(
-            uiState = AuthForGotPasswordState(isSent = true),
+        ForgotPasswordContent(
+            uiState = ForGotPasswordState(isSent = true),
             onEmailChange = {}, onSendReset = {},
             onNavigateBackToLogin = {}, onNavigateBack = {}
         )

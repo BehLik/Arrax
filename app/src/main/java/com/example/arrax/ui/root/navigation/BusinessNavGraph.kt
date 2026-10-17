@@ -7,10 +7,10 @@ import androidx.navigation.toRoute
 import com.example.arrax.core.navigation.BusinessHome
 import com.example.arrax.core.navigation.EventCreate
 import com.example.arrax.core.navigation.EventDetail
+import com.example.arrax.ui.screen.business.BusinessHomeScreen
 import com.example.arrax.ui.screen.events.create.EventCreateScreen
 import com.example.arrax.ui.screen.events.detail.EventDetailScreen
 
-// BusinessNavGraph.kt  (aquí vive también el evento)
 fun NavGraphBuilder.businessGraph(nav: NavController) {
     composable<BusinessHome> { entry ->
         val args = entry.toRoute<BusinessHome>()
@@ -24,7 +24,7 @@ fun NavGraphBuilder.businessGraph(nav: NavController) {
         val args = entry.toRoute<EventCreate>()
         EventCreateScreen(
             onBack = nav::popBackStack,
-            onCreated = { eventId ->
+            onEventCreated = { eventId ->
                 nav.navigate(EventDetail(args.businessId, eventId)) {
                     popUpTo<EventCreate> { inclusive = true }
                 }

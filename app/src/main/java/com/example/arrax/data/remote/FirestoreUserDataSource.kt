@@ -1,5 +1,6 @@
 package com.example.arrax.data.remote
 
+import com.example.arrax.core.common.FirestorePaths
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -17,10 +18,10 @@ class FirestoreUserDataSource @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val auth: FirebaseAuth
 ) {
-    private val users get() = firestore.collection("users")
+    private val users get() = firestore.collection(FirestorePaths.USERS)
 
-    // Sigue el uid autenticado actual y escucha /users/{uid} en tiempo real.
-    // Sin sesion emite null; si el uid cambia (login/logout) cambia de listener solo.
+    // Follows the current authenticated uid and listens to /users/{uid} in real time.
+    // No session emits null; if the uid changes (login/logout) it switches listener by itself.
     @OptIn(ExperimentalCoroutinesApi::class)
     fun observeCurrentUserDoc(): Flow<DocumentSnapshot?> {
         return authUidFlow().flatMapLatest { uid ->
