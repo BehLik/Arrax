@@ -15,60 +15,12 @@ import com.example.arrax.ui.screen.auth.forgotpassword.AuthForGotPasswordScreen
 import com.example.arrax.ui.screen.auth.login.AuthLoginScreen
 import com.example.arrax.ui.screen.auth.register.AuthRegisterScreen
 import com.example.arrax.ui.screen.lobby.home.LobbyHomeScreen
-
+// ui/root/navigation/ArraxNavHost.kt
 @Composable
-fun ArraxNavHost(
-    navController: NavHostController = rememberNavController(),
-    appStartViewmodel: AppStartViewmodel = hiltViewModel()
-) {
-    val destinoInicial by appStartViewmodel.destinoInicial.collectAsState()
-    val startDestination = destinoInicial
-
-    if (startDestination == null) {
-        ArxLoading(message = "Cargando...")
-        return
-    }
-
-    NavHost(navController = navController, startDestination = startDestination.route) {
-        composable(Routes.Login.route) {
-            AuthLoginScreen(
-                onLoginSuccess = {
-                    navController.navigate(Routes.LobbyHome.route) {
-                        popUpTo(Routes.Login.route) { inclusive = true }
-                    }
-                },
-                onNavigateToRegister = { navController.navigate(Routes.Register.route) },
-                onNavigateToForgotPassword = { navController.navigate(Routes.ForgotPassword.route) }
-            )
-        }
-        composable(Routes.Register.route) {
-            AuthRegisterScreen(
-                onRegisterSuccess = {
-                    navController.navigate(Routes.LobbyHome.route) {
-                        popUpTo(Routes.Login.route) { inclusive = true }
-                    }
-                },
-                onNavigateToLogin = { navController.popBackStack() },
-                onNavigateBack = { navController.popBackStack() }
-            )
-        }
-        composable(Routes.ForgotPassword.route) {
-            AuthForGotPasswordScreen(
-                onNavigateBackToLogin = { navController.popBackStack() },
-                onNavigateBack = { navController.popBackStack() }
-            )
-        }
-        composable(Routes.LobbyHome.route) {
-            LobbyHomeScreen(
-                onNegocioClick = {},
-                onCrearNegocioClick = {},
-                onUnirmeClick = {},
-                onVerTodosClick = {},
-                onNotificacionesClick = {},
-                onAjustesClick = {},
-                onPerfilClick = {}
-            )
-        }
-        // EventCreate / EventDetail: Fase 3
+fun ArraxNavHost(navController: NavHostController, startDestination: Any) {
+    NavHost(navController, startDestination = startDestination) {
+        authGraph(navController)
+        lobbyGraph(navController)
+        businessGraph(navController)
     }
 }
