@@ -245,7 +245,7 @@ private fun ArxTopBarPreviewContent() {
                     connectionStatus = ArxConnectionStatus.Online,
                     actions = {
                         ArxTopBarAction(
-                            iconRes = ArxIcons.NotificationOutline,
+                            iconRes = ArxIcons.Notification,
                             contentDescription = "Notificaciones",
                             onClick = {}
                         )

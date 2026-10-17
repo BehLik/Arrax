@@ -322,6 +322,8 @@ object ArxIcons {
 
     /** Escaneo de códigos QR o elementos físicos. */
     val ScanQr = R.drawable.ic_scan_qr
+//    enlace code
+    val Link = R.drawable.ic_link
 
     /** Activación del micrófono para interacción por voz. */
     val Mic = R.drawable.ic_mic
@@ -367,7 +369,7 @@ object ArxIcons {
     val NotificationFilled = R.drawable.ic_notification_filled
 
     /** Notificaciones inactivas. */
-    val NotificationOutline = R.drawable.ic_notification_outline
+    val Notification = R.drawable.ic_notification_outline
 
     /** NFC activo. */
     val NfcFilled = R.drawable.ic_nfc_filled

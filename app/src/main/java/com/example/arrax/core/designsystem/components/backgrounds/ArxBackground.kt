@@ -6,8 +6,11 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,15 +21,11 @@ import com.example.arrax.core.designsystem.components.backgrounds.montain.ArxMou
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
 
-
-
 /**
  * Fondo de pantalla de Arrax: color sólido del tema + decoración opcional abajo.
  *
- * @param decoration     forma decorativa; [ArxDecoration.None] = solo color.
- * @param invertMountains pon true si en tu SVG lo cercano es blanco y lo lejano negro.
- *
- * Usa MaterialTheme.colorScheme -> compatible con Light/Dark.
+ * Las decoraciones (montañas) se dibujan en todo el espacio Edge-to-Edge,
+ * mientras que el contenido respeta el espacio seguro de la barra de navegación del sistema.
  */
 @Composable
 fun ArxBackground(
@@ -38,8 +37,9 @@ fun ArxBackground(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.background) // Llena absolutamente toda la pantalla
     ) {
+        // Decoración de fondo (Montañas) dibujada al fondo absoluto de la pantalla
         Crossfade(
             targetState = decoration,
             animationSpec = tween(400),
@@ -51,7 +51,14 @@ fun ArxBackground(
                 ArxDecoration.Mountains -> ArxMountains(invert = invertMountains)
             }
         }
-        content()
+
+        // El contenido interactivo se protege contra la barra de navegación inferior
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(WindowInsets.navigationBars),
+            content = content
+        )
     }
 }
 

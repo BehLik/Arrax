@@ -1,10 +1,16 @@
 package com.example.arrax.ui.screen.lobby.home
 
-import com.example.arrax.domain.model.Event
+data class NegocioResumen(
+    val id: String,
+    val nombre: String,
+    val esPropietario: Boolean,
+    val totalEventos: Int
+)
 
 data class LobbyHomeState(
-    val eventos: List<Event> = emptyList(),
+    val nombreUsuario: String = "",
+    val negociosRecientes: List<NegocioResumen> = emptyList(),
+    val notificacionesSinLeer: Int = 0,
     val isLoading: Boolean = true,
-    val esAdmin: Boolean = false,
     val estaSinConexion: Boolean = false
 )

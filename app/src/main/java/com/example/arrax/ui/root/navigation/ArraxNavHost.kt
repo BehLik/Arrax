@@ -15,7 +15,6 @@ import com.example.arrax.ui.screen.auth.forgotpassword.AuthForGotPasswordScreen
 import com.example.arrax.ui.screen.auth.login.AuthLoginScreen
 import com.example.arrax.ui.screen.auth.register.AuthRegisterScreen
 import com.example.arrax.ui.screen.lobby.home.LobbyHomeScreen
-import com.example.arrax.ui.screen.lobby.onboarding.LobbyOnboardingScreen
 
 @Composable
 fun ArraxNavHost(
@@ -34,7 +33,7 @@ fun ArraxNavHost(
         composable(Routes.Login.route) {
             AuthLoginScreen(
                 onLoginSuccess = {
-                    navController.navigate(Routes.LobbyOnboarding.route) {
+                    navController.navigate(Routes.LobbyHome.route) {
                         popUpTo(Routes.Login.route) { inclusive = true }
                     }
                 },
@@ -45,33 +44,29 @@ fun ArraxNavHost(
         composable(Routes.Register.route) {
             AuthRegisterScreen(
                 onRegisterSuccess = {
-                    navController.navigate(Routes.LobbyOnboarding.route) {
+                    navController.navigate(Routes.LobbyHome.route) {
                         popUpTo(Routes.Login.route) { inclusive = true }
                     }
                 },
-                onNavigateToLogin = { navController.popBackStack() }
+                onNavigateToLogin = { navController.popBackStack() },
+                onNavigateBack = { navController.popBackStack() }
             )
         }
         composable(Routes.ForgotPassword.route) {
-            AuthForGotPasswordScreen(onNavigateBackToLogin = { navController.popBackStack() })
-        }
-        composable(Routes.LobbyOnboarding.route) {
-            LobbyOnboardingScreen(
-                onOnboardingCompletado = {
-                    navController.navigate(Routes.LobbyHome.route) {
-                        popUpTo(0) { inclusive = true }
-                    }
-                }
+            AuthForGotPasswordScreen(
+                onNavigateBackToLogin = { navController.popBackStack() },
+                onNavigateBack = { navController.popBackStack() }
             )
         }
         composable(Routes.LobbyHome.route) {
             LobbyHomeScreen(
-                onEventoClick = { eventoId ->
-                    // Fase 3: cambiar por Routes.EventDetail con navArgument real;
-                    // por ahora se arma el literal a mano porque la ruta no está montada aún.
-                    navController.navigate("evento/detail/$eventoId")
-                },
-                onNuevoEventoClick = { navController.navigate(Routes.EventCreate.route) }
+                onNegocioClick = {},
+                onCrearNegocioClick = {},
+                onUnirmeClick = {},
+                onVerTodosClick = {},
+                onNotificacionesClick = {},
+                onAjustesClick = {},
+                onPerfilClick = {}
             )
         }
         // EventCreate / EventDetail: Fase 3
