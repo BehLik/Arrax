@@ -27,11 +27,12 @@ fun ArraxNavHost(
     if (start == null) {
         ArxLoading()
     } else {
-        NavHost(navController = navController, startDestination = start) {
-            authGraph(navController)
-            lobbyGraph(navController)
-            businessGraph(navController)
-            eventGraph(navController)
+        // NavHost
+        NavHost(navController, startDestination = start) {
+            authGraph(navController)     // navigation<AuthGraph>(startDestination = Login) { ... }
+            lobbyGraph(navController)    // navigation<LobbyGraph>(startDestination = LobbyHome) { ... }
+            businessGraph(navController) // composable<BusinessHome>, <BusinessMembers>, ...
+            eventGraph(navController)    // composable<EventCreate>, <EventHome>, <EventOrders>, ...
         }
     }
 }
