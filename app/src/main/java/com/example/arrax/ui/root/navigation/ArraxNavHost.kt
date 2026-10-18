@@ -9,6 +9,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.arrax.core.designsystem.components.display.ArxLoading
 import com.example.arrax.ui.root.AppStartViewModel
+import com.example.arrax.ui.screen.auth.authGraph
+import com.example.arrax.ui.screen.business.businessGraph
+import com.example.arrax.ui.screen.events.eventGraph
+import com.example.arrax.ui.screen.lobby.lobbyGraph
 
 // MainActivity calls ArraxNavHost() with no arguments, so it owns the controller
 // and resolves the start destination itself.
@@ -27,6 +31,7 @@ fun ArraxNavHost(
             authGraph(navController)
             lobbyGraph(navController)
             businessGraph(navController)
+            eventGraph(navController)
         }
     }
 }

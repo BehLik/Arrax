@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.arrax.core.common.Resource
 import androidx.navigation.toRoute
-import com.example.arrax.core.navigation.EventDetail
+import com.example.arrax.core.navigation.EventHome
 import com.example.arrax.data.local.SessionLocalDataSource
 import com.example.arrax.domain.usecase.event.detail.CloseEventUseCase
 import com.example.arrax.domain.usecase.event.detail.ObserveEventDetailUseCase
@@ -27,7 +27,7 @@ class EventDetailViewModel @Inject constructor(
     private val sessionLocalDataSource: SessionLocalDataSource
 ) : ViewModel() {
 
-    private val route = savedStateHandle.toRoute<EventDetail>()
+    private val route = savedStateHandle.toRoute<EventHome>()
     private val tenantId: String = route.businessId
     private val eventId: String = route.eventId
 

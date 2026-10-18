@@ -32,8 +32,8 @@ class ObserveMyBusinessesUseCase @Inject constructor(
                         listOf(
                             BusinessSummary(
                                 tenant = tenant,
-                                esAdmin = user?.role == Role.ADMIN,
-                                totalEventos = eventos.size
+                                isAdmin = user?.role == Role.ADMIN,
+                                totalEvents = eventos.size
                             )
                         )
                     }

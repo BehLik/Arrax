@@ -1,4 +1,4 @@
-package com.example.arrax.ui.root.navigation
+package com.example.arrax.ui.screen.auth
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
