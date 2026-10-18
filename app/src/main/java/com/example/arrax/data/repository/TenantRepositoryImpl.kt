@@ -4,6 +4,7 @@ import com.example.arrax.core.common.Resource
 import com.example.arrax.data.local.SessionLocalDataSource
 import com.example.arrax.data.mapper.toDomain
 import com.example.arrax.data.remote.FirestoreTenantDataSource
+import com.example.arrax.domain.model.Role
 import com.example.arrax.domain.model.Tenant
 import com.example.arrax.domain.repository.TenantRepository
 import kotlinx.coroutines.flow.Flow
@@ -27,7 +28,7 @@ class TenantRepositoryImpl @Inject constructor(
 
     override suspend fun createTenant(name: String, adminUid: String): Resource<Tenant> = try {
         val dto = tenantDataSource.createTenant(name, adminUid)
-        sessionLocalDataSource.saveSession(dto.id, "ADMIN")
+        sessionLocalDataSource.saveSession(dto.id, Role.ADMIN.name)
         Resource.Success(dto.toDomain())
     } catch (e: Exception) {
         Resource.Error(e.message ?: "Error al crear el negocio", e)
@@ -35,7 +36,8 @@ class TenantRepositoryImpl @Inject constructor(
 
     override suspend fun joinTenant(invitationCode: String, uid: String): Resource<Tenant> = try {
         val dto = tenantDataSource.joinTenant(invitationCode, uid)
-        sessionLocalDataSource.saveSession(dto.id, "OPERADOR")
+        // was "OPERADOR": the DataStore kept caching the legacy Spanish value
+        sessionLocalDataSource.saveSession(dto.id, Role.OPERATOR.name)
         Resource.Success(dto.toDomain())
     } catch (e: Exception) {
         Resource.Error(e.message ?: "Código de invitación inválido", e)

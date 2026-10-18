@@ -6,14 +6,16 @@ import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.firestore.FirebaseFirestoreException
 
-/** Typed errors for repositories/use cases. The UI maps each one to a string resource. */
+/** Typed errors for repositories/use cases. The UI maps each one to a string. */
 sealed class AppError(cause: Throwable? = null) : Exception(cause) {
     class Network(cause: Throwable? = null) : AppError(cause)
     class InvalidCredentials(cause: Throwable? = null) : AppError(cause)
     class UserNotFound(cause: Throwable? = null) : AppError(cause)
     class EmailInUse(cause: Throwable? = null) : AppError(cause)
+    class WeakPassword(cause: Throwable? = null) : AppError(cause)
     class PermissionDenied(cause: Throwable? = null) : AppError(cause)
     class Validation(val field: String) : AppError()
     class Unknown(cause: Throwable? = null) : AppError(cause)
@@ -24,6 +26,8 @@ private const val TAG = "AppError"
 fun Throwable.toAppError(): AppError = when (this) {
     is AppError -> this
     is FirebaseNetworkException -> AppError.Network(this)
+    // WeakPassword extends InvalidCredentials: it must be checked first.
+    is FirebaseAuthWeakPasswordException -> AppError.WeakPassword(this)
     is FirebaseAuthInvalidCredentialsException -> AppError.InvalidCredentials(this)
     is FirebaseAuthInvalidUserException -> AppError.UserNotFound(this)
     is FirebaseAuthUserCollisionException -> AppError.EmailInUse(this)
