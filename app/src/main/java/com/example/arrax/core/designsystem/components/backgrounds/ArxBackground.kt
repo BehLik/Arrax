@@ -14,6 +14,9 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,6 +30,28 @@ import com.example.arrax.core.designsystem.theme.ArxTheme
  * Las decoraciones (montañas) se dibujan en todo el espacio Edge-to-Edge,
  * mientras que el contenido respeta el espacio seguro de la barra de navegación del sistema.
  */
+//val LocalArxBackdropHoisted = staticCompositionLocalOf { false }
+//@Composable
+//fun ArxBackdrop(
+//    modifier: Modifier = Modifier,
+//    decoration: ArxDecoration = ArxDecoration.None,
+//    invertMountains: Boolean = false,
+//) {
+//    Box(modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
+//        Crossfade(
+//            targetState = decoration,
+//            animationSpec = tween(400),
+//            modifier = Modifier.align(Alignment.BottomCenter),
+//            label = "arxDecoration",
+//        ) { current ->
+//            when (current) {
+//                ArxDecoration.None -> Unit
+//                ArxDecoration.Mountains -> ArxMountains(invert = invertMountains)
+//            }
+//        }
+//    }
+//}
+
 @Composable
 fun ArxBackground(
     modifier: Modifier = Modifier,
@@ -34,31 +59,36 @@ fun ArxBackground(
     invertMountains: Boolean = false,
     content: @Composable BoxScope.() -> Unit,
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background) // Llena absolutamente toda la pantalla
-    ) {
-        // Decoración de fondo (Montañas) dibujada al fondo absoluto de la pantalla
-        Crossfade(
-            targetState = decoration,
-            animationSpec = tween(400),
-            modifier = Modifier.align(Alignment.BottomCenter),
-            label = "arxDecoration",
-        ) { current ->
-            when (current) {
-                ArxDecoration.None -> Unit
-                ArxDecoration.Mountains -> ArxMountains(invert = invertMountains)
-            }
-        }
+    val backdrop = LocalArxBackdrop.current
 
-        // El contenido interactivo se protege contra la barra de navegación inferior
+    if (backdrop != null) {
+        // Fondo elevado: la pantalla declara su decoración y el root la dibuja.
+        val key = remember { Any() }
+        DisposableEffect(key, decoration, invertMountains) {
+            backdrop.push(key, ArxBackdropSpec(decoration, invertMountains))
+            onDispose { backdrop.remove(key) }
+        }
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .windowInsetsPadding(WindowInsets.navigationBars),
             content = content
         )
+    } else {
+        // Comportamiento original (previews y fuera del NavHost).
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        ) {
+            ArxDecorationLayer(decoration, invertMountains)
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .windowInsetsPadding(WindowInsets.navigationBars),
+                content = content
+            )
+        }
     }
 }
 
