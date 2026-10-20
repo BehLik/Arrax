@@ -30,27 +30,7 @@ import com.example.arrax.core.designsystem.theme.ArxTheme
  * Las decoraciones (montañas) se dibujan en todo el espacio Edge-to-Edge,
  * mientras que el contenido respeta el espacio seguro de la barra de navegación del sistema.
  */
-//val LocalArxBackdropHoisted = staticCompositionLocalOf { false }
-//@Composable
-//fun ArxBackdrop(
-//    modifier: Modifier = Modifier,
-//    decoration: ArxDecoration = ArxDecoration.None,
-//    invertMountains: Boolean = false,
-//) {
-//    Box(modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
-//        Crossfade(
-//            targetState = decoration,
-//            animationSpec = tween(400),
-//            modifier = Modifier.align(Alignment.BottomCenter),
-//            label = "arxDecoration",
-//        ) { current ->
-//            when (current) {
-//                ArxDecoration.None -> Unit
-//                ArxDecoration.Mountains -> ArxMountains(invert = invertMountains)
-//            }
-//        }
-//    }
-//}
+
 
 @Composable
 fun ArxBackground(
