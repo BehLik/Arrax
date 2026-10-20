@@ -1,36 +1,46 @@
-
 package com.example.arrax.core.designsystem.components.feedback
 
+import android.content.res.Configuration
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.platform.LocalConfiguration
-import com.example.arrax.core.designsystem.theme.ArxTheme
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.ui.tooling.preview.Preview
+import com.example.arrax.core.designsystem.icons.ArxIcons
+import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
 
 /**
@@ -46,8 +56,10 @@ enum class ArxBottomSheetSize {
 /**
  * Contenedor modal reutilizable de Arrax.
  *
- * Conserva la identidad visual del Design System y permite
- * personalizar tamaño, encabezado, contenido y acciones inferiores.
+ * Estructura: banda de encabezado (handle + icono + título + cerrar),
+ * contenido con scroll y footer anclado. Todo con tokens del Design System.
+ *
+ * @param icon recurso drawable (usar ArxIcons.*), se muestra en un contenedor tonal.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,12 +69,16 @@ fun ArxBottomSheet(
     size: ArxBottomSheetSize = ArxBottomSheetSize.WrapContent,
     title: String? = null,
     subtitle: String? = null,
+    @DrawableRes icon: Int? = null,
     showDragHandle: Boolean = true,
+    showCloseButton: Boolean = false,
     footer: (@Composable () -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    val screenHeight =
-        LocalConfiguration.current.screenHeightDp.dp
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val colors = MaterialTheme.colorScheme
+    val shapes = MaterialTheme.shapes
+    val horizontal = ArxSpacing.xl
 
     val sheetHeight: Dp = when (size) {
         ArxBottomSheetSize.WrapContent -> Dp.Unspecified
@@ -71,20 +87,28 @@ fun ArxBottomSheet(
         ArxBottomSheetSize.Full -> screenHeight * 0.96f
     }
 
-    val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true
-    )
+    val baseShape = when (size) {
+        ArxBottomSheetSize.WrapContent,
+        ArxBottomSheetSize.Compact -> shapes.large
+
+        ArxBottomSheetSize.Expanded,
+        ArxBottomSheetSize.Full -> shapes.extraLarge
+    }
+
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val hasHeader = title != null || subtitle != null || icon != null
 
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         modifier = modifier,
         sheetState = sheetState,
-        shape = MaterialTheme.shapes.extraLarge,
-        containerColor = MaterialTheme.colorScheme.surface,
-        contentColor = MaterialTheme.colorScheme.onSurface,
-        scrimColor = MaterialTheme.colorScheme.scrim.copy(
-            alpha = 0.48f
+        shape = baseShape.copy(
+            bottomStart = CornerSize(0.dp),
+            bottomEnd = CornerSize(0.dp)
         ),
+        containerColor = colors.surface,
+        contentColor = colors.onSurface,
+        scrimColor = colors.scrim.copy(alpha = 0.48f),
         tonalElevation = 0.dp,
         dragHandle = null
     ) {
@@ -92,86 +116,120 @@ fun ArxBottomSheet(
             modifier = Modifier
                 .fillMaxWidth()
                 .then(
-                    when (size) {
-                        ArxBottomSheetSize.WrapContent ->
-                            Modifier.heightIn(
-                                max = screenHeight * 0.85f
-                            )
-
-                        else -> Modifier.height(sheetHeight)
-                    }
+                    if (size == ArxBottomSheetSize.WrapContent)
+                        Modifier.heightIn(max = screenHeight * 0.85f)
+                    else Modifier.height(sheetHeight)
                 )
-                .padding(horizontal = 20.dp)
-                .padding(bottom = 16.dp)
         ) {
-            if (showDragHandle) {
+            // ── Banda de encabezado (handle + header) ──
+            if (showDragHandle || hasHeader) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(colors.surfaceContainerHigh)
+                ) {
+                    if (showDragHandle) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = ArxSpacing.sm, bottom = ArxSpacing.xs),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .width(ArxSpacing.huge)
+                                    .height(ArxSpacing.xxs)
+                                    .background(
+                                        color = colors.primary.copy(alpha = 0.5f),
+                                        shape = CircleShape
+                                    )
+                            )
+                        }
+                    }
+
+                    if (hasHeader) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    start = horizontal,
+                                    end = ArxSpacing.sm,
+                                    bottom = ArxSpacing.md
+                                ),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(ArxSpacing.sm)
+                        ) {
+                            icon?.let {
+                                Box(
+                                    modifier = Modifier
+                                        .size(ArxSpacing.huge)
+                                        .background(colors.primaryContainer, shapes.medium),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        painter = painterResource(it),
+                                        contentDescription = null,
+                                        tint = colors.onPrimaryContainer
+                                    )
+                                }
+                            }
+
+                            Column(modifier = Modifier.weight(1f)) {
+                                title?.let {
+                                    Text(
+                                        text = it,
+                                        style = MaterialTheme.typography.headlineSmall,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = colors.onSurface
+                                    )
+                                }
+                                subtitle?.let {
+                                    if (title != null) Spacer(Modifier.height(ArxSpacing.xxs))
+                                    Text(
+                                        text = it,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = colors.onSurfaceVariant
+                                    )
+                                }
+                            }
+
+                            if (showCloseButton) {
+                                IconButton(onClick = onDismissRequest) {
+                                    Icon(
+                                        painter = painterResource(ArxIcons.Close),
+                                        contentDescription = "Cerrar",
+                                        tint = colors.onSurfaceVariant
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+
+                HorizontalDivider(color = colors.outlineVariant)
+            }
+
+            // ── Contenido con scroll ──
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f, fill = size != ArxBottomSheetSize.WrapContent)
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = horizontal, vertical = ArxSpacing.md),
+                content = content
+            )
+
+            // ── Footer anclado a sangre completa ──
+            if (footer != null) {
+                HorizontalDivider(color = colors.outlineVariant)
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 4.dp, bottom = 16.dp),
-                    contentAlignment = Alignment.Center
+                        .background(colors.surfaceContainerLow)
+                        .padding(horizontal = horizontal, vertical = ArxSpacing.md)
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(0.10f)
-                            .height(4.dp)
-                            .background(
-                                color = MaterialTheme.colorScheme
-                                    .onSurfaceVariant.copy(alpha = 0.45f),
-                                shape = CircleShape
-                            )
-                    )
+                    footer()
                 }
-            }
-
-            if (title != null || subtitle != null) {
-                Column(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    title?.let {
-                        Text(
-                            text = it,
-                            style = MaterialTheme.typography.headlineMedium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-
-                    subtitle?.let {
-                        Spacer(Modifier.height(4.dp))
-
-                        Text(
-                            text = it,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-
-                Spacer(Modifier.height(16.dp))
-
-                HorizontalDivider(
-                    color = MaterialTheme.colorScheme.outlineVariant
-                        .copy(alpha = 0.65f)
-                )
-
-                Spacer(Modifier.height(16.dp))
-            }
-
-            if (size == ArxBottomSheetSize.WrapContent) {
-                content()
-            } else {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                ) {
-                    content()
-                }
-            }
-
-            if (footer != null) {
-                Spacer(Modifier.height(16.dp))
-                footer()
             }
         }
     }
@@ -184,7 +242,7 @@ fun ArxBottomSheet(
 private fun ArxBottomSheetPreviewContent(
     size: ArxBottomSheetSize
 ) {
-    ArxTheme(darkTheme = true) {
+    ArxTheme(darkTheme = false) {
         ArxBottomSheet(
             onDismissRequest = {},
             size = size,
@@ -207,10 +265,17 @@ private fun ArxBottomSheetPreviewContent(
                 ArxBottomSheetSize.Full ->
                     "Personaliza tu espacio de trabajo"
             },
+            icon = when (size) {
+                ArxBottomSheetSize.WrapContent -> ArxIcons.Add
+                ArxBottomSheetSize.Compact -> ArxIcons.Settings
+                ArxBottomSheetSize.Expanded -> ArxIcons.Event
+                ArxBottomSheetSize.Full -> ArxIcons.TeamOutline
+            },
             showDragHandle = true,
+            showCloseButton = size == ArxBottomSheetSize.Full,
             footer = {
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(ArxSpacing.xs)
                 ) {
                     Button(
                         onClick = {},
@@ -231,7 +296,7 @@ private fun ArxBottomSheetPreviewContent(
             when (size) {
                 ArxBottomSheetSize.WrapContent -> {
                     Text("¿Qué deseas hacer?")
-                    Spacer(Modifier.height(12.dp))
+                    Spacer(Modifier.height(ArxSpacing.sm))
 
                     Button(
                         onClick = {},
@@ -260,7 +325,7 @@ private fun ArxBottomSheetPreviewContent(
                         style = MaterialTheme.typography.labelLarge
                     )
 
-                    Spacer(Modifier.height(8.dp))
+                    Spacer(Modifier.height(ArxSpacing.xs))
 
                     OutlinedTextField(
                         value = "Equipo Arrax",
@@ -270,7 +335,7 @@ private fun ArxBottomSheetPreviewContent(
                         label = { Text("Nombre") }
                     )
 
-                    Spacer(Modifier.height(16.dp))
+                    Spacer(Modifier.height(ArxSpacing.md))
 
                     OutlinedTextField(
                         value = "Desarrollo y colaboración",
@@ -280,7 +345,7 @@ private fun ArxBottomSheetPreviewContent(
                         label = { Text("Descripción") }
                     )
 
-                    Spacer(Modifier.height(16.dp))
+                    Spacer(Modifier.height(ArxSpacing.md))
 
                     PreviewOption("Logotipo del negocio")
                     PreviewOption("Invitar miembros")
@@ -299,7 +364,7 @@ private fun ArxBottomSheetPreviewContent(
                         label = { Text("Nombre") }
                     )
 
-                    Spacer(Modifier.height(12.dp))
+                    Spacer(Modifier.height(ArxSpacing.sm))
 
                     OutlinedTextField(
                         value = "Gestiona proyectos y eventos.",
@@ -309,7 +374,7 @@ private fun ArxBottomSheetPreviewContent(
                         label = { Text("Descripción") }
                     )
 
-                    Spacer(Modifier.height(24.dp))
+                    Spacer(Modifier.height(ArxSpacing.xl))
 
                     Text(
                         "Preferencias",
@@ -331,13 +396,13 @@ private fun PreviewOption(text: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 10.dp),
+            .padding(vertical = ArxSpacing.sm),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(ArxSpacing.sm)
     ) {
         Box(
             modifier = Modifier
-                .size(36.dp)
+                .size(ArxSpacing.huge)
                 .background(
                     MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
                     CircleShape
@@ -365,7 +430,8 @@ private fun PreviewOption(text: String) {
     name = "Bottom Sheet - Wrap Content",
     showBackground = true,
     widthDp = 393,
-    heightDp = 700
+    heightDp = 700,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
 )
 @Composable
 private fun ArxBottomSheetWrapContentPreview() {
