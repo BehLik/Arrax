@@ -70,6 +70,11 @@ dependencies {
     implementation(libs.firebase.crashlytics)
     implementation(libs.androidx.datastore.core)
     implementation(libs.androidx.datastore.preferences)
+
+    // Coil 3
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

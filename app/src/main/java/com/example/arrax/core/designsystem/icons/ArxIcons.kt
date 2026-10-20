@@ -173,7 +173,8 @@ object ArxIcons {
     val VolumeUp = R.drawable.ic_volume_up
 
     /**Volumen Apagado*/
-    val VolumeOff = R.drawable.ic_volume_off    // ============================================================
+    val VolumeOff = R.drawable.ic_volume_off
+    // ============================================================
     // INVENTARIO
     // ============================================================
 
