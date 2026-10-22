@@ -7,7 +7,7 @@ import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.example.arrax.ui.screen.lobby.join.JoinMethod
+import com.example.arrax.core.model.JoinMethod
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

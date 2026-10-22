@@ -12,6 +12,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.example.arrax.core.model.JoinMethod
 import com.example.arrax.core.navigation.*
 import com.example.arrax.ui.root.navigation.PlaceholderAction
 import com.example.arrax.ui.root.navigation.PlaceholderScreen

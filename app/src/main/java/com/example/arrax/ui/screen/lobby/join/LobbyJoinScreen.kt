@@ -31,6 +31,7 @@ import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
 import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
+import com.example.arrax.core.model.JoinMethod
 import com.example.arrax.ui.screen.lobby.join.component.JoinCodeForm
 import com.example.arrax.ui.screen.lobby.join.component.JoinMethodSelector
 import com.example.arrax.ui.screen.lobby.join.component.JoinQrScannerView
