@@ -20,6 +20,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
+import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
 import com.example.arrax.core.designsystem.theme.extendedColors
@@ -43,70 +45,76 @@ fun LobbySettingsScreen(
     onAboutLinkClick: (AboutLink) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Scaffold(
-        modifier = modifier,
-        containerColor = MaterialTheme.colorScheme.background,
-        topBar = {
-            TopAppBar(
-                title = { Text("Configuración", style = MaterialTheme.typography.headlineMedium) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
-            )
-        }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .padding(padding)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = ArxSpacing.md, vertical = ArxSpacing.sm),
-            verticalArrangement = Arrangement.spacedBy(ArxSpacing.xl)
-        ) {
-            Column(verticalArrangement = Arrangement.spacedBy(ArxSpacing.xs)) {
-                SettingsSectionHeader("Acerca de Arrax")
-                SettingsAboutSection(
-                    version = appVersion,
-                    onLinkClick = onAboutLinkClick
+    ArxBackground(decoration = ArxDecoration.None) {
+        Scaffold(
+            modifier = modifier,
+            containerColor = MaterialTheme.colorScheme.background,
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            "Configuración",
+                            style = MaterialTheme.typography.headlineMedium
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = onBack) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
                 )
             }
-            Column(verticalArrangement = Arrangement.spacedBy(ArxSpacing.xs)) {
-                SettingsSectionHeader("Preferencias generales")
-                SettingsGroupCard {
-                    val prefs = SettingsPreference.entries
-                    prefs.forEachIndexed { index, pref ->
-                        SettingsNavigationRow(
-                            title = pref.title,
-                            subtitle = pref.subtitle,
-                            onClick = { onPreferenceClick(pref) }
-                        )
-                        if (index != prefs.lastIndex) {
-                            HorizontalDivider(color = MaterialTheme.extendedColors.glassBorder)
+        ) { padding ->
+            Column(
+                modifier = Modifier
+                    .padding(padding)
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = ArxSpacing.md, vertical = ArxSpacing.sm),
+                verticalArrangement = Arrangement.spacedBy(ArxSpacing.xl)
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(ArxSpacing.xs)) {
+                    SettingsSectionHeader("Acerca de Arrax")
+                    SettingsAboutSection(
+                        version = appVersion,
+                        onLinkClick = onAboutLinkClick
+                    )
+                }
+                Column(verticalArrangement = Arrangement.spacedBy(ArxSpacing.xs)) {
+                    SettingsSectionHeader("Preferencias generales")
+                    SettingsGroupCard {
+                        val prefs = SettingsPreference.entries
+                        prefs.forEachIndexed { index, pref ->
+                            SettingsNavigationRow(
+                                title = pref.title,
+                                subtitle = pref.subtitle,
+                                onClick = { onPreferenceClick(pref) }
+                            )
+                            if (index != prefs.lastIndex) {
+                                HorizontalDivider(color = MaterialTheme.extendedColors.glassBorder)
+                            }
+                        }
+                    }
+                }
+
+                Column(verticalArrangement = Arrangement.spacedBy(ArxSpacing.xs)) {
+                    SettingsSectionHeader("Gestión de alertas")
+                    SettingsGroupCard {
+                        val channels = AlertChannel.entries
+                        channels.forEachIndexed { index, channel ->
+                            SettingsSwitchRow(
+                                title = channel.title,
+                                subtitle = channel.subtitle,
+                                checked = alertStates[channel] ?: false,
+                                onCheckedChange = { onAlertToggle(channel, it) }
+                            )
+                            if (index != channels.lastIndex) {
+                                HorizontalDivider(color = MaterialTheme.extendedColors.glassBorder)
+                            }
                         }
                     }
                 }
             }
-
-            Column(verticalArrangement = Arrangement.spacedBy(ArxSpacing.xs)) {
-                SettingsSectionHeader("Gestión de alertas")
-                SettingsGroupCard {
-                    val channels = AlertChannel.entries
-                    channels.forEachIndexed { index, channel ->
-                        SettingsSwitchRow(
-                            title = channel.title,
-                            subtitle = channel.subtitle,
-                            checked = alertStates[channel] ?: false,
-                            onCheckedChange = { onAlertToggle(channel, it) }
-                        )
-                        if (index != channels.lastIndex) {
-                            HorizontalDivider(color = MaterialTheme.extendedColors.glassBorder)
-                        }
-                    }
-                }
-            }
-
 
         }
     }

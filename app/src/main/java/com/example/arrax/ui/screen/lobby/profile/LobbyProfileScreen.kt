@@ -18,9 +18,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
+import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
+import com.example.arrax.core.designsystem.components.brand.ArxLogo
+import com.example.arrax.core.designsystem.components.brand.ArxLogoLayout
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
 import com.example.arrax.core.designsystem.theme.extendedColors
@@ -41,50 +47,52 @@ fun LobbyProfileScreen(
     onLogout: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Scaffold(
-        modifier = modifier,
-        containerColor = MaterialTheme.colorScheme.background,
-        topBar = {
-            TopAppBar(
-                title = { Text("Mi perfil", style = MaterialTheme.typography.headlineMedium) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
-            )
-        }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .padding(padding)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = ArxSpacing.md, vertical = ArxSpacing.sm),
-            verticalArrangement = Arrangement.spacedBy(ArxSpacing.xl)
-        ) {
-            ProfileHeader(
-                name = userName,
-                email = userEmail,
-                modifier = Modifier.fillMaxWidth()
-            )
+    ArxBackground(decoration = ArxDecoration.Mountains) {
+        Scaffold(
+            modifier = modifier,
+            containerColor = MaterialTheme.colorScheme.background,
+            topBar = {
+                TopAppBar(
+                    title = { Text("Mi perfil", style = MaterialTheme.typography.headlineMedium) },
+                    navigationIcon = {
+                        IconButton(onClick = onBack) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
+                )
+            }
+        ) { padding ->
+            Column(
+                modifier = Modifier
+                    .padding(padding)
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = ArxSpacing.md, vertical = ArxSpacing.sm),
+                verticalArrangement = Arrangement.spacedBy(ArxSpacing.xl)
+            ) {
+                ProfileHeader(
+                    name = userName,
+                    email = userEmail,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-            ProfileGroupCard {
-                val options = ProfileOption.entries
-                options.forEachIndexed { index, option ->
-                    ProfileOptionRow(
-                        title = option.title,
-                        subtitle = if (option == ProfileOption.ActiveBusiness) activeBusinessName else null,
-                        onClick = { onOptionClick(option) }
-                    )
-                    if (index != options.lastIndex) {
-                        HorizontalDivider(color = MaterialTheme.extendedColors.glassBorder)
+                ProfileGroupCard {
+                    val options = ProfileOption.entries
+                    options.forEachIndexed { index, option ->
+                        ProfileOptionRow(
+                            title = option.title,
+                            subtitle = if (option == ProfileOption.ActiveBusiness) activeBusinessName else null,
+                            onClick = { onOptionClick(option) }
+                        )
+                        if (index != options.lastIndex) {
+                            HorizontalDivider(color = MaterialTheme.extendedColors.glassBorder)
+                        }
                     }
                 }
-            }
 
-            ProfileGroupCard {
-                ProfileLogoutRow(onClick = onLogout)
+                ProfileGroupCard {
+                    ProfileLogoutRow(onClick = onLogout)
+                }
             }
         }
     }

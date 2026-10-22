@@ -1,19 +1,16 @@
 package com.example.arrax.ui.screen.lobby.profile.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.example.arrax.core.designsystem.theme.ArxSpacing
+import com.example.arrax.ui.root.session.CurrentUserAvatar
 
 @Composable
 fun ProfileHeader(
@@ -26,19 +23,7 @@ fun ProfileHeader(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(ArxSpacing.xs)
     ) {
-        Box(
-            modifier = Modifier
-                .size(ArxSpacing.huge * 2)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primaryContainer),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = name.firstOrNull()?.uppercase().orEmpty(),
-                style = MaterialTheme.typography.headlineLarge,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
-            )
-        }
+        CurrentUserAvatar(size = 88.dp)
         Text(
             text = name,
             style = MaterialTheme.typography.headlineMedium,
