@@ -51,7 +51,6 @@ kotlin {
         )
     }
 }
-
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -74,6 +73,11 @@ dependencies {
     // Coil 3
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+
+    // --- (Credentials & Google ID) ---
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.google.id)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

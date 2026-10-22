@@ -31,6 +31,8 @@ import com.example.arrax.core.designsystem.components.backgrounds.ArxBackdropHos
 import com.example.arrax.core.designsystem.components.backgrounds.ArxBackdropState
 //import com.example.arrax.core.designsystem.components.backgrounds.LocalArxBackdropHoisted
 import com.example.arrax.core.designsystem.icons.ArxIcons.Box
+import com.example.arrax.ui.root.session.CurrentUserViewModel
+import com.example.arrax.ui.root.session.LocalCurrentUser
 
 // MainActivity calls ArraxNavHost() with no arguments, so it owns the controller
 // and resolves the start destination itself.
@@ -48,12 +50,14 @@ import com.example.arrax.core.designsystem.icons.ArxIcons.Box
 @Composable
 fun ArraxNavHost(
     navController: NavHostController = rememberNavController(),
-    viewModel: AppStartViewModel = hiltViewModel()
+    viewModel: AppStartViewModel = hiltViewModel(),
+    currentUserViewModel: CurrentUserViewModel = hiltViewModel()
 ) {
     val start by viewModel.start.collectAsState()
     val current = start
+    val currentUser by currentUserViewModel.user.collectAsState()
     val backdropState = remember { ArxBackdropState() }
-
+    CompositionLocalProvider(LocalCurrentUser provides currentUser) {
     ArxBackdropHost(state = backdropState) {
         if (current == null) {
             ArxLoading()
@@ -73,4 +77,5 @@ fun ArraxNavHost(
             }
         }
     }
+}
 }

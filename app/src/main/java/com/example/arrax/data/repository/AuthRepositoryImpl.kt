@@ -1,8 +1,10 @@
 package com.example.arrax.data.repository
 
 
+import android.util.Log
 import com.example.arrax.core.common.AppError
 import com.example.arrax.core.common.Resource
+import com.example.arrax.data.mapper.sessionPhotoUrl
 import com.example.arrax.data.remote.FirebaseAuthDataSource
 import com.example.arrax.data.remote.FirestoreTenantDataSource
 import com.example.arrax.domain.model.Role
@@ -29,11 +31,15 @@ class AuthRepositoryImpl @Inject constructor(
             } else {
                 tenantDataSource.observeUser(firebaseUser.uid).map { dto ->
                     dto?.let {
+                        Log.d("Avatar", "auth photo=${firebaseUser.sessionPhotoUrl()} providers=${firebaseUser.providerData.map { it.providerId }}")
                         User(
-                            uid = it.uid,
-                            name = it.name,
-                            tenantId = it.tenantId,
-                            role = runCatching { Role.valueOf(it.role) }.getOrDefault(Role.OPERATOR)
+                            uid = firebaseUser.uid,
+                            name = dto?.name?.takeIf { it.isNotBlank() } ?: firebaseUser.displayName.orEmpty(),
+                            tenantId = dto?.tenantId,
+                            role = dto?.let { runCatching { Role.valueOf(it.role) }.getOrDefault(Role.OPERATOR) }
+                                ?: Role.OPERATOR,
+                            email = firebaseUser.email.orEmpty(),
+                            photoUrl = firebaseUser.sessionPhotoUrl()
                         )
                     } ?: User(uid = firebaseUser.uid)
                 }
@@ -54,7 +60,21 @@ class AuthRepositoryImpl @Inject constructor(
     } catch (e: Exception) {
         Resource.Error(e.message ?: "Error al iniciar sesión", e)
     }
-
+    override suspend fun signInWithGoogle(idToken: String): Resource<User> = try {
+        val u = authDataSource.signInWithGoogle(idToken)
+        Resource.Success(
+            User(
+                uid = u.uid,
+                name = u.displayName.orEmpty(),
+                email = u.email.orEmpty(),
+                photoUrl = u.sessionPhotoUrl()
+            )
+        )
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        Resource.Error(e.message ?: "Error al iniciar sesión con Google", e)
+    }
     override suspend fun register(email: String, password: String, name: String): Resource<User> = try {
         val firebaseUser = authDataSource.register(email, password)
         authDataSource.sendEmailVerification()

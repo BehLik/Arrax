@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.arrax.core.common.AppError
 import com.example.arrax.core.common.Resource
 import com.example.arrax.core.common.mapAuthError
+import com.example.arrax.domain.usecase.auth.google.SignInWithGoogleUseCase
 import com.example.arrax.domain.usecase.auth.login.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,10 +15,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
+import android.util.Log
+import com.example.arrax.core.common.toAppError
 @HiltViewModel
 class AuthLoginViewmodel @Inject constructor(
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
+    private val signInWithGoogleUseCase: SignInWithGoogleUseCase
+
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AuthLoginState())
@@ -70,6 +74,37 @@ class AuthLoginViewmodel @Inject constructor(
         email.isBlank() -> "Ingresa tu correo"
         !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> "Correo inválido"
         else -> null
+    }
+    fun onGoogleStarted() {
+        _uiState.update { it.copy(isGoogleLoading = true, errorGeneral = null) }
+    }
+
+    fun onGoogleCancelled() {
+        _uiState.update { it.copy(isGoogleLoading = false) }
+    }
+
+    fun onGoogleError(message: String) {
+        _uiState.update { it.copy(isGoogleLoading = false, errorGeneral = message) }
+    }
+
+    fun signInWithGoogle(idToken: String, onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            when (val r = signInWithGoogleUseCase(idToken)) {
+                is Resource.Success -> {
+                    _uiState.update { it.copy(isGoogleLoading = false) }
+                    onSuccess()
+                }
+                is Resource.Error -> {
+                    Log.e("GoogleSignIn", "signInWithCredential falló", r.throwable)
+                    val message = when (r.throwable?.toAppError()) {
+                        is AppError.Network -> mapAuthError(r.throwable, r.message)
+                        else -> "No se pudo iniciar sesión con Google. Intenta de nuevo."
+                    }
+                    _uiState.update { it.copy(isGoogleLoading = false, errorGeneral = message) }
+                }
+                Resource.Loading -> Unit
+            }
+        }
     }
 
     private fun validatePassword(password: String): String? =

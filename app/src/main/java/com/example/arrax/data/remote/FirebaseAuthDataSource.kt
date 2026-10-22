@@ -4,6 +4,7 @@ package com.example.arrax.data.remote
 import android.R.attr.name
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.userProfileChangeRequest
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -27,6 +28,12 @@ class FirebaseAuthDataSource @Inject constructor(
     suspend fun login(email: String, password: String): FirebaseUser {
         val result = auth.signInWithEmailAndPassword(email, password).await()
         return result.user ?: error("No se pudo iniciar sesión")
+    }
+
+    suspend fun signInWithGoogle(idToken: String): FirebaseUser {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        val result = auth.signInWithCredential(credential).await()
+        return result.user ?: error("No se pudo iniciar sesión con Google")
     }
 
     suspend fun register(email: String, password: String): FirebaseUser {

@@ -18,7 +18,7 @@ import com.example.arrax.R
  * Esto permite cambiar el recurso gráfico sin modificar las pantallas.
  */
 object ArxIcons {
-
+    val Google = R.drawable.ic_google
     // ============================================================
     // NAVEGACIÓN
     // ============================================================
