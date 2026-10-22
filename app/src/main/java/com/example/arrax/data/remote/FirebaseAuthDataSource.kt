@@ -1,7 +1,5 @@
 package com.example.arrax.data.remote
 
-
-import android.R.attr.name
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -36,11 +34,10 @@ class FirebaseAuthDataSource @Inject constructor(
         return result.user ?: error("No se pudo iniciar sesión con Google")
     }
 
-    suspend fun register(email: String, password: String): FirebaseUser {
+    suspend fun register(email: String, password: String, name: String): FirebaseUser {
         val result = auth.createUserWithEmailAndPassword(email, password).await()
-        return result.user ?: error("No se pudo crear el usuario")
         val user = result.user ?: error("No se pudo crear el usuario")
-        user.updateProfile(userProfileChangeRequest { displayName = name.toString() }).await()
+        user.updateProfile(userProfileChangeRequest { displayName = name }).await()
         return user
     }
 

@@ -30,18 +30,15 @@ class AuthRepositoryImpl @Inject constructor(
                 flowOf(null)
             } else {
                 tenantDataSource.observeUser(firebaseUser.uid).map { dto ->
-                    dto?.let {
-                        Log.d("Avatar", "auth photo=${firebaseUser.sessionPhotoUrl()} providers=${firebaseUser.providerData.map { it.providerId }}")
-                        User(
-                            uid = firebaseUser.uid,
-                            name = dto?.name?.takeIf { it.isNotBlank() } ?: firebaseUser.displayName.orEmpty(),
-                            tenantId = dto?.tenantId,
-                            role = dto?.let { runCatching { Role.valueOf(it.role) }.getOrDefault(Role.OPERATOR) }
-                                ?: Role.OPERATOR,
-                            email = firebaseUser.email.orEmpty(),
-                            photoUrl = firebaseUser.sessionPhotoUrl()
-                        )
-                    } ?: User(uid = firebaseUser.uid)
+                    User(
+                        uid = firebaseUser.uid,
+                        name = dto?.name?.takeIf { it.isNotBlank() } ?: firebaseUser.displayName.orEmpty(),
+                        tenantId = dto?.tenantId,
+                        role = dto?.let { runCatching { Role.valueOf(it.role) }.getOrDefault(Role.OPERATOR) }
+                            ?: Role.OPERATOR,
+                        email = firebaseUser.email.orEmpty(),
+                        photoUrl = firebaseUser.sessionPhotoUrl()
+                    )
                 }
             }
         }
@@ -76,7 +73,7 @@ class AuthRepositoryImpl @Inject constructor(
         Resource.Error(e.message ?: "Error al iniciar sesión con Google", e)
     }
     override suspend fun register(email: String, password: String, name: String): Resource<User> = try {
-        val firebaseUser = authDataSource.register(email, password)
+        val firebaseUser = authDataSource.register(email, password,name)
         authDataSource.sendEmailVerification()
         Resource.Success(User(uid = firebaseUser.uid, name = name))
     } catch (e: CancellationException) {
