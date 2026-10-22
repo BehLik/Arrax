@@ -174,6 +174,9 @@ object ArxIcons {
 
     /**Volumen Apagado*/
     val VolumeOff = R.drawable.ic_volume_off
+
+    val FlashLightON=R.drawable.ic_flashlight_on
+    val FlashLightOFF=R.drawable.ic_flashlight_off
     // ============================================================
     // INVENTARIO
     // ============================================================

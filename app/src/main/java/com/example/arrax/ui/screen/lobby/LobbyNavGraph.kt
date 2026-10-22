@@ -3,6 +3,11 @@ package com.example.arrax.ui.screen.lobby
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -14,6 +19,11 @@ import com.example.arrax.ui.root.navigation.backAction
 import com.example.arrax.ui.root.navigation.logoutToAuth
 import com.example.arrax.ui.root.navigation.safeNavigate
 import com.example.arrax.ui.screen.lobby.home.LobbyHomeScreen
+import com.example.arrax.ui.screen.lobby.join.LobbyJoinScreen
+import com.example.arrax.ui.screen.lobby.notification.LobbyNotificationScreen
+import com.example.arrax.ui.screen.lobby.profile.LobbyProfileScreen
+import com.example.arrax.ui.screen.lobby.settings.LobbySettingsScreen
+import com.example.arrax.ui.screen.lobby.settings.component.AlertChannel
 
 fun NavGraphBuilder.lobbyGraph(nav: NavController) {
     val back = nav.backAction()
@@ -47,22 +57,38 @@ fun NavGraphBuilder.lobbyGraph(nav: NavController) {
         }
 
         composable<BusinessJoin> {
-            // TODO: BusinessJoinScreen(onBack = back, onJoined = { id ->
-            //     nav.safeNavigate(BusinessHome(id)) { popUpTo<BusinessJoin> { inclusive = true } } })
-            PlaceholderScreen("Unirse a un negocio", back)
-        }
+            // TODO: mover a LobbyJoinViewModel; al unirse: nav.safeNavigate(BusinessHome(id)) { popUpTo<BusinessJoin> { inclusive = true } }
+            var method by rememberSaveable { mutableStateOf(JoinMethod.CODE) }
+            var code by rememberSaveable { mutableStateOf("") }
+            var torchOn by remember { mutableStateOf(false) }
 
-        composable<Profile> { PlaceholderScreen("Perfil", back) }
-
-        composable<Settings> {
-            // TODO: onLogout = { nav.logoutToAuth() }
-            PlaceholderScreen(
-                title = "Ajustes",
+            LobbyJoinScreen(
+                method = method, code = code, isLoading = false, errorMessage = null, torchOn = torchOn,
                 onBack = back,
-                actions = listOf(PlaceholderAction("Cerrar sesión") { nav.logoutToAuth() })
+                onMethodChange = { method = it },
+                onCodeChange = { code = it },
+                onJoin = { /* JoinTenantUseCase vía ViewModel */ },
+                onTorchToggle = { torchOn = !torchOn }
             )
         }
 
-        composable<Notifications> { PlaceholderScreen("Notificaciones", back) }
+        composable<Profile> {
+            // TODO: estado desde LobbyProfileViewModel
+            LobbyProfileScreen(
+                userName = "Admin", userEmail = "admin@arrax.com", activeBusinessName = null,
+                onBack = back,
+                onOptionClick = { /* TODO */ },
+                onLogout = { nav.logoutToAuth() }
+            )
+        }
+        composable<Settings> {
+            LobbySettingsScreen(
+                alertStates = AlertChannel.entries.associateWith { true }, appVersion = "v1.0.0",
+                onBack = back, onPreferenceClick = {}, onAlertToggle = { _, _ -> }, onAboutLinkClick = {}
+            )
+        }
+        composable<Notifications> {
+            LobbyNotificationScreen(notifications = emptyList(), onBack = back, onNotificationClick = {})
+        }
     }
 }

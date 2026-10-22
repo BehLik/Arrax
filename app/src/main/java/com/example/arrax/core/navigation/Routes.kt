@@ -13,7 +13,7 @@ import kotlinx.serialization.Serializable
 @Serializable data object LobbyHome
 @Serializable data object MyBusinesses
 @Serializable data object BusinessCreate
-@Serializable data object BusinessJoin
+@Serializable data object BusinessJoin//<---unirse a negocio
 @Serializable data object Profile
 @Serializable data object Settings
 @Serializable data object Notifications
