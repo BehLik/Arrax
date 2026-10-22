@@ -23,8 +23,11 @@ fun FirebaseUser.sessionPhotoUrl(sizePx: Int = 256): String? {
     return raw?.toString()?.replace(Regex("=s\\d+-c$"), "=s$sizePx-c")
 }
 /** Unknown or missing role must NEVER fall back to ADMIN. "OPERADOR" is legacy data. */
+val Role.isAdminOrOwner: Boolean get() = this == Role.OWNER || this == Role.ADMIN
 internal fun String?.toRole(): Role = when (this?.uppercase()) {
+
+    "OWNER" -> Role.OWNER
     "ADMIN" -> Role.ADMIN
     "OPERATOR", "OPERADOR" -> Role.OPERATOR
-    else -> Role.OPERATOR
+    else -> Role.NONE
 }

@@ -47,7 +47,7 @@ fun LobbyHomeScreen(
             containerColor = Color.Transparent,
             topBar = {
                 LobbyTopBar(
-                    userName = state.userName,
+//                    userName = state.userName,
                     unreadNotifications = state.unreadNotifications,
                     onNotificationsClick = onNotificationsClick,
                     onSettingsClick = onSettingsClick,

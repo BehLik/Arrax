@@ -5,6 +5,7 @@ import android.util.Log
 import com.example.arrax.core.common.AppError
 import com.example.arrax.core.common.Resource
 import com.example.arrax.data.mapper.sessionPhotoUrl
+import com.example.arrax.data.mapper.toRole
 import com.example.arrax.data.remote.FirebaseAuthDataSource
 import com.example.arrax.data.remote.FirestoreTenantDataSource
 import com.example.arrax.domain.model.Role
@@ -30,12 +31,12 @@ class AuthRepositoryImpl @Inject constructor(
                 flowOf(null)
             } else {
                 tenantDataSource.observeUser(firebaseUser.uid).map { dto ->
+                    val tenantId = dto?.tenantId?.takeIf { it.isNotBlank() }
                     User(
                         uid = firebaseUser.uid,
                         name = dto?.name?.takeIf { it.isNotBlank() } ?: firebaseUser.displayName.orEmpty(),
-                        tenantId = dto?.tenantId,
-                        role = dto?.let { runCatching { Role.valueOf(it.role) }.getOrDefault(Role.OPERATOR) }
-                            ?: Role.OPERATOR,
+                        tenantId = tenantId,
+                        role = if (tenantId == null) Role.NONE else dto?.role.toRole(),
                         email = firebaseUser.email.orEmpty(),
                         photoUrl = firebaseUser.sessionPhotoUrl()
                     )

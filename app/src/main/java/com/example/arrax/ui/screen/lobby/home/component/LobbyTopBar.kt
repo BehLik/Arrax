@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,15 +20,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.arrax.R
 import com.example.arrax.core.designsystem.components.brand.ArxLogoMark
-import com.example.arrax.core.designsystem.components.display.ArxAvatar
-import com.example.arrax.core.designsystem.components.display.arxInitials
 import com.example.arrax.core.designsystem.components.feedback.ArxBadge
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
+import com.example.arrax.ui.root.session.CurrentUserAvatar
 
 @Composable
 fun LobbyTopBar(
-    userName: String,
     unreadNotifications: Int,
     onNotificationsClick: () -> Unit,
     onSettingsClick: () -> Unit,
@@ -59,16 +58,25 @@ fun LobbyTopBar(
                 )
             }
         }
+
         IconButton(onClick = onSettingsClick) {
             Icon(
                 painterResource(ArxIcons.Settings),
                 contentDescription = stringResource(R.string.lobby_settings_cd)
             )
         }
-        ArxAvatar(
-            initials = arxInitials(userName.ifBlank { "?" }),
-            size = 36.dp,
-            modifier = Modifier.clip(CircleShape).clickable(onClick = onProfileClick)
-        )
+
+        Box(
+            modifier = Modifier
+                .minimumInteractiveComponentSize()
+                .clip(CircleShape)
+                .clickable(
+                    onClickLabel = stringResource(R.string.lobby_profile_cd),
+                    onClick = onProfileClick
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            CurrentUserAvatar(size = 36.dp)
+        }
     }
 }

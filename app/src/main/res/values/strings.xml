@@ -129,6 +129,7 @@
     <!-- Lobby components -->
     <string name="lobby_notifications_cd">Notificaciones</string>
     <string name="lobby_settings_cd">Configuración</string>
+    <string name="lobby_profile_cd">Abrir perfil</string>
     <string name="lobby_empty_title">Aún no tienes negocios</string>
     <string name="lobby_empty_description">Crea uno nuevo o únete con un código de invitación.</string>
     <string name="lobby_empty_action">Crear negocio</string>

@@ -5,6 +5,6 @@ data class User(
     val email: String = "",
     val name: String = "",
     val tenantId: String? = null,
-    val role: Role = Role.OPERATOR,
+    val role: Role = Role.NONE,
     val photoUrl: String? = null
 )
