@@ -12,7 +12,7 @@ import com.example.arrax.domain.model.EventCut
 import com.example.arrax.domain.model.EventStatus
 import com.example.arrax.domain.repository.AuthRepository
 import com.example.arrax.domain.usecase.event.create.CreateEventUseCase
-import com.example.arrax.domain.usecase.event.create.GetCatalogCutUseCase
+import com.example.arrax.domain.usecase.catalog.GetCatalogCutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

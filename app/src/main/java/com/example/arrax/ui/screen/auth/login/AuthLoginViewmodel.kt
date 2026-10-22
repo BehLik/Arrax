@@ -3,6 +3,7 @@ package com.example.arrax.ui.screen.auth.login
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.arrax.core.common.AppError
 import com.example.arrax.core.common.Resource
 import com.example.arrax.core.common.mapAuthError
 import com.example.arrax.domain.usecase.auth.login.LoginUseCase
@@ -31,8 +32,9 @@ class AuthLoginViewmodel @Inject constructor(
     }
 
     /** onSuccess navega a un punto de decisión (Fase 2), no directo a Lobby Home. */
-    fun login(onSuccess: () -> Unit) {
+    fun login(onSuccess: () -> Unit, onNeedsVerification: () -> Unit) {
         val current = _uiState.value
+        val email = current.email.trim()
         val emailError = validateEmail(current.email)
         val passwordError = validatePassword(current.password)
 
@@ -44,13 +46,20 @@ class AuthLoginViewmodel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorGeneral = null) }
 
-            when (val result = loginUseCase(current.email, current.password)) {
+            when (val result = loginUseCase(email, current.password)) {
                 is Resource.Success -> {
                     _uiState.update { it.copy(isLoading = false) }
                     onSuccess()
                 }
-                is Resource.Error -> _uiState.update {
-                    it.copy(isLoading = false, errorGeneral = mapAuthError(result.throwable, result.message))
+                is Resource.Error -> {
+                    _uiState.update { it.copy(isLoading = false) }
+                    if (result.throwable is AppError.EmailNotVerified) {
+                        onNeedsVerification()
+                    } else {
+                        _uiState.update {
+                            it.copy(errorGeneral = mapAuthError(result.throwable, result.message))
+                        }
+                    }
                 }
                 Resource.Loading -> Unit
             }

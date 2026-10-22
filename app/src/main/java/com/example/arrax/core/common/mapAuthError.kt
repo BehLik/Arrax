@@ -13,5 +13,6 @@ fun mapAuthError(throwable: Throwable?, fallback: String): String =
         is AppError.EmailInUse -> "Ya existe una cuenta con ese correo."
         is AppError.WeakPassword -> "La contraseña es demasiado débil, usa al menos 6 caracteres."
         is AppError.Network -> "No hay conexión a internet. Intenta de nuevo."
+        is AppError.EmailNotVerified -> "Verifica tu correo para continuar."
         else -> fallback
     }

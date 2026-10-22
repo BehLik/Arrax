@@ -30,7 +30,8 @@ fun AuthLoginScreen(
     viewModel: AuthLoginViewmodel = hiltViewModel(),
     onLoginSuccess: () -> Unit,
     onNavigateToRegister: () -> Unit,
-    onNavigateToForgotPassword: () -> Unit
+    onNavigateToForgotPassword: () -> Unit,
+    onNavigateToVerifyEmail:()-> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -43,7 +44,7 @@ fun AuthLoginScreen(
         isLoading = uiState.isLoading,
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
-        onLoginClick = { viewModel.login(onLoginSuccess) },
+        onLoginClick = { viewModel.login(onLoginSuccess, onNavigateToVerifyEmail) },
         onRegisterClick = onNavigateToRegister,
         onForgotClick = onNavigateToForgotPassword
     )

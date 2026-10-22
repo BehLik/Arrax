@@ -1,4 +1,4 @@
-package com.example.arrax.domain.usecase.event.create
+package com.example.arrax.domain.usecase.catalog
 
 import com.example.arrax.domain.model.CutCatalog
 import com.example.arrax.domain.repository.CutCatalogRepository

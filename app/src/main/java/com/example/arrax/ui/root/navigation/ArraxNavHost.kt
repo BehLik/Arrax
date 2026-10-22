@@ -50,23 +50,23 @@ fun ArraxNavHost(
     navController: NavHostController = rememberNavController(),
     viewModel: AppStartViewModel = hiltViewModel()
 ) {
-    val startDestination by viewModel.startDestination.collectAsState()
-    val start = startDestination
+    val start by viewModel.start.collectAsState()
+    val current = start
     val backdropState = remember { ArxBackdropState() }
 
     ArxBackdropHost(state = backdropState) {
-        if (start == null) {
+        if (current == null) {
             ArxLoading()
         } else {
             NavHost(
                 navController = navController,
-                startDestination = start,
+                startDestination = current.root,
                 enterTransition = ArraxTransitions.enter,
                 exitTransition = ArraxTransitions.exit,
                 popEnterTransition = ArraxTransitions.popEnter,
                 popExitTransition = ArraxTransitions.popExit
             ) {
-                authGraph(navController)
+                authGraph(navController, startOnVerify = current.needsVerification)
                 lobbyGraph(navController)
                 businessGraph(navController)
                 eventGraph(navController)

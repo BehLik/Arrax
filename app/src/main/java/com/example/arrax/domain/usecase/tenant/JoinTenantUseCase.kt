@@ -1,5 +1,4 @@
-package com.example.arrax.domain.usecase.event.tenant
-
+package com.example.arrax.domain.usecase.tenant
 
 import com.example.arrax.core.common.Resource
 import com.example.arrax.domain.model.Tenant

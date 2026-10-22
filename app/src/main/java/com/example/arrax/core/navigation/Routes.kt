@@ -7,11 +7,11 @@ import kotlinx.serialization.Serializable
 @Serializable data object Login
 @Serializable data object Register
 @Serializable data object ForgotPassword
-
+@Serializable data object VerifyEmail
 // ── Lobby (alcance usuario, sin negocio) ──
 @Serializable data object LobbyGraph
 @Serializable data object LobbyHome
-@Serializable data object MyBusinesses            // "Ver todos"
+@Serializable data object MyBusinesses
 @Serializable data object BusinessCreate
 @Serializable data object BusinessJoin
 @Serializable data object Profile

@@ -9,5 +9,10 @@ interface AuthRepository {
     suspend fun login(email: String, password: String): Resource<User>
     suspend fun register(email: String, password: String, name: String): Resource<User>
     suspend fun sendPasswordReset(email: String): Resource<Unit>
+    suspend fun sendEmailVerification(): Resource<Unit>
+    suspend fun checkEmailVerified(): Resource<Boolean>
+    suspend fun cancelUnverifiedRegistration(): Resource<Unit>
+    fun currentEmail(): String?
+    fun isEmailVerified(): Boolean
     suspend fun logout()
 }

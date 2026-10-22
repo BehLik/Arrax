@@ -12,21 +12,23 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
+data class StartState(val root: Any, val needsVerification: Boolean = false)
 @HiltViewModel
 class AppStartViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    // null = still resolving. Type-safe routes are plain @Serializable objects, hence Any.
-    private val _startDestination = MutableStateFlow<Any?>(null)
-    val startDestination: StateFlow<Any?> = _startDestination.asStateFlow()
+    private val _start = MutableStateFlow<StartState?>(null)
+    val start: StateFlow<StartState?> = _start.asStateFlow()
 
     init {
         viewModelScope.launch {
             val user = authRepository.observeCurrentUser().first()
-            // Root NavHost start must be a graph (AuthGraph/LobbyGraph), not a nested destination.
-            _startDestination.value = if (user == null) AuthGraph else LobbyGraph
+            _start.value = when {
+                user == null -> StartState(AuthGraph)
+                !authRepository.isEmailVerified() -> StartState(AuthGraph, needsVerification = true)
+                else -> StartState(LobbyGraph)
+            }
         }
     }
 }

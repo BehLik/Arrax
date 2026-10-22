@@ -13,30 +13,41 @@ import com.example.arrax.ui.root.navigation.backAction
 import com.example.arrax.ui.root.navigation.safeNavigate
 import com.example.arrax.ui.screen.auth.forgotpassword.ForgotPasswordScreen
 import com.example.arrax.ui.screen.auth.login.AuthLoginScreen
+import com.example.arrax.ui.screen.auth.register.AuthRegisterScreen
+import com.example.arrax.ui.screen.auth.verifyemail.VerifyEmailScreen
 
-fun NavGraphBuilder.authGraph(nav: NavController) {
+fun NavGraphBuilder.authGraph(nav: NavController, startOnVerify: Boolean = false) {
     val back = nav.backAction()
 
-    navigation<AuthGraph>(startDestination = Login) {
+    navigation<AuthGraph>(startDestination = if (startOnVerify) VerifyEmail else Login) {
 
         composable<Login>(
             enterTransition = { fadeIn(tween(400)) },
             popExitTransition = { fadeOut(tween(400)) }
         ) {
             AuthLoginScreen(
-
                 onLoginSuccess = {
                     nav.safeNavigate(LobbyGraph) { popUpTo<AuthGraph> { inclusive = true } }
                 },
                 onNavigateToRegister = { nav.safeNavigate(Register) },
-                onNavigateToForgotPassword = { nav.safeNavigate(ForgotPassword) }
+                onNavigateToForgotPassword = { nav.safeNavigate(ForgotPassword) },
+                onNavigateToVerifyEmail = { nav.safeNavigate(VerifyEmail) }
             )
         }
 
         composable<Register> {
-            // TODO: reemplazar por AuthRegisterScreen(...). Al registrarse con éxito:
-            //   nav.safeNavigate(LobbyGraph) { popUpTo<AuthGraph> { inclusive = true } }
-            PlaceholderScreen(title = "Registro", onBack = back)
+            AuthRegisterScreen(
+                onRegisterSuccess = { nav.safeNavigate(VerifyEmail) },
+                onNavigateBack = back,
+                onNavigateToLogin = { nav.safeNavigate(Login) }
+            )
+        }
+
+        composable<VerifyEmail> {
+            VerifyEmailScreen(
+                onVerified = { nav.safeNavigate(LobbyGraph) { popUpTo<AuthGraph> { inclusive = true } } },
+                onCancel = { nav.safeNavigate(Login) { popUpTo<Login> { inclusive = true } } }
+            )
         }
 
         composable<ForgotPassword> {

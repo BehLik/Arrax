@@ -18,6 +18,7 @@ sealed class AppError(cause: Throwable? = null) : Exception(cause) {
     class WeakPassword(cause: Throwable? = null) : AppError(cause)
     class PermissionDenied(cause: Throwable? = null) : AppError(cause)
     class Validation(val field: String) : AppError()
+    class EmailNotVerified: AppError()
     class Unknown(cause: Throwable? = null) : AppError(cause)
 }
 
