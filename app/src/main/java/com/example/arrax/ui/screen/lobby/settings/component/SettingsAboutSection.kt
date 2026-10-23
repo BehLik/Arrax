@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.arrax.core.designsystem.components.brand.ArxLogo
@@ -43,7 +44,7 @@ fun SettingsAboutSection(
         AboutLink.entries.forEach { link ->
             HorizontalDivider(color = MaterialTheme.extendedColors.glassBorder)
             Text(
-                text = link.title,
+                text = stringResource(link.titleRes),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier

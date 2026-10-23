@@ -47,7 +47,7 @@ fun LobbyProfileScreen(
     onLogout: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    ArxBackground(decoration = ArxDecoration.Mountains) {
+    ArxBackground(decoration = ArxDecoration.None) {
         Scaffold(
             modifier = modifier,
             containerColor = MaterialTheme.colorScheme.background,

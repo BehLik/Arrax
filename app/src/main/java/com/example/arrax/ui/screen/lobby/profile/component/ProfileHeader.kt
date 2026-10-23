@@ -23,7 +23,7 @@ fun ProfileHeader(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(ArxSpacing.xs)
     ) {
-        CurrentUserAvatar(size = 88.dp)
+        CurrentUserAvatar(size = 99.dp)
         Text(
             text = name,
             style = MaterialTheme.typography.headlineMedium,

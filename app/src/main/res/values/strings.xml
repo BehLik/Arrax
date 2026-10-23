@@ -126,6 +126,45 @@
     <string name="event_cut_price_label">%1$s - precio por kg</string>
     <string name="event_confirm">Confirmar evento</string>
 
+<!--    Lobby Settings-->
+    <string name="lobby_configuration_ModeSelectorTitle">Modo Sistema</string>
+    <string name="lobby_configutation_ModeSelectorSubTitle">Usa el tema predeterminado del dispositivo</string>
+    <string name="lobby_configuration_Modelight_Title">Modo Claro</string>
+    <string name="lobby_configuration_Modelight_SubTitle">Forzar interfaz con colores claros</string>
+    <string name="lobby_configutation_ModeDark_Title">Modo Oscuro</string>
+    <string name="lobby_configuration_ModeDark_SubTitle">Forzar interfaz con colores oscuros</string>
+    <string name="settings_section_about">Acerca de Arrax</string>
+    <string name="settings_section_general">Preferencias generales</string>
+    <string name="settings_section_alerts">Gestión de alertas</string>
+
+    <string name="settings_theme_title">Tema</string>
+    <string name="settings_theme_system">Automático</string>
+    <string name="settings_theme_light">Claro</string>
+    <string name="settings_theme_dark">Oscuro</string>
+
+    <string name="settings_unit_title">Unidad de medida</string>
+    <string name="settings_unit_kg">kg</string>
+    <string name="settings_unit_lb">lb</string>
+
+    <string name="settings_language_title">Idioma</string>
+    <string name="settings_language_subtitle">Español</string>
+    <string name="settings_backup_title">Copia de seguridad</string>
+    <string name="settings_backup_subtitle">Tus datos se sincronizan con la nube</string>
+
+    <string name="settings_alert_new_orders_title">Pedidos nuevos</string>
+    <string name="settings_alert_new_orders_subtitle">Sonido y vibración</string>
+    <string name="settings_alert_upcoming_events_title">Eventos próximos</string>
+    <string name="settings_alert_upcoming_events_subtitle">Recordatorios</string>
+    <string name="settings_alert_confirmations_title">Confirmaciones</string>
+    <string name="settings_alert_confirmations_subtitle">Pesajes y registros</string>
+    <string name="settings_alert_promotions_title">Promociones</string>
+    <string name="settings_alert_promotions_subtitle">Ofertas y novedades</string>
+    <string name="settings_alert_system_title">Sistema</string>
+    <string name="settings_alert_system_subtitle">Actualizaciones y mantenimiento</string>
+
+    <string name="settings_about_terms">Términos y condiciones</string>
+    <string name="settings_about_privacy">Política de privacidad</string>
+    <string name="settings_about_licenses">Licencias de terceros</string>
     <!-- Lobby components -->
     <string name="lobby_notifications_cd">Notificaciones</string>
     <string name="lobby_settings_cd">Configuración</string>

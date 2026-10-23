@@ -24,7 +24,6 @@ import com.example.arrax.ui.screen.lobby.join.LobbyJoinScreen
 import com.example.arrax.ui.screen.lobby.notification.LobbyNotificationScreen
 import com.example.arrax.ui.screen.lobby.profile.LobbyProfileScreen
 import com.example.arrax.ui.screen.lobby.settings.LobbySettingsScreen
-import com.example.arrax.ui.screen.lobby.settings.component.AlertChannel
 
 fun NavGraphBuilder.lobbyGraph(nav: NavController) {
     val back = nav.backAction()
@@ -84,8 +83,8 @@ fun NavGraphBuilder.lobbyGraph(nav: NavController) {
         }
         composable<Settings> {
             LobbySettingsScreen(
-                alertStates = AlertChannel.entries.associateWith { true }, appVersion = "v1.0.0",
-                onBack = back, onPreferenceClick = {}, onAlertToggle = { _, _ -> }, onAboutLinkClick = {}
+                onBack = back,
+                onAboutLinkClick = { /* TODO: abrir términos / privacidad / licencias */ }
             )
         }
         composable<Notifications> {
