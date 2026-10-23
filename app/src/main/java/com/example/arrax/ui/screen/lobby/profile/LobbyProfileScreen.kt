@@ -81,7 +81,6 @@ fun LobbyProfileScreen(
                     options.forEachIndexed { index, option ->
                         ProfileOptionRow(
                             title = option.title,
-                            subtitle = if (option == ProfileOption.ActiveBusiness) activeBusinessName else null,
                             onClick = { onOptionClick(option) }
                         )
                         if (index != options.lastIndex) {
@@ -98,18 +97,18 @@ fun LobbyProfileScreen(
     }
 }
 
-@Preview(name = "Light", widthDp = 360, heightDp = 720)
-@Composable
-private fun ProfileLightPreview() {
-    ArxTheme(darkTheme = false) {
-        LobbyProfileScreen("Admin", "admin@arrax.com", "Rancho El Progreso", {}, {}, {})
-    }
-}
+//@Preview(name = "Light", widthDp = 360, heightDp = 720)
+//@Composable
+//private fun ProfileLightPreview() {
+//    ArxTheme(darkTheme = false) {
+//        LobbyProfileScreen("Admin", "admin@arrax.com", {}, {}, {},{})
+//    }
+//}
 
-@Preview(name = "Dark", widthDp = 360, heightDp = 720)
-@Composable
-private fun ProfileDarkPreview() {
-    ArxTheme(darkTheme = true) {
-        LobbyProfileScreen("Admin", "admin@arrax.com", "Rancho El Progreso", {}, {}, {})
-    }
-}
+//@Preview(name = "Dark", widthDp = 360, heightDp = 720)
+//@Composable
+//private fun ProfileDarkPreview() {
+//    ArxTheme(darkTheme = true) {
+//        LobbyProfileScreen("Admin", "admin@arrax.com", {}, {}, {})
+//    }
+//}

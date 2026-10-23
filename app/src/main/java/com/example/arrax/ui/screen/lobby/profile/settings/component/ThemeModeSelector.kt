@@ -1,4 +1,4 @@
-package com.example.arrax.ui.screen.lobby.settings.component
+package com.example.arrax.ui.screen.lobby.profile.settings.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically

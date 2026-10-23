@@ -1,4 +1,4 @@
-package com.example.arrax.ui.screen.lobby.settings
+package com.example.arrax.ui.screen.lobby.profile.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

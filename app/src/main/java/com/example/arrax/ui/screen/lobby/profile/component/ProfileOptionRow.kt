@@ -20,7 +20,7 @@ import com.example.arrax.core.designsystem.theme.ArxSpacing
 
 enum class ProfileOption(val title: String) {
     PersonalData("Datos personales"),
-    ActiveBusiness("Negocio activo"),
+    Settings("Ajustes"),
     ChangePassword("Cambiar contraseña"),
 
 }

@@ -1,4 +1,4 @@
-package com.example.arrax.ui.screen.lobby.settings
+package com.example.arrax.ui.screen.lobby.profile.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,17 +35,17 @@ import com.example.arrax.core.designsystem.theme.extendedColors
 import com.example.arrax.core.model.ThemeMode
 import com.example.arrax.domain.model.AlertChannel
 import com.example.arrax.domain.model.WeightUnit
-import com.example.arrax.ui.screen.lobby.settings.component.AboutLink
-import com.example.arrax.ui.screen.lobby.settings.component.SettingsAboutSection
-import com.example.arrax.ui.screen.lobby.settings.component.SettingsGroupCard
-import com.example.arrax.ui.screen.lobby.settings.component.SettingsNavigationRow
-import com.example.arrax.ui.screen.lobby.settings.component.SettingsPreference
-import com.example.arrax.ui.screen.lobby.settings.component.SettingsSectionHeader
-import com.example.arrax.ui.screen.lobby.settings.component.SettingsSelectorRow
-import com.example.arrax.ui.screen.lobby.settings.component.SettingsSwitchRow
-import com.example.arrax.ui.screen.lobby.settings.component.ThemeModeSelector
-import com.example.arrax.ui.screen.lobby.settings.component.subtitleRes
-import com.example.arrax.ui.screen.lobby.settings.component.titleRes
+import com.example.arrax.ui.screen.lobby.profile.settings.component.AboutLink
+import com.example.arrax.ui.screen.lobby.profile.settings.component.SettingsAboutSection
+import com.example.arrax.ui.screen.lobby.profile.settings.component.SettingsGroupCard
+import com.example.arrax.ui.screen.lobby.profile.settings.component.SettingsNavigationRow
+import com.example.arrax.ui.screen.lobby.profile.settings.component.SettingsPreference
+import com.example.arrax.ui.screen.lobby.profile.settings.component.SettingsSectionHeader
+import com.example.arrax.ui.screen.lobby.profile.settings.component.SettingsSelectorRow
+import com.example.arrax.ui.screen.lobby.profile.settings.component.SettingsSwitchRow
+import com.example.arrax.ui.screen.lobby.profile.settings.component.ThemeModeSelector
+import com.example.arrax.ui.screen.lobby.profile.settings.component.subtitleRes
+import com.example.arrax.ui.screen.lobby.profile.settings.component.titleRes
 
 
 @Composable

@@ -38,7 +38,6 @@ fun LobbyHomeScreen(
     onJoinClick: () -> Unit,
     onViewAllClick: () -> Unit,
     onNotificationsClick: () -> Unit,
-    onSettingsClick: () -> Unit,
     onProfileClick: () -> Unit,
     viewModel: LobbyHomeViewModel = hiltViewModel()
 ) {
@@ -51,7 +50,7 @@ fun LobbyHomeScreen(
         onJoinClick = onJoinClick,
         onViewAllClick = onViewAllClick,
         onNotificationsClick = onNotificationsClick,
-        onSettingsClick = onSettingsClick,
+//        onSettingsClick = onSettingsClick,
         onProfileClick = onProfileClick
     )
 }
@@ -59,13 +58,12 @@ fun LobbyHomeScreen(
 // ─── PANTALLA SIN ESTADO (Ideal para el @Preview) ────────────────────────────
 @Composable
 fun LobbyHomeContent(
-    state: LobbyHomeState, // Asumiendo que esta es tu clase de estado
+    state: LobbyHomeState,
     onBusinessClick: (String) -> Unit,
     onCreateBusinessClick: () -> Unit,
     onJoinClick: () -> Unit,
     onViewAllClick: () -> Unit,
     onNotificationsClick: () -> Unit,
-    onSettingsClick: () -> Unit,
     onProfileClick: () -> Unit
 ) {
     ArxBackground(modifier = Modifier.fillMaxSize()) {
@@ -75,7 +73,6 @@ fun LobbyHomeContent(
                 LobbyTopBar(
                     unreadNotifications = state.unreadNotifications,
                     onNotificationsClick = onNotificationsClick,
-                    onSettingsClick = onSettingsClick,
                     onProfileClick = onProfileClick
                 )
             }
@@ -180,7 +177,7 @@ fun LobbyHomeScreenPreview_Content() {
             onJoinClick = {},
             onViewAllClick = {},
             onNotificationsClick = {},
-            onSettingsClick = {},
+//            onSettingsClick = {},
             onProfileClick = {}
         )
     }
@@ -203,7 +200,7 @@ fun LobbyHomeScreenPreview_Empty_Offline() {
             onJoinClick = {},
             onViewAllClick = {},
             onNotificationsClick = {},
-            onSettingsClick = {},
+//            onSettingsClick = {},
             onProfileClick = {}
         )
     }
@@ -226,7 +223,7 @@ fun LobbyHomeScreenPreview_Loading() {
             onJoinClick = {},
             onViewAllClick = {},
             onNotificationsClick = {},
-            onSettingsClick = {},
+//            onSettingsClick = {},
             onProfileClick = {}
         )
     }

@@ -15,6 +15,8 @@ import kotlinx.serialization.Serializable
 @Serializable data object BusinessCreate
 @Serializable data object BusinessJoin//<---unirse a negocio
 @Serializable data object Profile
+@Serializable data object PersonalData
+@Serializable data object ChangePassword
 @Serializable data object Settings
 @Serializable data object Notifications
 

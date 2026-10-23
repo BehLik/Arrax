@@ -14,7 +14,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.example.arrax.core.model.JoinMethod
 import com.example.arrax.core.navigation.*
-import com.example.arrax.ui.root.navigation.PlaceholderAction
 import com.example.arrax.ui.root.navigation.PlaceholderScreen
 import com.example.arrax.ui.root.navigation.backAction
 import com.example.arrax.ui.root.navigation.logoutToAuth
@@ -23,7 +22,8 @@ import com.example.arrax.ui.screen.lobby.home.LobbyHomeScreen
 import com.example.arrax.ui.screen.lobby.join.LobbyJoinScreen
 import com.example.arrax.ui.screen.lobby.notification.LobbyNotificationScreen
 import com.example.arrax.ui.screen.lobby.profile.LobbyProfileScreen
-import com.example.arrax.ui.screen.lobby.settings.LobbySettingsScreen
+import com.example.arrax.ui.screen.lobby.profile.component.ProfileOption
+import com.example.arrax.ui.screen.lobby.profile.settings.LobbySettingsScreen
 
 fun NavGraphBuilder.lobbyGraph(nav: NavController) {
     val back = nav.backAction()
@@ -40,7 +40,6 @@ fun NavGraphBuilder.lobbyGraph(nav: NavController) {
                 onJoinClick = { nav.safeNavigate(BusinessJoin) },
                 onViewAllClick = { nav.safeNavigate(MyBusinesses) },
                 onNotificationsClick = { nav.safeNavigate(Notifications) },
-                onSettingsClick = { nav.safeNavigate(Settings) },
                 onProfileClick = { nav.safeNavigate(Profile) }
             )
         }
@@ -77,7 +76,13 @@ fun NavGraphBuilder.lobbyGraph(nav: NavController) {
             LobbyProfileScreen(
                 userName = "Admin", userEmail = "admin@arrax.com", activeBusinessName = null,
                 onBack = back,
-                onOptionClick = { /* TODO */ },
+                onOptionClick = { option ->
+                    when (option) {
+                        ProfileOption.Settings -> nav.safeNavigate(Settings)
+                        ProfileOption.PersonalData -> { /* TODO */ }
+                        ProfileOption.ChangePassword -> { /* TODO */ }
+                    }
+                },
                 onLogout = { nav.logoutToAuth() }
             )
         }
