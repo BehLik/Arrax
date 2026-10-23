@@ -1,4 +1,6 @@
 package com.example.arrax.ui.screen.lobby.profile
 
-class LobbyProfileState {
-}
+
+data class LobbyProfileState(
+    val isLoggingOut: Boolean = false
+)

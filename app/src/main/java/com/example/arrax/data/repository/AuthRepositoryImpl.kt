@@ -4,7 +4,9 @@ package com.example.arrax.data.repository
 import android.util.Log
 import com.example.arrax.core.common.AppError
 import com.example.arrax.core.common.Resource
+import com.example.arrax.data.local.SessionLocalDataSource
 import com.example.arrax.data.mapper.sessionPhotoUrl
+import com.example.arrax.data.mapper.signInMethods
 import com.example.arrax.data.mapper.toRole
 import com.example.arrax.data.remote.FirebaseAuthDataSource
 import com.example.arrax.data.remote.FirestoreTenantDataSource
@@ -22,7 +24,8 @@ import kotlin.coroutines.cancellation.CancellationException
 @Singleton
 class AuthRepositoryImpl @Inject constructor(
     private val authDataSource: FirebaseAuthDataSource,
-    private val tenantDataSource: FirestoreTenantDataSource
+    private val tenantDataSource: FirestoreTenantDataSource,
+    private val sessionLocalDataSource: SessionLocalDataSource
 ) : AuthRepository {
 
     override fun observeCurrentUser(): Flow<User?> =
@@ -38,7 +41,8 @@ class AuthRepositoryImpl @Inject constructor(
                         tenantId = tenantId,
                         role = if (tenantId == null) Role.NONE else dto?.role.toRole(),
                         email = firebaseUser.email.orEmpty(),
-                        photoUrl = firebaseUser.sessionPhotoUrl()
+                        photoUrl = firebaseUser.sessionPhotoUrl(),
+                        signInMethods = firebaseUser.signInMethods()
                     )
                 }
             }
@@ -128,5 +132,15 @@ class AuthRepositoryImpl @Inject constructor(
         Resource.Error(e.message ?: "Error al enviar correo de recuperación", e)
     }
 
-    override suspend fun logout() = authDataSource.logout()
+    override suspend fun logout() {
+        authDataSource.logout()
+        // La caché local (tenantId/rol) es de la cuenta anterior: no debe sobrevivir.
+        try {
+            sessionLocalDataSource.clearSession()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.e("AuthRepository", "No se pudo limpiar la sesión local", e)
+        }
+    }
 }

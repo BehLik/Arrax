@@ -79,7 +79,6 @@ fun NavGraphBuilder.lobbyGraph(nav: NavController) {
             LobbyProfileScreen(
                 userName = user?.name.orEmpty(),
                 userEmail = user?.email.orEmpty(),
-                activeBusinessName = null,
                 showChangePassword = user?.hasPassword ?: true,
                 onBack = back,
                 onOptionClick = { option ->
@@ -89,7 +88,7 @@ fun NavGraphBuilder.lobbyGraph(nav: NavController) {
                         ProfileOption.ChangePassword -> nav.safeNavigate(ChangePassword)
                     }
                 },
-                onLogout = { nav.logoutToAuth() }
+                onLoggedOut = { nav.logoutToAuth() }
             )
         }
 

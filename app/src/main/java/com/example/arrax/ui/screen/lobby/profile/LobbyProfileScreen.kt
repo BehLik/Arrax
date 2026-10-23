@@ -1,5 +1,6 @@
 package com.example.arrax.ui.screen.lobby.profile
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,15 +19,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
 import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
-import com.example.arrax.core.designsystem.components.brand.ArxLogo
-import com.example.arrax.core.designsystem.components.brand.ArxLogoLayout
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
 import com.example.arrax.core.designsystem.theme.extendedColors
@@ -36,22 +36,47 @@ import com.example.arrax.ui.screen.lobby.profile.component.ProfileLogoutRow
 import com.example.arrax.ui.screen.lobby.profile.component.ProfileOption
 import com.example.arrax.ui.screen.lobby.profile.component.ProfileOptionRow
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LobbyProfileScreen(
     userName: String,
     userEmail: String,
-    activeBusinessName: String?,
     onBack: () -> Unit,
     onOptionClick: (ProfileOption) -> Unit,
-    onLogout: () -> Unit,
+    onLoggedOut: () -> Unit,
     modifier: Modifier = Modifier,
-    showChangePassword: Boolean = true
+    showChangePassword: Boolean = true,
+    viewModel: LobbyProfileViewmodel = hiltViewModel()
+) {
+    val state by viewModel.uiState.collectAsState()
+
+    LobbyProfileContent(
+        userName = userName,
+        userEmail = userEmail,
+        showChangePassword = showChangePassword,
+        isLoggingOut = state.isLoggingOut,
+        onBack = onBack,
+        onOptionClick = onOptionClick,
+        onLogoutClick = { viewModel.logout(onLoggedOut) },
+        modifier = modifier
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun LobbyProfileContent(
+    userName: String,
+    userEmail: String,
+    showChangePassword: Boolean,
+    isLoggingOut: Boolean,
+    onBack: () -> Unit,
+    onOptionClick: (ProfileOption) -> Unit,
+    onLogoutClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val options = ProfileOption.entries.filter {
         it != ProfileOption.ChangePassword || showChangePassword
     }
-    options.forEachIndexed { index, option -> /* igual */ }
+
     ArxBackground(decoration = ArxDecoration.None) {
         Scaffold(
             modifier = modifier,
@@ -82,7 +107,6 @@ fun LobbyProfileScreen(
                 )
 
                 ProfileGroupCard {
-                    val options = ProfileOption.entries
                     options.forEachIndexed { index, option ->
                         ProfileOptionRow(
                             title = option.title,
@@ -95,25 +119,36 @@ fun LobbyProfileScreen(
                 }
 
                 ProfileGroupCard {
-                    ProfileLogoutRow(onClick = onLogout)
+                    ProfileLogoutRow(
+                        onClick = onLogoutClick,
+                        enabled = !isLoggingOut
+                    )
                 }
             }
         }
     }
 }
 
-//@Preview(name = "Light", widthDp = 360, heightDp = 720)
-//@Composable
-//private fun ProfileLightPreview() {
-//    ArxTheme(darkTheme = false) {
-//        LobbyProfileScreen("Admin", "admin@arrax.com", {}, {}, {},{})
-//    }
-//}
+@Preview(name = "Light", widthDp = 360, heightDp = 720)
+@Composable
+private fun ProfileLightPreview() {
+    ArxTheme {
+        LobbyProfileContent(
+            userName = "Admin", userEmail = "admin@arrax.com",
+            showChangePassword = true, isLoggingOut = false,
+            onBack = {}, onOptionClick = {}, onLogoutClick = {}
+        )
+    }
+}
 
-//@Preview(name = "Dark", widthDp = 360, heightDp = 720)
-//@Composable
-//private fun ProfileDarkPreview() {
-//    ArxTheme(darkTheme = true) {
-//        LobbyProfileScreen("Admin", "admin@arrax.com", {}, {}, {})
-//    }
-//}
+@Preview(name = "Dark", widthDp = 360, heightDp = 720, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun ProfileDarkPreview() {
+    ArxTheme(darkTheme = true) {
+        LobbyProfileContent(
+            userName = "Admin", userEmail = "admin@arrax.com",
+            showChangePassword = false, isLoggingOut = true,
+            onBack = {}, onOptionClick = {}, onLogoutClick = {}
+        )
+    }
+}

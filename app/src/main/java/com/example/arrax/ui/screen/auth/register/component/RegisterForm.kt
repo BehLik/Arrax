@@ -18,6 +18,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import com.example.arrax.core.designsystem.components.inputs.ArxPasswordField
 import com.example.arrax.core.designsystem.components.inputs.ArxTextField
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
@@ -69,50 +70,21 @@ fun RegisterForm(
             )
         )
 
-        ArxTextField(
+        ArxPasswordField(
             value = password,
             onValueChange = onPasswordChange,
             label = "Contraseña",
-            isError = passwordError != null,
             errorMessage = passwordError,
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            trailingIcon = {
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(
-                        painter = painterResource(
-                            if (passwordVisible) ArxIcons.PasswordOutline else ArxIcons.PasswordFilled
-                        ),
-                        contentDescription = if (passwordVisible) "Ocultar contraseña" else "Mostrar contraseña"
-                    )
-                }
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Next
-            )
+            imeAction = ImeAction.Next
+
         )
 
-        ArxTextField(
+        ArxPasswordField(
             value = confirmPassword,
             onValueChange = onConfirmPasswordChange,
             label = "Confirmar contraseña",
-            isError = confirmPasswordError != null,
             errorMessage = confirmPasswordError,
-            visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            trailingIcon = {
-                IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
-                    Icon(
-                        painter = painterResource(
-                            if (confirmPasswordVisible) ArxIcons.PasswordOutline else ArxIcons.PasswordFilled
-                        ),
-                        contentDescription = if (confirmPasswordVisible) "Ocultar confirmación" else "Mostrar confirmación"
-                    )
-                }
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done
-            )
+            imeAction = ImeAction.Done
         )
     }
 }
