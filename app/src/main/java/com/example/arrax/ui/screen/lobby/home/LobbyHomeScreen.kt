@@ -18,11 +18,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.arrax.R
 import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
 import com.example.arrax.core.designsystem.components.display.ArxLoading
 import com.example.arrax.core.designsystem.theme.ArxSpacing
+import com.example.arrax.core.designsystem.theme.ArxTheme
 import com.example.arrax.ui.screen.lobby.home.component.BusinessListItem
 import com.example.arrax.ui.screen.lobby.home.component.LobbyEmptyBusinesses
 import com.example.arrax.ui.screen.lobby.home.component.LobbyTopBar
@@ -42,12 +44,35 @@ fun LobbyHomeScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
+    LobbyHomeContent(
+        state = state,
+        onBusinessClick = onBusinessClick,
+        onCreateBusinessClick = onCreateBusinessClick,
+        onJoinClick = onJoinClick,
+        onViewAllClick = onViewAllClick,
+        onNotificationsClick = onNotificationsClick,
+        onSettingsClick = onSettingsClick,
+        onProfileClick = onProfileClick
+    )
+}
+
+// ─── PANTALLA SIN ESTADO (Ideal para el @Preview) ────────────────────────────
+@Composable
+fun LobbyHomeContent(
+    state: LobbyHomeState, // Asumiendo que esta es tu clase de estado
+    onBusinessClick: (String) -> Unit,
+    onCreateBusinessClick: () -> Unit,
+    onJoinClick: () -> Unit,
+    onViewAllClick: () -> Unit,
+    onNotificationsClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onProfileClick: () -> Unit
+) {
     ArxBackground(modifier = Modifier.fillMaxSize()) {
         Scaffold(
             containerColor = Color.Transparent,
             topBar = {
                 LobbyTopBar(
-//                    userName = state.userName,
                     unreadNotifications = state.unreadNotifications,
                     onNotificationsClick = onNotificationsClick,
                     onSettingsClick = onSettingsClick,
@@ -61,6 +86,7 @@ fun LobbyHomeScreen(
                 } else {
                     Column(modifier = Modifier.fillMaxSize()) {
                         if (state.isOffline) OfflineBadge()
+
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
                             contentPadding = PaddingValues(ArxSpacing.md)
@@ -79,6 +105,7 @@ fun LobbyHomeScreen(
                                     )
                                 }
                             }
+
                             item {
                                 WorkspaceCard(
                                     onCreateBusinessClick = onCreateBusinessClick,
@@ -86,12 +113,14 @@ fun LobbyHomeScreen(
                                     modifier = Modifier.padding(bottom = ArxSpacing.xl)
                                 )
                             }
+
                             item {
                                 RecentHeader(
                                     onViewAllClick = onViewAllClick,
                                     modifier = Modifier.padding(bottom = ArxSpacing.sm)
                                 )
                             }
+
                             if (state.recentBusinesses.isEmpty()) {
                                 item {
                                     LobbyEmptyBusinesses(
@@ -124,6 +153,81 @@ private fun OfflineBadge() {
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(horizontal = ArxSpacing.md, vertical = ArxSpacing.xs)
+        )
+    }
+}
+
+// ─── PREVIEWS ────────────────────────────────────────────────────────────────
+
+@Preview(showBackground = true, name = "Lobby Home - Con Datos")
+@Composable
+fun LobbyHomeScreenPreview_Content() {
+    ArxTheme {
+        LobbyHomeContent(
+            state = LobbyHomeState(
+                isLoading = false,
+                isOffline = false,
+                userName = "Juan Pérez",
+                unreadNotifications = 3,
+                // Nota: Sustituye 'Business' por la clase real de tu modelo
+                recentBusinesses = listOf(
+                    // Business(id = "1", name = "Carnicería El Torito", role = "Productor"),
+                    // Business(id = "2", name = "Distribuidora Norte", role = "Administrador")
+                )
+            ),
+            onBusinessClick = {},
+            onCreateBusinessClick = {},
+            onJoinClick = {},
+            onViewAllClick = {},
+            onNotificationsClick = {},
+            onSettingsClick = {},
+            onProfileClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Lobby Home - Estado Vacío & Offline")
+@Composable
+fun LobbyHomeScreenPreview_Empty_Offline() {
+    ArxTheme {
+        LobbyHomeContent(
+            state = LobbyHomeState(
+                isLoading = false,
+                isOffline = true, // Muestra el banner offline
+                userName = "María López",
+                unreadNotifications = 0,
+                recentBusinesses = emptyList() // Mostrará el componente LobbyEmptyBusinesses
+            ),
+            onBusinessClick = {},
+            onCreateBusinessClick = {},
+            onJoinClick = {},
+            onViewAllClick = {},
+            onNotificationsClick = {},
+            onSettingsClick = {},
+            onProfileClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Lobby Home - Cargando")
+@Composable
+fun LobbyHomeScreenPreview_Loading() {
+    ArxTheme {
+        LobbyHomeContent(
+            state = LobbyHomeState(
+                isLoading = true,
+                isOffline = false,
+                userName = "",
+                unreadNotifications = 0,
+                recentBusinesses = emptyList()
+            ),
+            onBusinessClick = {},
+            onCreateBusinessClick = {},
+            onJoinClick = {},
+            onViewAllClick = {},
+            onNotificationsClick = {},
+            onSettingsClick = {},
+            onProfileClick = {}
         )
     }
 }

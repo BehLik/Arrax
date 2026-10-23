@@ -8,17 +8,17 @@ import kotlinx.serialization.Serializable
 @Serializable data object Register
 @Serializable data object ForgotPassword
 @Serializable data object VerifyEmail
-// ── Lobby (alcance usuario, sin negocio) ──
+// ── Lobby (alcance usuario, sin negocio) ─────────────────────────────────────────────────────────
 @Serializable data object LobbyGraph
 @Serializable data object LobbyHome
 @Serializable data object MyBusinesses
 @Serializable data object BusinessCreate
-@Serializable data object BusinessJoin
+@Serializable data object BusinessJoin//<---unirse a negocio
 @Serializable data object Profile
 @Serializable data object Settings
 @Serializable data object Notifications
 
-// ── Business (alcance negocio) ──
+// ── Business (alcance negocio) ───────────────────────────────────────────────────────────────────
 @Serializable data class BusinessHome(val businessId: String)
 @Serializable data class BusinessSettings(val businessId: String)
 @Serializable data class BusinessEvents(val businessId: String)
@@ -36,7 +36,7 @@ import kotlinx.serialization.Serializable
 )
 @Serializable data class BusinessCustomerDetail(val businessId: String, val customerId: String)
 
-// ── Event (alcance evento) ──
+// ── Event (alcance evento) ───────────────────────────────────────────────────────────────────────
 @Serializable data class EventCreate(val businessId: String)
 @Serializable data class EventHome(val businessId: String, val eventId: String)
 
@@ -66,6 +66,6 @@ import kotlinx.serialization.Serializable
 @Serializable data class EventExpenses(val businessId: String, val eventId: String)
 @Serializable data class EventResults(val businessId: String, val eventId: String)
 
-// ── Argumentos tipados ──
+// ── Argumentos tipados ───────────────────────────────────────────────────────────────────────────
 @Serializable
 enum class WeighingMode { BY_CUT, BY_CUSTOMER }
