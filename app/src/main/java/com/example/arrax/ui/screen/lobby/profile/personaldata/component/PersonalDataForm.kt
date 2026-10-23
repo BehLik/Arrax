@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -11,7 +12,9 @@ import androidx.compose.ui.Modifier
 import com.example.arrax.core.designsystem.components.inputs.ArxTextField
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.ui.screen.lobby.profile.component.ProfileGroupCard
-
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import com.example.arrax.core.designsystem.components.inputs.ArxTextField
 @Composable
 fun PersonalDataForm(
     name: String,
@@ -24,18 +27,24 @@ fun PersonalDataForm(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(ArxSpacing.md)
     ) {
-        // AJUSTA a la firma real de tu ArxTextField
         ArxTextField(
             value = name,
             onValueChange = onNameChange,
             label = "Nombre",
-            isError =false,
-            errorMessage = nameError
+            isError = nameError != null,
+            errorMessage = nameError,
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.Words,
+                imeAction = ImeAction.Done
+            )
         )
 
-        ProfileGroupCard {
-            ReadOnlyRow(label = "Correo electrónico", value = email)
-        }
+        ArxTextField(
+            value = email,
+            onValueChange = {},
+            label = "Correo electrónico",
+            enabled = false
+        )
         Text(
             text = "El correo no se puede cambiar desde aquí.",
             style = MaterialTheme.typography.bodySmall,

@@ -35,6 +35,7 @@ object FirestorePaths {
 /** Field names used in queries (collectionGroup / where / orderBy). */
 object FirestoreFields {
     const val UID = "uid"
+    const val NAME = "name"
     const val TENANT_ID = "tenantId"
     const val EVENT_ID = "eventId"
     const val ORDER_ID = "orderId"
