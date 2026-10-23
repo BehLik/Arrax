@@ -2,6 +2,7 @@ package com.example.arrax.core.common
 
 import android.util.Log
 import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
@@ -20,6 +21,7 @@ sealed class AppError(cause: Throwable? = null) : Exception(cause) {
     class Validation(val field: String) : AppError()
     class EmailNotVerified: AppError()
     class Unknown(cause: Throwable? = null) : AppError(cause)
+    class TooManyRequests(cause: Throwable? = null) : AppError(cause)
 }
 
 private const val TAG = "AppError"
@@ -32,6 +34,7 @@ fun Throwable.toAppError(): AppError = when (this) {
     is FirebaseAuthInvalidCredentialsException -> AppError.InvalidCredentials(this)
     is FirebaseAuthInvalidUserException -> AppError.UserNotFound(this)
     is FirebaseAuthUserCollisionException -> AppError.EmailInUse(this)
+    is FirebaseTooManyRequestsException -> AppError.TooManyRequests(this)
     is FirebaseFirestoreException -> when (code) {
         FirebaseFirestoreException.Code.PERMISSION_DENIED -> AppError.PermissionDenied(this)
         FirebaseFirestoreException.Code.UNAVAILABLE -> AppError.Network(this)

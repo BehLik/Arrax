@@ -1,9 +1,11 @@
 package com.example.arrax.data.remote
 
+import com.example.arrax.core.common.FirestoreFields
 import com.example.arrax.core.common.FirestorePaths
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -27,6 +29,10 @@ class FirestoreUserDataSource @Inject constructor(
         return authUidFlow().flatMapLatest { uid ->
             if (uid.isNullOrBlank()) flowOf(null) else observeUserDoc(uid)
         }
+    }
+    fun updateName(name: String) {
+        val uid = auth.currentUser?.uid ?: error("Sin sesión activa")
+        users.document(uid).set(mapOf(FirestoreFields.NAME to name), SetOptions.merge())
     }
 
     private fun authUidFlow(): Flow<String?> = callbackFlow {

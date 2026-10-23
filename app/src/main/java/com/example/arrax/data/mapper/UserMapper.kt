@@ -1,8 +1,11 @@
 package com.example.arrax.data.mapper
 
 import com.example.arrax.domain.model.Role
+import com.example.arrax.domain.model.SignInMethod
 import com.example.arrax.domain.model.User
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.DocumentSnapshot
 
 fun DocumentSnapshot.toUser(): User? {
@@ -22,6 +25,13 @@ fun FirebaseUser.sessionPhotoUrl(sizePx: Int = 256): String? {
         ?: photoUrl
     return raw?.toString()?.replace(Regex("=s\\d+-c$"), "=s$sizePx-c")
 }
+fun FirebaseUser.signInMethods(): Set<SignInMethod> = providerData.mapNotNull {
+    when (it.providerId) {
+        EmailAuthProvider.PROVIDER_ID -> SignInMethod.PASSWORD
+        GoogleAuthProvider.PROVIDER_ID -> SignInMethod.GOOGLE
+        else -> null
+    }
+}.toSet()
 /** Unknown or missing role must NEVER fall back to ADMIN. "OPERADOR" is legacy data. */
 val Role.isAdminOrOwner: Boolean get() = this == Role.OWNER || this == Role.ADMIN
 internal fun String?.toRole(): Role = when (this?.uppercase()) {

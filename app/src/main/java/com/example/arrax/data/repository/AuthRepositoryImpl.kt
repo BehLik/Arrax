@@ -100,6 +100,14 @@ class AuthRepositoryImpl @Inject constructor(
         Resource.Error(e.message ?: "Error al comprobar la verificación", e)
     }
 
+    override suspend fun changePassword(currentPassword: String, newPassword: String): Resource<Unit> = try {
+        authDataSource.changePassword(currentPassword, newPassword)
+        Resource.Success(Unit)
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        Resource.Error(e.message ?: "Error al cambiar la contraseña", e)
+    }
     override suspend fun cancelUnverifiedRegistration(): Resource<Unit> = try {
         authDataSource.deleteCurrentUser()
         Resource.Success(Unit)

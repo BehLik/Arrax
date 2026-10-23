@@ -6,5 +6,8 @@ data class User(
     val name: String = "",
     val tenantId: String? = null,
     val role: Role = Role.NONE,
-    val photoUrl: String? = null
-)
+    val photoUrl: String? = null,
+    val signInMethods: Set<SignInMethod> = emptySet()
+) {
+    val hasPassword: Boolean get() = SignInMethod.PASSWORD in signInMethods
+}

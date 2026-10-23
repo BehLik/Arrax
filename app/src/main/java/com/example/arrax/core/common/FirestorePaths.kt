@@ -6,6 +6,7 @@ package com.example.arrax.core.common
  */
 object FirestorePaths {
     // Top level
+    const val NAME = "name"
     const val USERS = "users"               // was: usuarios
     const val INVITES = "invites"           // F2
     const val TENANTS = "tenants"

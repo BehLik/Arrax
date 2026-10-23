@@ -1,5 +1,6 @@
 package com.example.arrax.data.repository
 
+import com.example.arrax.core.common.Resource
 import com.example.arrax.data.mapper.toUser
 import com.example.arrax.data.remote.FirestoreUserDataSource
 import com.example.arrax.domain.model.User
@@ -16,5 +17,11 @@ class UserRepositoryImpl @Inject constructor(
 
     override fun observeCurrentUser(): Flow<User?> {
         return userDataSource.observeCurrentUserDoc().map { it?.toUser() }
+    }
+    override fun updateName(name: String): Resource<Unit> = try {
+        userDataSource.updateName(name)
+        Resource.Success(Unit)
+    } catch (e: Exception) {
+        Resource.Error(e.message ?: "Error al guardar el nombre", e)
     }
 }

@@ -18,11 +18,14 @@ import com.example.arrax.ui.root.navigation.PlaceholderScreen
 import com.example.arrax.ui.root.navigation.backAction
 import com.example.arrax.ui.root.navigation.logoutToAuth
 import com.example.arrax.ui.root.navigation.safeNavigate
+import com.example.arrax.ui.root.session.LocalCurrentUser
 import com.example.arrax.ui.screen.lobby.home.LobbyHomeScreen
 import com.example.arrax.ui.screen.lobby.join.LobbyJoinScreen
 import com.example.arrax.ui.screen.lobby.notification.LobbyNotificationScreen
 import com.example.arrax.ui.screen.lobby.profile.LobbyProfileScreen
+import com.example.arrax.ui.screen.lobby.profile.changepassword.LobbyChangePasswordScreen
 import com.example.arrax.ui.screen.lobby.profile.component.ProfileOption
+import com.example.arrax.ui.screen.lobby.profile.personaldata.LobbyPersonalDataScreen
 import com.example.arrax.ui.screen.lobby.profile.settings.LobbySettingsScreen
 
 fun NavGraphBuilder.lobbyGraph(nav: NavController) {
@@ -72,20 +75,26 @@ fun NavGraphBuilder.lobbyGraph(nav: NavController) {
         }
 
         composable<Profile> {
-            // TODO: estado desde LobbyProfileViewModel
+            val user = LocalCurrentUser.current
             LobbyProfileScreen(
-                userName = "Admin", userEmail = "admin@arrax.com", activeBusinessName = null,
+                userName = user?.name.orEmpty(),
+                userEmail = user?.email.orEmpty(),
+                activeBusinessName = null,
+                showChangePassword = user?.hasPassword ?: true,
                 onBack = back,
                 onOptionClick = { option ->
                     when (option) {
                         ProfileOption.Settings -> nav.safeNavigate(Settings)
-                        ProfileOption.PersonalData -> { /* TODO */ }
-                        ProfileOption.ChangePassword -> { /* TODO */ }
+                        ProfileOption.PersonalData -> nav.safeNavigate(PersonalData)
+                        ProfileOption.ChangePassword -> nav.safeNavigate(ChangePassword)
                     }
                 },
                 onLogout = { nav.logoutToAuth() }
             )
         }
+
+        composable<PersonalData> { LobbyPersonalDataScreen(onBack = back) }
+        composable<ChangePassword> { LobbyChangePasswordScreen(onBack = back) }
         composable<Settings> {
             LobbySettingsScreen(
                 onBack = back,

@@ -45,8 +45,13 @@ fun LobbyProfileScreen(
     onBack: () -> Unit,
     onOptionClick: (ProfileOption) -> Unit,
     onLogout: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showChangePassword: Boolean = true
 ) {
+    val options = ProfileOption.entries.filter {
+        it != ProfileOption.ChangePassword || showChangePassword
+    }
+    options.forEachIndexed { index, option -> /* igual */ }
     ArxBackground(decoration = ArxDecoration.None) {
         Scaffold(
             modifier = modifier,

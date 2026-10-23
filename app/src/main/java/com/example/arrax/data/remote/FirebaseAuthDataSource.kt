@@ -1,5 +1,6 @@
 package com.example.arrax.data.remote
 
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -56,6 +57,12 @@ class FirebaseAuthDataSource @Inject constructor(
         user.reload().await()
         if (user.isEmailVerified) user.getIdToken(true).await()
         return user.isEmailVerified
+    }
+    suspend fun changePassword(currentPassword: String, newPassword: String) {
+        val user = auth.currentUser ?: error("Sin sesión activa")
+        val email = user.email ?: error("La cuenta no tiene correo")
+        user.reauthenticate(EmailAuthProvider.getCredential(email, currentPassword)).await()
+        user.updatePassword(newPassword).await()
     }
 
     suspend fun deleteCurrentUser() {
