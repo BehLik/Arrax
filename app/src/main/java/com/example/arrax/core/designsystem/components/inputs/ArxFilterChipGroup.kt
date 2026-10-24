@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -42,39 +43,32 @@ enum class OrderStatusFilter(val label: String) {
  * @param onFilterSelected Callback al seleccionar un filtro.
  * @param badgeCounts Contadores opcionales por chip (ej. Pendientes -> 4).
  */
+/** Versión genérica: sirve para cualquier lista de opciones. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ArxFilterChipGroup(
-    filters: List<OrderStatusFilter>,
-    selectedFilter: OrderStatusFilter,
-    onFilterSelected: (OrderStatusFilter) -> Unit,
+fun <T> ArxFilterChipGroup(
+    filters: List<T>,
+    selected: T,
+    onSelected: (T) -> Unit,
+    label: (T) -> String,
     modifier: Modifier = Modifier,
-    badgeCounts: Map<OrderStatusFilter, Int> = emptyMap()
+    badgeCounts: Map<T, Int> = emptyMap()
 ) {
     LazyRow(
         modifier = modifier.fillMaxWidth(),
         contentPadding = PaddingValues(horizontal = ArxSpacing.md, vertical = ArxSpacing.xs),
         horizontalArrangement = Arrangement.spacedBy(ArxSpacing.xs)
     ) {
-        items(filters, key = { it.name }) { filter ->
-            val isSelected = filter == selectedFilter
+        itemsIndexed(filters, key = { index, _ -> index }) { _, filter ->
+            val isSelected = filter == selected
             val count = badgeCounts[filter]
-            val chipText = if (count != null && count > 0) {
-                "${filter.label} ($count)"
-            } else {
-                filter.label
-            }
+            val chipText = if (count != null && count > 0) "${label(filter)} ($count)" else label(filter)
 
             FilterChip(
                 selected = isSelected,
-                onClick = { onFilterSelected(filter) },
+                onClick = { onSelected(filter) },
                 shape = MaterialTheme.shapes.small,
-                label = {
-                    Text(
-                        text = chipText,
-                        style = MaterialTheme.typography.labelLarge
-                    )
-                },
+                label = { Text(text = chipText, style = MaterialTheme.typography.labelLarge) },
                 colors = FilterChipDefaults.filterChipColors(
                     containerColor = MaterialTheme.extendedColors.glass,
                     labelColor = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -90,6 +84,25 @@ fun ArxFilterChipGroup(
             )
         }
     }
+}
+
+/** API original de pedidos: se conserva y delega en la genérica. del desino orinalll*/
+@Composable
+fun ArxFilterChipGroup(
+    filters: List<OrderStatusFilter>,
+    selectedFilter: OrderStatusFilter,
+    onFilterSelected: (OrderStatusFilter) -> Unit,
+    modifier: Modifier = Modifier,
+    badgeCounts: Map<OrderStatusFilter, Int> = emptyMap()
+) {
+    ArxFilterChipGroup(
+        filters = filters,
+        selected = selectedFilter,
+        onSelected = onFilterSelected,
+        label = { it.label },
+        modifier = modifier,
+        badgeCounts = badgeCounts
+    )
 }
 
 // ───────────────────────── Previews (Light / Dark) ─────────────────────────

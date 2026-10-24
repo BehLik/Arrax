@@ -1,42 +1,25 @@
 package com.example.arrax.ui.screen.business.alerts
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
 import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
-import com.example.arrax.core.designsystem.icons.ArxIcon
 import com.example.arrax.core.designsystem.icons.ArxIcons
-import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
-import com.example.arrax.ui.screen.business.BusinessDot
-import com.example.arrax.ui.screen.business.BusinessListRow
 import com.example.arrax.ui.screen.business.BusinessScreenSurface
-import com.example.arrax.ui.screen.business.BusinessTabs
 import com.example.arrax.ui.screen.business.BusinessTone
-import com.example.arrax.ui.screen.business.BusinessToneBadge
 import com.example.arrax.ui.screen.business.BusinessTopBar
-
+import com.example.arrax.ui.screen.business.alerts.component.AlertsEmptyState
+import com.example.arrax.ui.screen.business.alerts.component.AlertsList
+import com.example.arrax.ui.screen.business.alerts.component.AlertsTabs
+import com.example.arrax.ui.screen.business.alerts.component.MarkAllReadButton
 
 @Composable
 fun BusinessAlertsScreen(
@@ -70,89 +53,39 @@ internal fun BusinessAlertsContent(
     }
 
     BusinessScreenSurface(modifier) {
-        ArxBackground(decoration = ArxDecoration.None){
-        Column(modifier = Modifier.fillMaxSize()) {
-            BusinessTopBar(title = "Alertas y recordatorios", onBack = onBack)
+        ArxBackground(decoration = ArxDecoration.None) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                BusinessTopBar(title = "Alertas y recordatorios", onBack = onBack)
 
-            BusinessTabs(
-                labels = AlertsTab.entries.map { it.label() },
-                selectedIndex = AlertsTab.entries.indexOf(state.selectedTab),
-                onSelect = { onTabSelected(AlertsTab.entries[it]) },
-                modifier = Modifier.padding(horizontal = ArxSpacing.md)
-            )
+                AlertsTabs(selected = state.selectedTab, onSelected = onTabSelected)
 
-            if (visible.isEmpty()) {
-                Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        ArxIcon(
-                            icon = ArxIcons.Notification,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                            size = 40.dp
-                        )
-                        Text(
-                            text = "No hay alertas por ahora",
-                            modifier = Modifier.padding(top = ArxSpacing.sm),
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            textAlign = TextAlign.Center
-                        )
-                    }
+                if (visible.isEmpty()) {
+                    AlertsEmptyState(modifier = Modifier.weight(1f))
+                } else {
+                    AlertsList(
+                        alerts = visible,
+                        onAlertClick = onAlertClick,
+                        modifier = Modifier.weight(1f)
+                    )
                 }
-            } else {
-                LazyColumn(
-                    modifier = Modifier.weight(1f),
-                    contentPadding = PaddingValues(ArxSpacing.md),
-                    verticalArrangement = Arrangement.spacedBy(ArxSpacing.xs)
-                ) {
-                    items(visible, key = { it.id }) { alert ->
-                        BusinessListRow(
-                            title = alert.title,
-                            subtitle = alert.detail,
-                            detail = alert.supporting,
-                            tone = alert.tone.takeIf { alert.isUnread },
-                            leading = { BusinessToneBadge(icon = alert.icon, tone = alert.tone) },
-                            trailing = {
-                                if (alert.isUnread) BusinessDot(tone = alert.tone)
-                            },
-                            onClick = { onAlertClick(alert.id) }
-                        )
-                    }
-                }
-            }
 
-            OutlinedButton(
-                onClick = onMarkAllRead,
-                enabled = state.alerts.any { it.isUnread },
-                shape = MaterialTheme.shapes.medium,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = ArxSpacing.md, vertical = ArxSpacing.sm)
-                    .heightIn(min = 48.dp)
-            ) {
-                ArxIcon(icon = ArxIcons.DoneAll, size = 20.dp)
-                Text(
-                    text = "Marcar todas como leídas",
-                    modifier = Modifier.padding(start = ArxSpacing.xs),
-                    style = MaterialTheme.typography.labelLarge
+                MarkAllReadButton(
+                    enabled = state.alerts.any { it.isUnread },
+                    onClick = onMarkAllRead
                 )
             }
-        }
         }
     }
 }
 
-private fun AlertsTab.label() = when (this) {
-    AlertsTab.All -> "Todas"
-    AlertsTab.Events -> "Eventos"
-    AlertsTab.Invitations -> "Invitaciones"
-    AlertsTab.Orders -> "Pedidos"
-}
-
 @Preview(showBackground = true, widthDp = 360, heightDp = 780)
-@Preview(showBackground = true, widthDp = 360, heightDp = 780, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Preview(
+    showBackground = true, widthDp = 360, heightDp = 780,
+    uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 private fun BusinessAlertsPreview() {
-    ArxTheme(darkTheme = true) {
+    ArxTheme(darkTheme = isSystemInDarkTheme()) {
         BusinessAlertsContent(
             state = BusinessAlertsState(
                 alerts = listOf(
