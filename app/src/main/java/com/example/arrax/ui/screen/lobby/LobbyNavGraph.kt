@@ -19,6 +19,7 @@ import com.example.arrax.ui.root.navigation.PlaceholderScreen
 import com.example.arrax.ui.root.navigation.backAction
 import com.example.arrax.ui.root.navigation.logoutToAuth
 import com.example.arrax.ui.root.navigation.safeNavigate
+import com.example.arrax.ui.screen.lobby.create.LobbyBusinessCreateScreen
 import com.example.arrax.ui.screen.lobby.home.LobbyHomeScreen
 import com.example.arrax.ui.screen.lobby.join.LobbyJoinScreen
 import com.example.arrax.ui.screen.lobby.notification.LobbyNotificationScreen
@@ -52,9 +53,12 @@ fun NavGraphBuilder.lobbyGraph(nav: NavController) {
         }
 
         composable<BusinessCreate> {
-            // TODO: BusinessCreateScreen(onBack = back, onCreated = { id ->
-            //     nav.safeNavigate(BusinessHome(id)) { popUpTo<BusinessCreate> { inclusive = true } } })
-            PlaceholderScreen("Crear negocio", back)
+            LobbyBusinessCreateScreen(
+                onBack = back,
+                onCreated = { id ->
+                    nav.navigate(BusinessHome(id)) { popUpTo<BusinessCreate> { inclusive = true } }
+                }
+            )
         }
 
         composable<BusinessJoin> {

@@ -26,9 +26,13 @@ class TenantRepositoryImpl @Inject constructor(
             else tenantDataSource.observeTenant(tenantId).map { it?.toDomain() }
         }
 
-    override suspend fun createTenant(name: String, adminUid: String): Resource<Tenant> = try {
-        val dto = tenantDataSource.createTenant(name, adminUid)
-        sessionLocalDataSource.saveSession(dto.id, Role.ADMIN.name)
+    override suspend fun createTenant(
+        name: String,
+        ownerUid: String,
+        ownerName: String
+    ): Resource<Tenant> = try {
+        val dto = tenantDataSource.createTenant(name, ownerUid, ownerName)
+        sessionLocalDataSource.saveSession(dto.id, Role.OWNER.name) // antes ADMIN: el creador es OWNER
         Resource.Success(dto.toDomain())
     } catch (e: Exception) {
         Resource.Error(e.message ?: "Error al crear el negocio", e)
