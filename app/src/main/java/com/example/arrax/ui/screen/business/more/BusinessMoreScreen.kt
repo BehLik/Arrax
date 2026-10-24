@@ -20,6 +20,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
+import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
 import com.example.arrax.core.designsystem.icons.ArxIcon
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
@@ -87,6 +89,7 @@ internal fun BusinessMoreContent(
     )
 
     BusinessScreenSurface(modifier) {
+        ArxBackground(decoration = ArxDecoration.None) {
         Column(modifier = Modifier.fillMaxSize()) {
             BusinessTopBar(title = "Más")
 
@@ -111,12 +114,13 @@ internal fun BusinessMoreContent(
             ) {
                 ArxIcon(icon = ArxIcons.Logout, tint = MaterialTheme.colorScheme.error, size = 20.dp)
                 Text(
-                    text = "Cerrar sesión",
+                    text = "Salir del negocio",
                     modifier = Modifier.padding(start = ArxSpacing.xs),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.error
                 )
             }
+        }
         }
     }
 }

@@ -38,6 +38,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
+import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
 import com.example.arrax.core.designsystem.icons.ArxIcon
 import com.example.arrax.core.designsystem.icons.ArxIconBadge
 import com.example.arrax.core.designsystem.icons.ArxIconShape
@@ -101,6 +103,7 @@ internal fun BusinessHomeContent(
     modifier: Modifier = Modifier
 ) {
     BusinessScreenSurface(modifier) {
+        ArxBackground (decoration = ArxDecoration.None){
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -184,6 +187,7 @@ internal fun BusinessHomeContent(
                     QuickActionTile("Cortes", ArxIcons.Box, false, onCutsClick, Modifier.weight(1f))
                 }
             }
+        }
         }
     }
 }
