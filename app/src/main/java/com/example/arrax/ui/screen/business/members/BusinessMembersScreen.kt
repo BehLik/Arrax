@@ -324,7 +324,7 @@ private fun ShareTile(
 @Preview(showBackground = true, widthDp = 360, heightDp = 780, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun BusinessMembersPreview() {
-    ArxTheme(darkTheme = isSystemInDarkTheme()) {
+    ArxTheme(darkTheme =true) {
         BusinessMembersContent(
             state = BusinessMembersState(
                 members = listOf(

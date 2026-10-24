@@ -390,7 +390,7 @@ private fun QuickActionTile(
 @Preview(showBackground = true, widthDp = 360, heightDp = 900, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun BusinessHomePreview() {
-    ArxTheme(darkTheme = isSystemInDarkTheme()) {
+    ArxTheme(darkTheme = true) {
         BusinessHomeContent(
             state = BusinessHomeState(
                 businessName = "Granja San José",

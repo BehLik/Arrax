@@ -148,7 +148,7 @@ private fun AlertsTab.label() = when (this) {
 @Preview(showBackground = true, widthDp = 360, heightDp = 780, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun BusinessAlertsPreview() {
-    ArxTheme(darkTheme = isSystemInDarkTheme()) {
+    ArxTheme(darkTheme = true) {
         BusinessAlertsContent(
             state = BusinessAlertsState(
                 alerts = listOf(

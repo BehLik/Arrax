@@ -151,7 +151,7 @@ internal fun BusinessCustomersContent(
 @Preview(showBackground = true, widthDp = 360, heightDp = 780, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun BusinessCustomersPreview() {
-    ArxTheme(darkTheme = isSystemInDarkTheme()) {
+    ArxTheme(darkTheme =true) {
         BusinessCustomersContent(
             state = BusinessCustomersState(
                 allCount = 24, frequentCount = 8, newCount = 3,
