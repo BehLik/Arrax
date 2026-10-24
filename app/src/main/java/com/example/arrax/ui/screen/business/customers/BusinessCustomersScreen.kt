@@ -1,40 +1,26 @@
 package com.example.arrax.ui.screen.business.customers
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
 import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
-import com.example.arrax.core.designsystem.icons.ArxIcon
-import com.example.arrax.core.designsystem.icons.ArxIcons
+import com.example.arrax.core.designsystem.components.inputs.ArxSearchField
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
-import com.example.arrax.core.designsystem.theme.extendedColors
-import com.example.arrax.ui.screen.business.BusinessAvatar
-import com.example.arrax.ui.screen.business.BusinessListRow
 import com.example.arrax.ui.screen.business.BusinessScreenSurface
-import com.example.arrax.ui.screen.business.BusinessTabs
 import com.example.arrax.ui.screen.business.BusinessTopBar
+import com.example.arrax.ui.screen.business.customers.component.AddCustomerAction
+import com.example.arrax.ui.screen.business.customers.component.CustomersEmptyState
+import com.example.arrax.ui.screen.business.customers.component.CustomersList
+import com.example.arrax.ui.screen.business.customers.component.CustomersTabs
 
 @Composable
 fun BusinessCustomersScreen(
@@ -63,99 +49,53 @@ internal fun BusinessCustomersContent(
     onCustomerClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val glass = MaterialTheme.extendedColors
-    val tabLabels = listOf(
-        "Todos (${state.allCount})",
-        "Frecuentes (${state.frequentCount})",
-        "Nuevos (${state.newCount})"
-    )
-
     BusinessScreenSurface(modifier) {
         ArxBackground(decoration = ArxDecoration.None) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            BusinessTopBar(title = "Clientes") {
-                IconButton(onClick = onAddCustomerClick) {
-                    ArxIcon(
-                        icon = ArxIcons.Add,
-                        contentDescription = "Agregar cliente",
-                        tint = MaterialTheme.colorScheme.primary
+            Column(modifier = Modifier.fillMaxSize()) {
+                BusinessTopBar(title = "Clientes") {
+                    AddCustomerAction(onClick = onAddCustomerClick)
+                }
+
+                ArxSearchField(
+                    query = state.query,
+                    onQueryChange = onQueryChange,
+                    placeholder = "Buscar cliente...",
+                    modifier = Modifier.padding(horizontal = ArxSpacing.md)
+                )
+
+                CustomersTabs(
+                    selected = state.selectedTab,
+                    allCount = state.allCount,
+                    frequentCount = state.frequentCount,
+                    newCount = state.newCount,
+                    onSelected = onTabSelected
+                )
+
+                if (state.customers.isEmpty()) {
+                    CustomersEmptyState(
+                        isSearching = state.query.isNotBlank(),
+                        modifier = Modifier.weight(1f)
+                    )
+                } else {
+                    CustomersList(
+                        customers = state.customers,
+                        onCustomerClick = onCustomerClick,
+                        modifier = Modifier.weight(1f)
                     )
                 }
             }
-
-            // TODO: migrar a ArxTextField cuando comparta su API.
-            OutlinedTextField(
-                value = state.query,
-                onValueChange = onQueryChange,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = ArxSpacing.md),
-                singleLine = true,
-                placeholder = { Text("Buscar cliente...") },
-                leadingIcon = { ArxIcon(icon = ArxIcons.Search, size = 20.dp) },
-                shape = MaterialTheme.shapes.small,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = glass.glass,
-                    unfocusedContainerColor = glass.glass,
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = glass.glassBorder
-                )
-            )
-
-            BusinessTabs(
-                labels = tabLabels,
-                selectedIndex = CustomersTab.entries.indexOf(state.selectedTab),
-                onSelect = { onTabSelected(CustomersTab.entries[it]) },
-                modifier = Modifier.padding(horizontal = ArxSpacing.md, vertical = ArxSpacing.xs)
-            )
-
-            if (state.customers.isEmpty()) {
-                Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        ArxIcon(
-                            icon = ArxIcons.SearchOff,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                            size = 40.dp
-                        )
-                        Text(
-                            text = "Sin resultados",
-                            modifier = Modifier.padding(top = ArxSpacing.sm),
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-            } else {
-                LazyColumn(
-                    modifier = Modifier.weight(1f),
-                    contentPadding = PaddingValues(horizontal = ArxSpacing.md, vertical = ArxSpacing.xs),
-                    verticalArrangement = Arrangement.spacedBy(ArxSpacing.xs)
-                ) {
-                    items(state.customers, key = { it.id }) { customer ->
-                        BusinessListRow(
-                            title = customer.name,
-                            subtitle = customer.phone,
-                            leading = { BusinessAvatar(initials = customer.initials) },
-                            trailing = {
-                                Text(
-                                    text = if (customer.purchases == 1) "1 compra" else "${customer.purchases} compras",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            },
-                            onClick = { onCustomerClick(customer.id) }
-                        )
-                    }
-                }
-            }
-        }
         }
     }
 }
 
 @Preview(showBackground = true, widthDp = 360, heightDp = 780)
-@Preview(showBackground = true, widthDp = 360, heightDp = 780, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Preview(
+    showBackground = true, widthDp = 360, heightDp = 780,
+    uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 private fun BusinessCustomersPreview() {
-    ArxTheme(darkTheme =true) {
+    ArxTheme(darkTheme = isSystemInDarkTheme()) {
         BusinessCustomersContent(
             state = BusinessCustomersState(
                 allCount = 24, frequentCount = 8, newCount = 3,
