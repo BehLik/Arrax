@@ -54,7 +54,8 @@ fun ArxIconBadge(
     shape: ArxIconShape = ArxIconShape.Rounded,
     containerSize: Dp = ArxSpacing.huge,
     iconSize: Dp = 24.dp,
-    contentDescription: String? = null
+    contentDescription: String? = null,
+    accent: Color? = null
 ) {
     val colors = MaterialTheme.colorScheme
 
@@ -70,8 +71,9 @@ fun ArxIconBadge(
         }
 
         ArxIconStyle.Soft -> {
-            containerColor = colors.primary.copy(alpha = 0.15f)
-            contentColor = colors.primary
+            val base = accent ?: colors.primary
+            containerColor = base.copy(alpha = 0.15f)
+            contentColor = base
             border = null
         }
 

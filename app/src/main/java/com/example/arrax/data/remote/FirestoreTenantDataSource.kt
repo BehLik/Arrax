@@ -1,6 +1,7 @@
 package com.example.arrax.data.remote
 
 import com.example.arrax.core.common.FirestorePaths
+import com.example.arrax.core.model.DefaultCuts
 import com.example.arrax.domain.model.Role
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.FirebaseFirestore
@@ -17,9 +18,10 @@ import javax.inject.Singleton
 data class TenantDto(
     @DocumentId val id: String = "",
     val name: String = "",
-    val createdAt: Long = 0L
+    val ownerUid: String = "",
+    val createdAt: Long = 0L,
+    val eventCount: Long = 0L
 )
-
 data class UserDto(
     @DocumentId val uid: String = "",
     val name: String = "",
@@ -56,16 +58,41 @@ class FirestoreTenantDataSource @Inject constructor(
 
     // Atomic (batch) and merge only tenantId/role: writing a whole UserDto with merge
     // would overwrite the existing "name" with "".
-    suspend fun createTenant(name: String, adminUid: String): TenantDto {
-        val tenantId = UUID.randomUUID().toString()
-        val dto = TenantDto(id = tenantId, name = name, createdAt = System.currentTimeMillis())
+    private fun members(tenantId: String) =
+        tenants().document(tenantId).collection(FirestorePaths.MEMBERS)
+
+    private fun cutCatalog(tenantId: String) =
+        tenants().document(tenantId).collection(FirestorePaths.CUT_CATALOG)
+
+    /** Atómico: tenant + member OWNER + seed de cutCatalog (9 cortes, muy por debajo del límite de 500). */
+    suspend fun createTenant(name: String, ownerUid: String, ownerName: String): TenantDto {
+        val tenantId = firestore.collection(FirestorePaths.TENANTS).document().id // id autogenerado
+        val now = System.currentTimeMillis()
+        val tenantRef = tenants().document(tenantId)
+        val dto = TenantDto(id = tenantId, name = name, ownerUid = ownerUid, createdAt = now, eventCount = 0)
+
         val batch = firestore.batch()
-        batch.set(tenants().document(tenantId), dto)
+        batch.set(tenantRef, dto)
         batch.set(
-            users().document(adminUid),
-            mapOf("tenantId" to tenantId, "role" to Role.ADMIN.name),
-            SetOptions.merge()
+            tenantRef.collection(FirestorePaths.MEMBERS).document(ownerUid),
+            mapOf(
+                "uid" to ownerUid,
+                "role" to Role.OWNER.name,
+                "name" to ownerName,
+                "joinedAt" to now
+            )
         )
+        DefaultCuts.forEach { cut ->
+            batch.set(
+                tenantRef.collection(FirestorePaths.CUT_CATALOG).document(cut.id),
+                buildMap<String, Any> {
+                    put("name", cut.name)
+                    put("state", cut.state.name)
+                    put("active", true)
+                    cut.description?.let { put("description", it) }
+                }
+            )
+        }
         batch.commit().await()
         return dto
     }

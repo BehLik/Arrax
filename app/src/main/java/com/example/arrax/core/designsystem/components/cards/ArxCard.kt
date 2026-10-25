@@ -41,19 +41,29 @@ fun ArxCard(
     colors: CardColors? = null,
     elevation: CardElevation? = null,
     variant: ArxCardVariant = ArxCardVariant.Standard,
+    accentColor: Color? = null,   // tiñe fondo y borde (alertas, banners)
     content: @Composable ColumnScope.() -> Unit
 ) {
     val shape = MaterialTheme.shapes.medium
     val isGlass = variant == ArxCardVariant.Glass
 
+    val containerColor = when {
+        accentColor != null -> accentColor.copy(alpha = 0.12f)
+        isGlass -> MaterialTheme.extendedColors.glass
+        else -> MaterialTheme.colorScheme.surface
+    }
     val resolvedColors = colors ?: CardDefaults.cardColors(
-        containerColor = if (isGlass) MaterialTheme.extendedColors.glass else MaterialTheme.colorScheme.surface,
+        containerColor = containerColor,
         contentColor = MaterialTheme.colorScheme.onSurface
     )
     val resolvedElevation = elevation ?: CardDefaults.cardElevation(
-        defaultElevation = if (isGlass) 0.dp else 2.dp
+        defaultElevation = if (isGlass || accentColor != null) 0.dp else 2.dp
     )
-    val border = if (isGlass) BorderStroke(1.dp, MaterialTheme.extendedColors.glassBorder) else null
+    val border = when {
+        accentColor != null -> BorderStroke(1.dp, accentColor.copy(alpha = 0.5f))
+        isGlass -> BorderStroke(1.dp, MaterialTheme.extendedColors.glassBorder)
+        else -> null
+    }
 
     if (onClick != null) {
         Card(

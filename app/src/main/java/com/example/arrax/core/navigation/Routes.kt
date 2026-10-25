@@ -38,6 +38,11 @@ import kotlinx.serialization.Serializable
 )
 @Serializable data class BusinessCustomerDetail(val businessId: String, val customerId: String)
 
+@Serializable data class BusinessAlerts(val businessId: String)
+@Serializable data class BusinessMore(val businessId: String)
+@Serializable data class BusinessCatalog(val businessId: String)   // catálogo de productos y cortes
+@Serializable data class BusinessHistory(val businessId: String)   // eventos cerrados e histórico
+
 // ── Event (alcance evento) ───────────────────────────────────────────────────────────────────────
 @Serializable data class EventCreate(val businessId: String)
 @Serializable data class EventHome(val businessId: String, val eventId: String)
