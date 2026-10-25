@@ -264,7 +264,6 @@ fun LobbyHomeScreenPreview_Content2() {
             onJoinClick = {},
             onViewAllClick = {},
             onNotificationsClick = {},
-            onSettingsClick = {},
             onProfileClick = {}
         )
     }

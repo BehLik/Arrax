@@ -20,6 +20,9 @@ import com.example.arrax.core.designsystem.components.brand.ArxLogo
 import com.example.arrax.core.designsystem.components.brand.ArxLogoLayout
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.extendedColors
+//import com.example.arrax.core.model.AboutLink
+import com.example.arrax.ui.screen.lobby.profile.settings.component.AboutLink
+import com.example.arrax.ui.screen.lobby.profile.settings.component.SettingsGroupCard
 
 @Composable
 fun SettingsAboutSection(

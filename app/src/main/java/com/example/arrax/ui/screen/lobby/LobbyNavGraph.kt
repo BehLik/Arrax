@@ -19,12 +19,17 @@ import com.example.arrax.ui.root.navigation.PlaceholderScreen
 import com.example.arrax.ui.root.navigation.backAction
 import com.example.arrax.ui.root.navigation.logoutToAuth
 import com.example.arrax.ui.root.navigation.safeNavigate
+import com.example.arrax.ui.root.session.LocalCurrentUser
+import com.example.arrax.ui.screen.lobby.create.LobbyBusinessCreateScreen
 import com.example.arrax.ui.screen.lobby.home.LobbyHomeScreen
 import com.example.arrax.ui.screen.lobby.join.LobbyJoinScreen
 import com.example.arrax.ui.screen.lobby.notification.LobbyNotificationScreen
 import com.example.arrax.ui.screen.lobby.profile.LobbyProfileScreen
-import com.example.arrax.ui.screen.lobby.settings.LobbySettingsScreen
-import com.example.arrax.ui.screen.lobby.settings.component.AlertChannel
+import com.example.arrax.ui.screen.lobby.profile.changepassword.LobbyChangePasswordScreen
+import com.example.arrax.ui.screen.lobby.profile.component.ProfileOption
+import com.example.arrax.ui.screen.lobby.profile.personaldata.LobbyPersonalDataScreen
+import com.example.arrax.ui.screen.lobby.profile.settings.LobbySettingsScreen
+
 
 fun NavGraphBuilder.lobbyGraph(nav: NavController) {
     val back = nav.backAction()
@@ -41,7 +46,7 @@ fun NavGraphBuilder.lobbyGraph(nav: NavController) {
                 onJoinClick = { nav.safeNavigate(BusinessJoin) },
                 onViewAllClick = { nav.safeNavigate(MyBusinesses) },
                 onNotificationsClick = { nav.safeNavigate(Notifications) },
-                onSettingsClick = { nav.safeNavigate(Settings) },
+//                onSettingsClick = { nav.safeNavigate(Settings) },
                 onProfileClick = { nav.safeNavigate(Profile) }
             )
         }
@@ -99,7 +104,7 @@ fun NavGraphBuilder.lobbyGraph(nav: NavController) {
         composable<Settings> {
             LobbySettingsScreen(
                 onBack = back,
-                onAboutLinkClick = { /* TODO: abrir términos / privacidad / licencias */ }
+                onAboutLinkClick = { /* TODO: abrir términos / privacidad / licencias */ },
             )
         }
         composable<Notifications> {
