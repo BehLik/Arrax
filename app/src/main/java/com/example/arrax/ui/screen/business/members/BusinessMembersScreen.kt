@@ -14,6 +14,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
 import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
+import com.example.arrax.core.designsystem.components.backgrounds.ArxScreenSurface
 import com.example.arrax.core.designsystem.components.navigation.ArxTopBar
 import com.example.arrax.core.designsystem.components.navigation.ArxTopBarNavigationType
 import com.example.arrax.core.designsystem.theme.ArxTheme
@@ -63,7 +64,7 @@ internal fun BusinessMembersContent(
     onGenerateInvitation: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    ArxScreenSurface(modifier) {
+
         ArxBackground(decoration = ArxDecoration.None) {
             Column(modifier = Modifier.fillMaxSize()) {
                 ArxTopBar(
@@ -93,7 +94,7 @@ internal fun BusinessMembersContent(
             )
         }
     }
-}
+
 
 @Preview(showBackground = true, widthDp = 360, heightDp = 780)
 @Preview(

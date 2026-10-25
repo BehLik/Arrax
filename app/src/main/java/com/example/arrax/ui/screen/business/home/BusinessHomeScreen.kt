@@ -16,6 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
 import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
+import com.example.arrax.core.designsystem.components.backgrounds.ArxScreenSurface
 import com.example.arrax.core.designsystem.components.display.ArxTone
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
@@ -72,7 +73,7 @@ internal fun BusinessHomeContent(
     onCutsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    ArxScreenSurface(modifier) {
+
         ArxBackground(decoration = ArxDecoration.None) {
             Column(
                 modifier = Modifier
@@ -109,7 +110,7 @@ internal fun BusinessHomeContent(
                 )
             }
         }
-    }
+
 }
 
 @Preview(showBackground = true, widthDp = 360, heightDp = 900)

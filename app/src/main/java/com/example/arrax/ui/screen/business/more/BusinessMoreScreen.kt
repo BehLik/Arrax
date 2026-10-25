@@ -16,6 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
 import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
+import com.example.arrax.core.designsystem.components.backgrounds.ArxScreenSurface
 import com.example.arrax.core.designsystem.components.navigation.ArxTopBar
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
@@ -63,7 +64,7 @@ internal fun BusinessMoreContent(
     onLogoutClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    ArxScreenSurface(modifier) {
+
         ArxBackground(decoration = ArxDecoration.None) {
             Column(modifier = Modifier.fillMaxSize()) {
                 ArxTopBar(title = "Más", centeredTitle = false)
@@ -97,7 +98,7 @@ internal fun BusinessMoreContent(
                 LeaveBusinessButton(onClick = onLogoutClick)
             }
         }
-    }
+
 }
 
 @Preview(showBackground = true, widthDp = 360, heightDp = 780)

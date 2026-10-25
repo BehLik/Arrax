@@ -3,22 +3,14 @@ package com.example.arrax.ui.screen.business.members.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.arrax.core.designsystem.components.buttons.ArxPrimaryButton
 import com.example.arrax.core.designsystem.components.display.ArxListItem
+import com.example.arrax.core.designsystem.components.feedback.ArxBottomSheet
 import com.example.arrax.core.designsystem.components.inputs.ArxFilterChipGroup
 import com.example.arrax.core.designsystem.icons.ArxIcon
 import com.example.arrax.core.designsystem.icons.ArxIcons
@@ -26,7 +18,6 @@ import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.ui.screen.business.members.BusinessMembersState
 import com.example.arrax.ui.screen.business.members.InviteTab
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun InvitationSheet(
     state: BusinessMembersState,
@@ -39,30 +30,13 @@ internal fun InvitationSheet(
 ) {
     val invitation = state.invitation
 
-    ModalBottomSheet(
+    ArxBottomSheet(
         onDismissRequest = onDismiss,
-        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-        containerColor = MaterialTheme.colorScheme.surface
+        title = "Crear invitación",
+        icon = ArxIcons.GroupAdd,
+        showCloseButton = true
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = ArxSpacing.md)
-                .padding(bottom = ArxSpacing.xl),
-            verticalArrangement = Arrangement.spacedBy(ArxSpacing.md)
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = "Crear invitación",
-                    modifier = Modifier.weight(1f),
-                    style = MaterialTheme.typography.headlineMedium
-                )
-                IconButton(onClick = onDismiss) {
-                    ArxIcon(icon = ArxIcons.Close, contentDescription = "Cerrar")
-                }
-            }
-
+        Column(verticalArrangement = Arrangement.spacedBy(ArxSpacing.md)) {
             ArxFilterChipGroup(
                 filters = InviteTab.entries,
                 selected = state.inviteTab,
