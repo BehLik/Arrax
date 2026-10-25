@@ -231,3 +231,44 @@ fun LobbyHomeScreenPreview_Loading() {
         )
     }
 }
+@Preview(showBackground = true, name = "Lobby Home - Con Datos")
+@Composable
+fun LobbyHomeScreenPreview_Content2() {
+    ArxTheme {
+        LobbyHomeContent(
+            state = LobbyHomeState(
+                isLoading = false,
+                isOffline = false,
+                userName = "Juan Pérez",
+                unreadNotifications = 3,
+                recentBusinesses = listOf(
+                    BusinessItem(
+                        id = "1",
+                        name = "Carnicería El Torito",
+                        isAdmin = false,
+                        totalEvents = 5
+                    ),
+                    BusinessItem(
+                        id = "2",
+                        name = "Distribuidora Norte",
+                        isAdmin = true,
+                        totalEvents = 12
+                    ),
+                    BusinessItem(
+                        id = "3",
+                        name = "Ferretería Central",
+                        isAdmin = false,
+                        totalEvents = 1
+                    )
+                )
+            ),
+            onBusinessClick = {},
+            onCreateBusinessClick = {},
+            onJoinClick = {},
+            onViewAllClick = {},
+            onNotificationsClick = {},
+            onSettingsClick = {},
+            onProfileClick = {}
+        )
+    }
+}

@@ -12,10 +12,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.arrax.core.designsystem.components.cards.ArxCard
 import com.example.arrax.core.designsystem.components.cards.ArxCardVariant
+import com.example.arrax.core.designsystem.components.display.color
+import com.example.arrax.core.designsystem.components.feedback.ArxBadgeDot
 import com.example.arrax.core.designsystem.icons.ArxIcon
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
-import com.example.arrax.ui.screen.business.BusinessDot
 import com.example.arrax.ui.screen.business.home.HomeSalesSliceUi
 
 @Composable
@@ -54,7 +55,7 @@ internal fun SalesSummaryCard(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(ArxSpacing.xs)
                         ) {
-                            BusinessDot(tone = slice.tone)
+                            ArxBadgeDot(containerColor = slice.tone.color())
                             Text(
                                 text = slice.label,
                                 modifier = Modifier.weight(1f),

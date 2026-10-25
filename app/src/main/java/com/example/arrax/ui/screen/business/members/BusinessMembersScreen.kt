@@ -3,6 +3,7 @@ package com.example.arrax.ui.screen.business.members
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -13,9 +14,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
 import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
+import com.example.arrax.core.designsystem.components.navigation.ArxTopBar
+import com.example.arrax.core.designsystem.components.navigation.ArxTopBarNavigationType
 import com.example.arrax.core.designsystem.theme.ArxTheme
-import com.example.arrax.ui.screen.business.BusinessScreenSurface
-import com.example.arrax.ui.screen.business.BusinessTopBar
 import com.example.arrax.ui.screen.business.members.component.InvitationSheet
 import com.example.arrax.ui.screen.business.members.component.InviteMemberButton
 import com.example.arrax.ui.screen.business.members.component.MembersList
@@ -47,6 +48,7 @@ fun BusinessMembersScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun BusinessMembersContent(
     state: BusinessMembersState,
@@ -61,10 +63,15 @@ internal fun BusinessMembersContent(
     onGenerateInvitation: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    BusinessScreenSurface(modifier) {
+    ArxScreenSurface(modifier) {
         ArxBackground(decoration = ArxDecoration.None) {
             Column(modifier = Modifier.fillMaxSize()) {
-                BusinessTopBar(title = "Equipo y permisos", onBack = onBack)
+                ArxTopBar(
+                    title = "Equipo y permisos",
+                    centeredTitle = false,
+                    navigationType = ArxTopBarNavigationType.BACK,
+                    onNavigationClick = onBack
+                )
                 InviteMemberButton(onClick = onInviteClick)
                 MembersList(
                     members = state.members,

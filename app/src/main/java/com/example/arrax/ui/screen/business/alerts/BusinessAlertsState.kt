@@ -1,7 +1,8 @@
 package com.example.arrax.ui.screen.business.alerts
 
 import androidx.annotation.DrawableRes
-import com.example.arrax.ui.screen.business.BusinessTone
+import com.example.arrax.core.designsystem.components.display.ArxTone
+
 
 enum class AlertsTab { All, Events, Invitations, Orders }
 
@@ -12,7 +13,7 @@ data class AlertUi(
     val detail: String,
     val supporting: String? = null,
     @DrawableRes val icon: Int,
-    val tone: BusinessTone,
+    val tone: ArxTone,
     val isUnread: Boolean = false
 )
 

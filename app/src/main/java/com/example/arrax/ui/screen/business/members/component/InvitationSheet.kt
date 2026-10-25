@@ -18,11 +18,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.arrax.core.designsystem.components.buttons.ArxPrimaryButton
+import com.example.arrax.core.designsystem.components.display.ArxListItem
+import com.example.arrax.core.designsystem.components.inputs.ArxFilterChipGroup
 import com.example.arrax.core.designsystem.icons.ArxIcon
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
-import com.example.arrax.ui.screen.business.BusinessListRow
-import com.example.arrax.ui.screen.business.BusinessTabs
 import com.example.arrax.ui.screen.business.members.BusinessMembersState
 import com.example.arrax.ui.screen.business.members.InviteTab
 
@@ -63,10 +63,11 @@ internal fun InvitationSheet(
                 }
             }
 
-            BusinessTabs(
-                labels = listOf("Código", "QR"),
-                selectedIndex = InviteTab.entries.indexOf(state.inviteTab),
-                onSelect = { onTabSelected(InviteTab.entries[it]) }
+            ArxFilterChipGroup(
+                filters = InviteTab.entries,
+                selected = state.inviteTab,
+                onSelected = onTabSelected,
+                label = { if (it == InviteTab.Code) "Código" else "QR" }
             )
 
             InvitationCard(invitation = invitation, tab = state.inviteTab)
@@ -74,7 +75,7 @@ internal fun InvitationSheet(
             if (invitation != null) {
                 Column(verticalArrangement = Arrangement.spacedBy(ArxSpacing.xs)) {
                     Text("Rol asignado", style = MaterialTheme.typography.labelLarge)
-                    BusinessListRow(
+                    ArxListItem(
                         title = invitation.roleLabel,
                         showChevron = false,
                         leading = {

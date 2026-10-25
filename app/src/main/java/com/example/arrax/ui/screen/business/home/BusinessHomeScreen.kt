@@ -16,11 +16,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
 import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
+import com.example.arrax.core.designsystem.components.display.ArxTone
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
-import com.example.arrax.ui.screen.business.BusinessScreenSurface
-import com.example.arrax.ui.screen.business.BusinessTone
 import com.example.arrax.ui.screen.business.home.component.ActiveBusinessCard
 import com.example.arrax.ui.screen.business.home.component.HomeAlertsSection
 import com.example.arrax.ui.screen.business.home.component.HomeHeader
@@ -73,7 +72,7 @@ internal fun BusinessHomeContent(
     onCutsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    BusinessScreenSurface(modifier) {
+    ArxScreenSurface(modifier) {
         ArxBackground(decoration = ArxDecoration.None) {
             Column(
                 modifier = Modifier
@@ -134,15 +133,15 @@ private fun BusinessHomePreview() {
                     message = "Revisa la estimación de cortes y la disponibilidad de insumos para el evento de mañana."
                 ),
                 alerts = listOf(
-                    HomeAlertUi("1", "Evento del sábado", "Faltan 2 días • 6 cerdos estimados", "En preparación", BusinessTone.Success, ArxIcons.Event),
-                    HomeAlertUi("2", "Invitación por vencer", "Código #AB12 • Vence en 3 días", "Atención", BusinessTone.Warning, ArxIcons.GroupAdd),
-                    HomeAlertUi("3", "Pedidos pendientes de pesar", "Evento del sábado • 4 pedidos", "Pendiente", BusinessTone.Info, ArxIcons.Order)
+                    HomeAlertUi("1", "Evento del sábado", "Faltan 2 días • 6 cerdos estimados", "En preparación", ArxTone.Success, ArxIcons.Event),
+                    HomeAlertUi("2", "Invitación por vencer", "Código #AB12 • Vence en 3 días", "Atención", ArxTone.Warning, ArxIcons.GroupAdd),
+                    HomeAlertUi("3", "Pedidos pendientes de pesar", "Evento del sábado • 4 pedidos", "Pendiente", ArxTone.Info, ArxIcons.Order)
                 ),
                 salesTotal = "$ 3,820.00",
                 salesBreakdown = listOf(
-                    HomeSalesSliceUi("Cortes", "68%", 0.68f, BusinessTone.Primary),
-                    HomeSalesSliceUi("Clientes", "22%", 0.22f, BusinessTone.Info),
-                    HomeSalesSliceUi("Otros", "10%", 0.10f, BusinessTone.Neutral)
+                    HomeSalesSliceUi("Cortes", "68%", 0.68f, ArxTone.Primary),
+                    HomeSalesSliceUi("Clientes", "22%", 0.22f, ArxTone.Info),
+                    HomeSalesSliceUi("Otros", "10%", 0.10f, ArxTone.Neutral)
                 )
             ),
             onBusinessClick = {}, onNotificationsClick = {}, onEventClick = {}, onAlertsClick = {},

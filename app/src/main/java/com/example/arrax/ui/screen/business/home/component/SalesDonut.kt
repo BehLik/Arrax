@@ -9,7 +9,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
-import com.example.arrax.ui.screen.business.color
+import com.example.arrax.core.designsystem.components.display.color
 import com.example.arrax.ui.screen.business.home.HomeSalesSliceUi
 
 @Composable

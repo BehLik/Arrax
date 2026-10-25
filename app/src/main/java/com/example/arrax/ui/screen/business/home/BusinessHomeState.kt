@@ -1,7 +1,7 @@
 package com.example.arrax.ui.screen.business.home
 
 import androidx.annotation.DrawableRes
-import com.example.arrax.ui.screen.business.BusinessTone
+import com.example.arrax.core.designsystem.components.display.ArxTone
 
 data class HomeNextEventUi(val whenLabel: String, val message: String)
 
@@ -10,7 +10,7 @@ data class HomeAlertUi(
     val title: String,
     val detail: String,
     val statusLabel: String,
-    val tone: BusinessTone,
+    val tone: ArxTone,
     @DrawableRes val icon: Int
 )
 
@@ -18,7 +18,7 @@ data class HomeSalesSliceUi(
     val label: String,
     val percentLabel: String,
     val fraction: Float,
-    val tone: BusinessTone
+    val tone: ArxTone
 )
 
 data class BusinessHomeState(

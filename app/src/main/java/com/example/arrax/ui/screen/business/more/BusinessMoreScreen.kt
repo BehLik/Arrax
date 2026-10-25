@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -15,10 +16,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
 import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
+import com.example.arrax.core.designsystem.components.navigation.ArxTopBar
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
-import com.example.arrax.ui.screen.business.BusinessScreenSurface
-import com.example.arrax.ui.screen.business.BusinessTopBar
 import com.example.arrax.ui.screen.business.more.component.LeaveBusinessButton
 import com.example.arrax.ui.screen.business.more.component.MoreSection
 import com.example.arrax.ui.screen.business.more.component.adminOptions
@@ -50,6 +50,7 @@ fun BusinessMoreScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun BusinessMoreContent(
     state: BusinessMoreState,
@@ -62,10 +63,10 @@ internal fun BusinessMoreContent(
     onLogoutClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    BusinessScreenSurface(modifier) {
+    ArxScreenSurface(modifier) {
         ArxBackground(decoration = ArxDecoration.None) {
             Column(modifier = Modifier.fillMaxSize()) {
-                BusinessTopBar(title = "Más")
+                ArxTopBar(title = "Más", centeredTitle = false)
 
                 Column(
                     modifier = Modifier

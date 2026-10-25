@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.arrax.core.designsystem.components.display.ArxTone
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
@@ -127,6 +128,14 @@ fun ArxStatusChip(
             color = resolvedContent
         )
     }
+}
+
+fun ArxTone.toChipStatus(): ArxChipStatus = when (this) {
+    ArxTone.Success -> ArxChipStatus.Success
+    ArxTone.Warning -> ArxChipStatus.Warning
+    ArxTone.Info -> ArxChipStatus.Info
+    ArxTone.Error -> ArxChipStatus.Error
+    ArxTone.Primary, ArxTone.Neutral -> ArxChipStatus.Neutral
 }
 
 // ───────────────────────── Previews (Light / Dark) ─────────────────────────

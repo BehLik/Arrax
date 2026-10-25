@@ -5,7 +5,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.arrax.core.designsystem.components.display.ArxAvatar
-import com.example.arrax.ui.screen.business.BusinessListRow
+import com.example.arrax.core.designsystem.components.display.ArxListItem
 import com.example.arrax.ui.screen.business.customers.CustomerUi
 
 @Composable
@@ -14,7 +14,7 @@ internal fun CustomerRow(
     onClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    BusinessListRow(
+    ArxListItem(
         title = customer.name,
         modifier = modifier,
         subtitle = customer.phone,
