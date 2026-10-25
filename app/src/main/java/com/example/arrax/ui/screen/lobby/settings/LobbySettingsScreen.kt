@@ -32,7 +32,6 @@ import com.example.arrax.ui.screen.lobby.settings.component.SettingsNavigationRo
 import com.example.arrax.ui.screen.lobby.settings.component.SettingsPreference
 import com.example.arrax.ui.screen.lobby.settings.component.SettingsSectionHeader
 import com.example.arrax.ui.screen.lobby.settings.component.SettingsSwitchRow
-import com.example.arrax.ui.screen.lobby.settings.component.AlertChannel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

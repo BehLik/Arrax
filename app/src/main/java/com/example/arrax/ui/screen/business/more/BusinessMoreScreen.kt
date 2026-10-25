@@ -34,7 +34,7 @@ fun BusinessMoreScreen(
     onSettingsClick: () -> Unit = {},
     onHelpClick: () -> Unit = {},
     onAboutClick: () -> Unit = {},
-    onLogoutClick: () -> Unit = {},
+    onLeaveBusinessClick: () -> Unit = {},
     viewModel: BusinessMoreViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -46,7 +46,7 @@ fun BusinessMoreScreen(
         onSettingsClick = onSettingsClick,
         onHelpClick = onHelpClick,
         onAboutClick = onAboutClick,
-        onLogoutClick = onLogoutClick,
+        onLeaveBusinessClick = onLeaveBusinessClick,
         modifier = modifier
     )
 }
@@ -61,44 +61,33 @@ internal fun BusinessMoreContent(
     onSettingsClick: () -> Unit,
     onHelpClick: () -> Unit,
     onAboutClick: () -> Unit,
-    onLogoutClick: () -> Unit,
+    onLeaveBusinessClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    ArxBackground(modifier = modifier, decoration = ArxDecoration.None) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            ArxTopBar(title = "Más", centeredTitle = false)
 
-        ArxBackground(decoration = ArxDecoration.None) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                ArxTopBar(title = "Más", centeredTitle = false)
-
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .verticalScroll(rememberScrollState())
-                        .padding(horizontal = ArxSpacing.md),
-                    verticalArrangement = Arrangement.spacedBy(ArxSpacing.lg)
-                ) {
-                    MoreSection(
-                        title = "Administración del negocio",
-                        options = adminOptions(
-                            onTeamClick = onTeamClick,
-                            onCatalogClick = onCatalogClick,
-                            onHistoryClick = onHistoryClick,
-                            onSettingsClick = onSettingsClick
-                        )
-                    )
-                    MoreSection(
-                        title = "Información",
-                        options = infoOptions(
-                            appVersion = state.appVersion,
-                            onHelpClick = onHelpClick,
-                            onAboutClick = onAboutClick
-                        )
-                    )
-                }
-
-                LeaveBusinessButton(onClick = onLogoutClick)
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = ArxSpacing.md),
+                verticalArrangement = Arrangement.spacedBy(ArxSpacing.lg)
+            ) {
+                MoreSection(
+                    title = "Administración del negocio",
+                    options = adminOptions(onTeamClick, onCatalogClick, onHistoryClick, onSettingsClick)
+                )
+                MoreSection(
+                    title = "Información",
+                    options = infoOptions(state.appVersion, onHelpClick, onAboutClick)
+                )
             }
-        }
 
+            LeaveBusinessButton(onClick = onLeaveBusinessClick)
+        }
+    }
 }
 
 @Preview(showBackground = true, widthDp = 360, heightDp = 780)
@@ -112,7 +101,7 @@ private fun BusinessMorePreview() {
         BusinessMoreContent(
             state = BusinessMoreState(appVersion = "1.0.0"),
             onTeamClick = {}, onCatalogClick = {}, onHistoryClick = {}, onSettingsClick = {},
-            onHelpClick = {}, onAboutClick = {}, onLogoutClick = {}
+            onHelpClick = {}, onAboutClick = {}, onLeaveBusinessClick = {}
         )
     }
 }

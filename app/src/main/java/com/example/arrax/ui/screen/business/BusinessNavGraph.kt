@@ -118,13 +118,13 @@ private fun NavGraphBuilder.businessMore(nav: NavController) {
             onSettingsClick = { nav.safeNavigate(BusinessSettings(args.businessId)) },
             // TODO: Ayuda y Acerca de (rutas aún no definidas).
             onHelpClick = {},
-            onAboutClick = {},
-            // TODO: confirmar antes con ArxAlertDialog(isDestructive = true).
-            onLogoutClick = {
-                nav.navigate(MyBusinesses) {
-                    popUpTo<BusinessHome> { inclusive = true }
-                }
-            }
+//            onAboutClick = {},
+//            // TODO: confirmar antes con ArxAlertDialog(isDestructive = true).
+//            onLogoutClick = {
+//                nav.navigate(MyBusinesses) {
+//                    popUpTo<BusinessHome> { inclusive = true }
+//                }
+//            }
         )
     }
 
