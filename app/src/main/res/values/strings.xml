@@ -134,8 +134,6 @@
     <string name="lobby_configutation_ModeDark_Title">Modo Oscuro</string>
     <string name="lobby_configuration_ModeDark_SubTitle">Forzar interfaz con colores oscuros</string>
     <string name="settings_section_about">Acerca de Arrax</string>
-    <string name="settings_section_general">Preferencias generales</string>
-    <string name="settings_section_alerts">Gestión de alertas</string>
 
     <string name="settings_theme_title">Tema</string>
     <string name="settings_theme_system">Automático</string>
@@ -157,9 +155,7 @@
     <string name="settings_alert_upcoming_events_subtitle">Recordatorios</string>
     <string name="settings_alert_confirmations_title">Confirmaciones</string>
     <string name="settings_alert_confirmations_subtitle">Pesajes y registros</string>
-    <string name="settings_alert_promotions_title">Promociones</string>
     <string name="settings_alert_promotions_subtitle">Ofertas y novedades</string>
-    <string name="settings_alert_system_title">Sistema</string>
     <string name="settings_alert_system_subtitle">Actualizaciones y mantenimiento</string>
 
     <string name="settings_about_terms">Términos y condiciones</string>
@@ -174,7 +170,16 @@
     <string name="lobby_empty_action">Crear negocio</string>
     <string name="lobby_recent_title">Recientes</string>
     <string name="lobby_view_all">Ver todo</string>
-<!--    lobby settings-->
+    <string name="settings_section_appearance">Apariencia</string>
+    <string name="settings_section_alerts">Notificaciones</string>
+    <string name="settings_section_general">General</string>
+
+    <string name="settings_sync_title">Sincronización</string>
+    <string name="settings_sync_online">Conectado: tus cambios se sincronizan con la nube</string>
+    <string name="settings_sync_offline">Sin conexión: tus cambios se sincronizarán al volver la red</string>
+
+    <string name="settings_alert_promotions_title">Novedades y promociones</string>
+    <string name="settings_alert_system_title">Avisos del sistema</string>
 
     <string name="business_role_admin">Propietario</string>
     <string name="business_role_member">Miembro</string>

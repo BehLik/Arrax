@@ -2,6 +2,7 @@ package com.example.arrax.ui.screen.lobby.profile.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.arrax.core.common.NetworkMonitor
 import com.example.arrax.core.model.ThemeMode
 import com.example.arrax.domain.model.AlertChannel
 import com.example.arrax.domain.model.WeightUnit
@@ -19,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LobbySettingsViewmodel @Inject constructor(
     observePreferences: ObservePreferencesUseCase,
+    networkMonitor: NetworkMonitor,
     private val updateThemeMode: UpdateThemeModeUseCase,
     private val updateWeightUnit: UpdateWeightUnitUseCase,
     private val setAlertEnabled: SetAlertEnabledUseCase

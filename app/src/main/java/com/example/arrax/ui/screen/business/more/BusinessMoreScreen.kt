@@ -26,7 +26,7 @@ import com.example.arrax.ui.screen.business.more.component.adminOptions
 import com.example.arrax.ui.screen.business.more.component.infoOptions
 
 @Composable
-fun BusinessMoreScreen(
+fun BusinessMoreScreen(        
     modifier: Modifier = Modifier,
     onTeamClick: () -> Unit = {},
     onCatalogClick: () -> Unit = {},

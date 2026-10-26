@@ -32,21 +32,18 @@ import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
 import com.example.arrax.core.designsystem.theme.extendedColors
+//import com.example.arrax.core.model.AboutLink
 import com.example.arrax.core.model.ThemeMode
 import com.example.arrax.domain.model.AlertChannel
-import com.example.arrax.domain.model.WeightUnit
 import com.example.arrax.ui.screen.lobby.profile.settings.component.AboutLink
 import com.example.arrax.ui.screen.lobby.profile.settings.component.SettingsGroupCard
 import com.example.arrax.ui.screen.lobby.profile.settings.component.SettingsNavigationRow
-import com.example.arrax.ui.screen.lobby.profile.settings.component.SettingsPreference
 import com.example.arrax.ui.screen.lobby.profile.settings.component.SettingsSectionHeader
-import com.example.arrax.ui.screen.lobby.profile.settings.component.SettingsSelectorRow
 import com.example.arrax.ui.screen.lobby.profile.settings.component.SettingsSwitchRow
 import com.example.arrax.ui.screen.lobby.profile.settings.component.ThemeModeSelector
 import com.example.arrax.ui.screen.lobby.profile.settings.component.subtitleRes
 import com.example.arrax.ui.screen.lobby.profile.settings.component.titleRes
 import com.example.arrax.ui.screen.lobby.settings.component.SettingsAboutSection
-
 
 @Composable
 fun LobbySettingsScreen(
@@ -69,7 +66,6 @@ fun LobbySettingsScreen(
         appVersion = appVersion,
         onBack = onBack,
         onThemeModeChange = viewModel::onThemeModeChange,
-        onWeightUnitChange = viewModel::onWeightUnitChange,
         onAlertToggle = viewModel::onAlertToggle,
         onAboutLinkClick = onAboutLinkClick,
         modifier = modifier
@@ -83,7 +79,6 @@ fun LobbySettingsContent(
     appVersion: String,
     onBack: () -> Unit,
     onThemeModeChange: (ThemeMode) -> Unit,
-    onWeightUnitChange: (WeightUnit) -> Unit,
     onAlertToggle: (AlertChannel, Boolean) -> Unit,
     onAboutLinkClick: (AboutLink) -> Unit,
     modifier: Modifier = Modifier
@@ -111,39 +106,18 @@ fun LobbySettingsContent(
                     .padding(horizontal = ArxSpacing.md, vertical = ArxSpacing.sm),
                 verticalArrangement = Arrangement.spacedBy(ArxSpacing.xl)
             ) {
+                // 1. Apariencia
                 Column(verticalArrangement = Arrangement.spacedBy(ArxSpacing.xs)) {
-                    SettingsSectionHeader(stringResource(R.string.settings_section_about))
-                    SettingsAboutSection(version = appVersion, onLinkClick = onAboutLinkClick)
-                }
-
-                Column(verticalArrangement = Arrangement.spacedBy(ArxSpacing.xs)) {
-                    SettingsSectionHeader(stringResource(R.string.settings_section_general))
+                    SettingsSectionHeader(stringResource(R.string.settings_section_appearance))
                     SettingsGroupCard {
                         ThemeModeSelector(
                             currentMode = state.themeMode,
                             onModeSelected = onThemeModeChange
                         )
-                        HorizontalDivider(color = MaterialTheme.extendedColors.glassBorder)
-                        SettingsSelectorRow(
-                            title = stringResource(R.string.settings_unit_title),
-                            options = WeightUnit.entries,
-                            selected = state.weightUnit,
-                            label = {
-                                stringResource(if (it == WeightUnit.KG) R.string.settings_unit_kg else R.string.settings_unit_lb)
-                            },
-                            onSelected = onWeightUnitChange
-                        )
-                        SettingsPreference.entries.forEach { pref ->
-                            HorizontalDivider(color = MaterialTheme.extendedColors.glassBorder)
-                            SettingsNavigationRow(
-                                title = stringResource(pref.titleRes),
-                                subtitle = stringResource(pref.subtitleRes)
-                            )
-
-                        }
                     }
                 }
 
+                // 2. Notificaciones
                 Column(verticalArrangement = Arrangement.spacedBy(ArxSpacing.xs)) {
                     SettingsSectionHeader(stringResource(R.string.settings_section_alerts))
                     SettingsGroupCard {
@@ -161,6 +135,31 @@ fun LobbySettingsContent(
                         }
                     }
                 }
+
+                // 3. General
+                Column(verticalArrangement = Arrangement.spacedBy(ArxSpacing.xs)) {
+                    SettingsSectionHeader(stringResource(R.string.settings_section_general))
+                    SettingsGroupCard {
+                        SettingsNavigationRow(
+                            title = stringResource(R.string.settings_language_title),
+                            subtitle = stringResource(R.string.settings_language_subtitle)
+                        )
+                        HorizontalDivider(color = MaterialTheme.extendedColors.glassBorder)
+                        SettingsNavigationRow(
+                            title = stringResource(R.string.settings_sync_title),
+                            subtitle = stringResource(
+                                if (state.isOnline) R.string.settings_sync_online
+                                else R.string.settings_sync_offline
+                            )
+                        )
+                    }
+                }
+
+                // 4. Acerca de (al final)
+                Column(verticalArrangement = Arrangement.spacedBy(ArxSpacing.xs)) {
+                    SettingsSectionHeader(stringResource(R.string.settings_section_about))
+                    SettingsAboutSection(version = appVersion, onLinkClick = onAboutLinkClick)
+                }
             }
         }
     }
@@ -170,17 +169,17 @@ fun LobbySettingsContent(
 @Composable
 private fun SettingsLightPreview() {
     ArxTheme(darkTheme = false) {
-        LobbySettingsContent(LobbySettingsState(), "v1.0.0", {}, {}, {}, { _, _ -> }, {})
+        LobbySettingsContent(LobbySettingsState(), "v1.0.0", {}, {}, { _, _ -> }, {})
     }
 }
 
-@Preview(name = "Dark", widthDp = 360, heightDp = 900)
+@Preview(name = "Dark - sin conexión", widthDp = 360, heightDp = 900)
 @Composable
 private fun SettingsDarkPreview() {
     ArxTheme(darkTheme = true) {
         LobbySettingsContent(
-            LobbySettingsState(themeMode = ThemeMode.DARK, weightUnit = WeightUnit.LB),
-            "v1.0.0", {}, {}, {}, { _, _ -> }, {}
+            LobbySettingsState(themeMode = ThemeMode.DARK, isOnline = false),
+            "v1.0.0", {}, {}, { _, _ -> }, {}
         )
     }
 }
