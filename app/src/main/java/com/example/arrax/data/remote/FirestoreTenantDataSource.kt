@@ -1,5 +1,6 @@
 package com.example.arrax.data.remote
 
+import com.example.arrax.core.common.AppError
 import com.example.arrax.core.common.FirestorePaths
 import com.example.arrax.core.model.DefaultCuts
 import com.example.arrax.domain.model.Role
@@ -100,11 +101,40 @@ class FirestoreTenantDataSource @Inject constructor(
     // The invitation code is assumed equal to tenantId for now; the real invitation model
     // (own codes, expiry, assigned role) is left for a later phase.
     suspend fun joinTenant(invitationCode: String, uid: String): TenantDto {
-        val snapshot = tenants().document(invitationCode).get().await()
-        val dto = snapshot.toObject<TenantDto>() ?: error("Código de invitación inválido")
-        users().document(uid)
-            .set(mapOf("tenantId" to dto.id, "role" to Role.OPERATOR.name), SetOptions.merge())
-            .await()
+        val inviteSnap = firestore.collection(FirestorePaths.INVITES) // agrega INVITES = "invites"
+            .document(invitationCode).get().await()
+        if (!inviteSnap.exists()) throw throw AppError.InviteNotFound()
+
+        val tenantId = inviteSnap.getString("tenantId") ?: throw AppError.InviteNotFound()
+        val revoked = inviteSnap.getBoolean("revoked") ?: false
+        val expiresAt = inviteSnap.getLong("expiresAt") ?: 0L
+        if (revoked || expiresAt < System.currentTimeMillis()) throw AppError.InviteExpired()
+
+        val memberRef = members(tenantId).document(uid)
+        if (memberRef.get().await().exists()) throw throw AppError.AlreadyMember()
+
+        val tenantSnap = tenants().document(tenantId).get().await()
+        val dto = tenantSnap.toObject<TenantDto>() ?: throw AppError.InviteNotFound()
+
+        val userName = users().document(uid).get().await().getString("name").orEmpty()
+
+        // Atómico: miembro (lo que exigen las reglas) + negocio activo del usuario
+        val batch = firestore.batch()
+        batch.set(
+            memberRef,
+            mapOf(
+                "uid" to uid,
+                "role" to Role.OPERATOR.name,
+                "name" to userName,
+                "joinedAt" to System.currentTimeMillis()
+            )
+        )
+        batch.set(
+            users().document(uid),
+            mapOf("tenantId" to dto.id, "role" to Role.OPERATOR.name),
+            SetOptions.merge()
+        )
+        batch.commit().await()
         return dto
     }
 }

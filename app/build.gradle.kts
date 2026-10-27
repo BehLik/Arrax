@@ -51,45 +51,99 @@ kotlin {
         )
     }
 }
+
 dependencies {
+    // ─────────────────────────────────────
+    // Android Core
+    // ─────────────────────────────────────
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+
+    // ─────────────────────────────────────
+    // Jetpack Compose
+    // ─────────────────────────────────────
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-
-    // Firebase
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.firestore)
-    implementation(libs.firebase.auth)
     implementation(libs.androidx.compose.ui.text.google.fonts)
+
+    // ─────────────────────────────────────
+    // Navigation
+    // ─────────────────────────────────────
+    implementation(libs.androidx.navigation.compose)
+
+    // ─────────────────────────────────────
+    // Dependency Injection - Hilt
+    // ─────────────────────────────────────
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
+    ksp(libs.hilt.compiler)
+
+    // ─────────────────────────────────────
+    // Firebase
+    // ─────────────────────────────────────
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
     implementation(libs.firebase.crashlytics)
+
+    // ─────────────────────────────────────
+    // Data Storage
+    // ─────────────────────────────────────
     implementation(libs.androidx.datastore.core)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.kotlinx.serialization.json)
 
-    // Coil 3
+    // ─────────────────────────────────────
+    // Image Loading - Coil 3
+    // ─────────────────────────────────────
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
-    // --- (Credentials & Google ID) ---
+    // ─────────────────────────────────────
+    // Authentication - Credential Manager
+    // ─────────────────────────────────────
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.google.id)
 
+    // ─────────────────────────────────────
+    // QR Generation - ZXing
+    // ─────────────────────────────────────
+    implementation(libs.zxing.core)
+
+    // ─────────────────────────────────────
+    // QR Scanning - CameraX
+    // ─────────────────────────────────────
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+
+    implementation(libs.google.guava)
+    // ─────────────────────────────────────
+    // Barcode & QR Recognition - ML Kit
+    // ─────────────────────────────────────
+    implementation(libs.google.mlkit.barcode.scanning)
+
+    // ─────────────────────────────────────
+    // Unit Tests
+    // ─────────────────────────────────────
     testImplementation(libs.junit)
+
+    // ─────────────────────────────────────
+    // Instrumented Tests
+    // ─────────────────────────────────────
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+
+    // ─────────────────────────────────────
+    // Debug Tools
+    // ─────────────────────────────────────
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.hilt.navigation.compose)
-    implementation(libs.kotlinx.serialization.json)
 }

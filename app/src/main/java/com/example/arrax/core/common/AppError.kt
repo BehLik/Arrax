@@ -22,6 +22,9 @@ sealed class AppError(cause: Throwable? = null) : Exception(cause) {
     class EmailNotVerified: AppError()
     class Unknown(cause: Throwable? = null) : AppError(cause)
     class TooManyRequests(cause: Throwable? = null) : AppError(cause)
+    class InviteNotFound : AppError()
+    class InviteExpired : AppError()
+    class AlreadyMember : AppError()
 }
 
 private const val TAG = "AppError"

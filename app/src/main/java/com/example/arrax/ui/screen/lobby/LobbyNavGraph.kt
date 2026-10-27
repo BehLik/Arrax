@@ -3,11 +3,14 @@ package com.example.arrax.ui.screen.lobby
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -22,7 +25,10 @@ import com.example.arrax.ui.root.navigation.safeNavigate
 import com.example.arrax.ui.root.session.LocalCurrentUser
 import com.example.arrax.ui.screen.lobby.create.LobbyBusinessCreateScreen
 import com.example.arrax.ui.screen.lobby.home.LobbyHomeScreen
+import com.example.arrax.ui.screen.lobby.join.LobbyJoinEvent
 import com.example.arrax.ui.screen.lobby.join.LobbyJoinScreen
+import com.example.arrax.ui.screen.lobby.join.LobbyJoinViewModel
+import com.example.arrax.ui.screen.lobby.join.component.QrCameraContent
 import com.example.arrax.ui.screen.lobby.notification.LobbyNotificationScreen
 import com.example.arrax.ui.screen.lobby.profile.LobbyProfileScreen
 import com.example.arrax.ui.screen.lobby.profile.changepassword.LobbyChangePasswordScreen
@@ -66,18 +72,37 @@ fun NavGraphBuilder.lobbyGraph(nav: NavController) {
         }
 
         composable<BusinessJoin> {
-            // TODO: mover a LobbyJoinViewModel; al unirse: nav.safeNavigate(BusinessHome(id)) { popUpTo<BusinessJoin> { inclusive = true } }
-            var method by rememberSaveable { mutableStateOf(JoinMethod.CODE) }
-            var code by rememberSaveable { mutableStateOf("") }
-            var torchOn by remember { mutableStateOf(false) }
+            val viewModel: LobbyJoinViewModel = hiltViewModel()
+            val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+            LaunchedEffect(Unit) {
+                viewModel.events.collect { event ->
+                    when (event) {
+                        is LobbyJoinEvent.Joined ->
+                            nav.safeNavigate(BusinessHome(event.tenantId)) {
+                                popUpTo<BusinessJoin> { inclusive = true }
+                            }
+                    }
+                }
+            }
 
             LobbyJoinScreen(
-                method = method, code = code, isLoading = false, errorMessage = null, torchOn = torchOn,
+                method = state.method,
+                code = state.code,
+                isLoading = state.isLoading,
+                errorMessage = state.errorMessage,
+                torchOn = state.torchOn,
                 onBack = back,
-                onMethodChange = { method = it },
-                onCodeChange = { code = it },
-                onJoin = { /* JoinTenantUseCase vía ViewModel */ },
-                onTorchToggle = { torchOn = !torchOn }
+                onMethodChange = viewModel::onMethodChange,
+                onCodeChange = viewModel::onCodeChange,
+                onJoin = viewModel::onJoin,
+                onTorchToggle = viewModel::onTorchToggle,
+                cameraContent = {
+                    QrCameraContent(
+                        torchOn = state.torchOn,
+                        onQrScanned = viewModel::onQrScanned
+                    )
+                }
             )
         }
 

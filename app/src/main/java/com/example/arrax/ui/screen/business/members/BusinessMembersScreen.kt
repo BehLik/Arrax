@@ -7,19 +7,21 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
 import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
-import com.example.arrax.core.designsystem.components.backgrounds.ArxScreenSurface
 import com.example.arrax.core.designsystem.components.navigation.ArxTopBar
 import com.example.arrax.core.designsystem.components.navigation.ArxTopBarNavigationType
 import com.example.arrax.core.designsystem.theme.ArxTheme
 import com.example.arrax.ui.screen.business.members.component.InvitationSheet
 import com.example.arrax.ui.screen.business.members.component.InviteMemberButton
+import com.example.arrax.ui.screen.business.members.component.InviteSharing
 import com.example.arrax.ui.screen.business.members.component.MembersList
 
 @Composable
@@ -27,11 +29,10 @@ fun BusinessMembersScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
     onMemberClick: (memberId: String) -> Unit = {},
-    onShareQr: () -> Unit = {},
-    onShareLink: () -> Unit = {},
     viewModel: BusinessMembersViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
     val clipboard = LocalClipboardManager.current
 
     BusinessMembersContent(
@@ -42,8 +43,14 @@ fun BusinessMembersScreen(
         onDismissInvite = viewModel::onDismissInvite,
         onInviteTabSelected = viewModel::onInviteTabSelected,
         onCopyCode = { state.invitation?.code?.let { clipboard.setText(AnnotatedString(it)) } },
-        onShareQr = onShareQr,
-        onShareLink = onShareLink,
+        onShareQr = {
+            state.invitation?.let { inv ->
+                inv.qrImage?.let { InviteSharing.shareQr(context, it.asAndroidBitmap(), inv.shareMessage) }
+            }
+        },
+        onShareLink = {
+            state.invitation?.let { InviteSharing.shareText(context, it.shareMessage) }
+        },
         onGenerateInvitation = viewModel::onGenerateInvitation,
         modifier = modifier
     )
@@ -64,37 +71,35 @@ internal fun BusinessMembersContent(
     onGenerateInvitation: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-        ArxBackground(decoration = ArxDecoration.None) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                ArxTopBar(
-                    title = "Equipo y permisos",
-                    centeredTitle = false,
-                    navigationType = ArxTopBarNavigationType.BACK,
-                    onNavigationClick = onBack
-                )
-                InviteMemberButton(onClick = onInviteClick)
-                MembersList(
-                    members = state.members,
-                    onMemberClick = onMemberClick,
-                    modifier = Modifier.weight(1f)
-                )
-            }
-        }
-
-        if (state.isInviteSheetVisible) {
-            InvitationSheet(
-                state = state,
-                onDismiss = onDismissInvite,
-                onTabSelected = onInviteTabSelected,
-                onCopyCode = onCopyCode,
-                onShareQr = onShareQr,
-                onShareLink = onShareLink,
-                onGenerate = onGenerateInvitation
+    ArxBackground(modifier = modifier, decoration = ArxDecoration.None) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            ArxTopBar(
+                title = "Equipo y permisos",
+                centeredTitle = false,
+                navigationType = ArxTopBarNavigationType.BACK,
+                onNavigationClick = onBack
+            )
+            InviteMemberButton(onClick = onInviteClick)
+            MembersList(
+                members = state.members,
+                onMemberClick = onMemberClick,
+                modifier = Modifier.weight(1f)
             )
         }
     }
 
+    if (state.isInviteSheetVisible) {
+        InvitationSheet(
+            state = state,
+            onDismiss = onDismissInvite,
+            onTabSelected = onInviteTabSelected,
+            onCopyCode = onCopyCode,
+            onShareQr = onShareQr,
+            onShareLink = onShareLink,
+            onGenerate = onGenerateInvitation
+        )
+    }
+}
 
 @Preview(showBackground = true, widthDp = 360, heightDp = 780)
 @Preview(

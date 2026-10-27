@@ -32,6 +32,7 @@ data class BusinessMembersState(
     val members: List<MemberUi> = emptyList(),
     val isInviteSheetVisible: Boolean = false,
     val inviteTab: InviteTab = InviteTab.Code,
+    val isGenerating: Boolean = false,
+    val inviteError: String? = null,
     val invitation: InvitationUi? = null,
-    val isGenerating: Boolean = false
 )
