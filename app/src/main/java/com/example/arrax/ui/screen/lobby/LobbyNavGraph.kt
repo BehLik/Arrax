@@ -54,6 +54,7 @@ fun NavGraphBuilder.lobbyGraph(nav: NavController) {
                 onNotificationsClick = { nav.safeNavigate(Notifications) },
 //                onSettingsClick = { nav.safeNavigate(Settings) },
                 onProfileClick = { nav.safeNavigate(Profile) }
+
             )
         }
 

@@ -29,6 +29,10 @@ data class UserDto(
     val tenantId: String? = null,
     val role: String = Role.OPERATOR.name
 )
+data class MembershipDto(
+    val tenantId: String,
+    val role: String
+)
 
 /**
  * Firestore is both remote and local (no Room): the SDK keeps a persistent local cache and syncs it,
@@ -57,6 +61,19 @@ class FirestoreTenantDataSource @Inject constructor(
         awaitClose { listener.remove() }
     }
 
+    fun observeMyMemberships(uid: String): Flow<List<MembershipDto>> = callbackFlow {
+        val listener = firestore.collectionGroup(FirestorePaths.MEMBERS)
+            .whereEqualTo("uid", uid)
+            .addSnapshotListener { snap, error ->
+                if (error != null) { close(error); return@addSnapshotListener }
+                val list = snap?.documents.orEmpty().mapNotNull { doc ->
+                    val tenantId = doc.reference.parent.parent?.id ?: return@mapNotNull null
+                    MembershipDto(tenantId, doc.getString("role") ?: Role.OPERATOR.name)
+                }
+                trySend(list)
+            }
+        awaitClose { listener.remove() }
+    }
     // Atomic (batch) and merge only tenantId/role: writing a whole UserDto with merge
     // would overwrite the existing "name" with "".
     private fun members(tenantId: String) =

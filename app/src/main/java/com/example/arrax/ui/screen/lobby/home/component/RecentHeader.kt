@@ -13,7 +13,11 @@ import com.example.arrax.R
 import com.example.arrax.core.designsystem.components.buttons.ArxTextButton
 
 @Composable
-fun RecentHeader(onViewAllClick: () -> Unit, modifier: Modifier = Modifier) {
+fun RecentHeader(
+    onViewAllClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    showViewAll: Boolean = true
+) {
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -24,6 +28,8 @@ fun RecentHeader(onViewAllClick: () -> Unit, modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onBackground
         )
-        ArxTextButton(text = stringResource(R.string.lobby_view_all), onClick = onViewAllClick)
+        if (showViewAll) {
+            ArxTextButton(text = stringResource(R.string.lobby_view_all), onClick = onViewAllClick)
+        }
     }
 }

@@ -8,6 +8,7 @@ import com.example.arrax.domain.usecase.user.ObserveCurrentUserUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -15,26 +16,21 @@ import javax.inject.Inject
 
 class ObserveMyBusinessesUseCase @Inject constructor(
     private val tenantRepository: TenantRepository,
-    private val observeCurrentUserUseCase: ObserveCurrentUserUseCase,
-    private val observeEventsUseCase: ObserveEventsUseCase
+    private val observeCurrentUserUseCase: ObserveCurrentUserUseCase
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
     operator fun invoke(): Flow<List<BusinessSummary>> =
-        combine(
-            tenantRepository.observeCurrentTenant(),
-            observeCurrentUserUseCase()
-        ) { tenant, user -> tenant to user }
-            .flatMapLatest { (tenant, user) ->
-                if (tenant == null) {
-                    flowOf(emptyList())
-                } else {
-                    observeEventsUseCase(tenant.id).map { eventos ->
-                        listOf(
-                            BusinessSummary(
-                                tenant = tenant,
-                                isAdmin = user?.role == Role.ADMIN,
-                                totalEvents = eventos.size
-                            )
+        observeCurrentUserUseCase()
+            .map { it?.uid }
+            .distinctUntilChanged()
+            .flatMapLatest { uid ->
+                if (uid == null) flowOf(emptyList())
+                else tenantRepository.observeMyTenants(uid).map { list ->
+                    list.map {
+                        BusinessSummary(
+                            tenant = it.tenant,
+                            isAdmin = it.role == Role.OWNER || it.role == Role.ADMIN,
+                            totalEvents = it.eventCount
                         )
                     }
                 }

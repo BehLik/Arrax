@@ -14,7 +14,9 @@ data class BusinessItem(
 data class LobbyHomeState(
     val userName: String = "",
     val recentBusinesses: List<BusinessItem> = emptyList(),
+    val hasMoreBusinesses: Boolean = false,
     val unreadNotifications: Int = 0,
     val isLoading: Boolean = true,
-    val isOffline: Boolean = false
+    val isOffline: Boolean = false,
+    val isRefreshing:Boolean=false
 )

@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -50,12 +52,13 @@ fun LobbyHomeScreen(
         onJoinClick = onJoinClick,
         onViewAllClick = onViewAllClick,
         onNotificationsClick = onNotificationsClick,
-//        onSettingsClick = onSettingsClick,
-        onProfileClick = onProfileClick
+        onProfileClick = onProfileClick,
+        onRefresh = viewModel::refresh
     )
 }
 
 // ─── PANTALLA SIN ESTADO (Ideal para el @Preview) ────────────────────────────
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LobbyHomeContent(
     state: LobbyHomeState,
@@ -64,7 +67,8 @@ fun LobbyHomeContent(
     onJoinClick: () -> Unit,
     onViewAllClick: () -> Unit,
     onNotificationsClick: () -> Unit,
-    onProfileClick: () -> Unit
+    onProfileClick: () -> Unit,
+    onRefresh: () -> Unit
 ) {
     ArxBackground(modifier = Modifier.fillMaxSize()) {
         Scaffold(
@@ -77,7 +81,13 @@ fun LobbyHomeContent(
                 )
             }
         ) { padding ->
-            Box(modifier = Modifier.padding(padding).fillMaxSize()) {
+            PullToRefreshBox(
+                isRefreshing = state.isRefreshing,
+                onRefresh = onRefresh,
+                modifier = Modifier
+                    .padding(padding)
+                    .fillMaxSize()
+            ) {
                 if (state.isLoading) {
                     ArxLoading(message = stringResource(R.string.lobby_loading))
                 } else {
@@ -91,7 +101,10 @@ fun LobbyHomeContent(
                             item {
                                 Column(modifier = Modifier.padding(bottom = ArxSpacing.lg)) {
                                     Text(
-                                        text = stringResource(R.string.lobby_greeting, state.userName),
+                                        text = stringResource(
+                                            R.string.lobby_greeting,
+                                            state.userName
+                                        ),
                                         style = MaterialTheme.typography.headlineMedium,
                                         color = MaterialTheme.colorScheme.onBackground
                                     )
@@ -113,6 +126,7 @@ fun LobbyHomeContent(
 
                             item {
                                 RecentHeader(
+                                    showViewAll = state.hasMoreBusinesses,
                                     onViewAllClick = onViewAllClick,
                                     modifier = Modifier.padding(bottom = ArxSpacing.sm)
                                 )
@@ -141,6 +155,7 @@ fun LobbyHomeContent(
         }
     }
 }
+
 
 @Composable
 private fun OfflineBadge() {
@@ -178,7 +193,8 @@ fun LobbyHomeScreenPreview_Content() {
             onViewAllClick = {},
             onNotificationsClick = {},
 //            onSettingsClick = {},
-            onProfileClick = {}
+            onProfileClick = {},
+            onRefresh={}
         )
     }
 }
@@ -201,7 +217,8 @@ fun LobbyHomeScreenPreview_Empty_Offline() {
             onViewAllClick = {},
             onNotificationsClick = {},
 //            onSettingsClick = {},
-            onProfileClick = {}
+            onProfileClick = {},
+            onRefresh = {}
         )
     }
 }
@@ -224,10 +241,12 @@ fun LobbyHomeScreenPreview_Loading() {
             onViewAllClick = {},
             onNotificationsClick = {},
 //            onSettingsClick = {},
-            onProfileClick = {}
+            onProfileClick = {},
+            onRefresh={}
         )
     }
 }
+
 @Preview(showBackground = true, name = "Lobby Home - Con Datos")
 @Composable
 fun LobbyHomeScreenPreview_Content2() {
@@ -264,7 +283,8 @@ fun LobbyHomeScreenPreview_Content2() {
             onJoinClick = {},
             onViewAllClick = {},
             onNotificationsClick = {},
-            onProfileClick = {}
+            onProfileClick = {},
+            onRefresh={}
         )
     }
 }
