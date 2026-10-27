@@ -12,11 +12,19 @@ data class MemberUi(
     val isOwner: Boolean = false
 )
 
+//data class InvitationUi(
+//    val code: String,
+//    val expiresLabel: String,
+//    val usesLabel: String,
+//    val roleLabel: String,
+//    val qrImage: ImageBitmap? = null
+//)
 data class InvitationUi(
-    val code: String,
+    val code: String,            // ya formateado: K7M2-9QPX
+    val roleLabel: String,
     val expiresLabel: String,
     val usesLabel: String,
-    val roleLabel: String,
+    val shareMessage: String,
     val qrImage: ImageBitmap? = null
 )
 
