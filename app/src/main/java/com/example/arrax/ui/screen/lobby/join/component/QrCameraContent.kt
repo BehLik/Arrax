@@ -41,6 +41,8 @@ import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import java.util.concurrent.Executors
 import android.Manifest
+import android.net.Uri
+import android.util.Log
 
 @androidx.annotation.OptIn(ExperimentalGetImage::class)
 @Composable
@@ -85,6 +87,7 @@ fun QrCameraContent(
 
     val currentOnScanned by rememberUpdatedState(onQrScanned)
     val executor = remember { Executors.newSingleThreadExecutor() }
+    val lastScan = remember { longArrayOf(0L) }
     val scanner = remember {
         BarcodeScanning.getClient(
             BarcodeScannerOptions.Builder()
@@ -126,7 +129,12 @@ fun QrCameraContent(
                     val image = InputImage.fromMediaImage(media, proxy.imageInfo.rotationDegrees)
                     scanner.process(image)
                         .addOnSuccessListener { codes ->
-                            codes.firstNotNullOfOrNull { it.rawValue }?.let(currentOnScanned)
+                            val raw = codes.firstNotNullOfOrNull { it.rawValue } ?: return@addOnSuccessListener
+                            val now = System.currentTimeMillis()
+                            if (now - lastScan[0] < 2500) return@addOnSuccessListener   // evita ráfagas
+                            lastScan[0] = now
+                            Log.d("QR_JOIN", "raw=[$raw] len=${raw.length}")
+                            currentOnScanned(extractInviteCode(raw))
                         }
                         .addOnCompleteListener { proxy.close() }
                 }
@@ -138,4 +146,12 @@ fun QrCameraContent(
             previewView
         }
     )
+}
+private fun extractInviteCode(raw: String): String {
+    val text = raw.trim()
+    return runCatching { Uri.parse(text).getQueryParameter("code") }
+        .getOrNull()
+        ?.trim()
+        ?.takeIf { it.isNotEmpty() }
+        ?: text   // si el QR trae solo el código, se usa tal cual
 }
