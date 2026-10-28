@@ -88,8 +88,8 @@ class LobbyJoinViewModel @Inject constructor(
                 fail("No se encontró tu sesión. Inicia sesión de nuevo.")
                 return@launch
             }
-
-            when (val result = joinTenant(code, user.uid)) {
+            val displayName = user.name.ifBlank { user.email.substringBefore("@") }
+            when (val result = joinTenant(code, user.uid, displayName)) {
                 is Resource.Success -> {
                     _uiState.update { it.copy(isSuccess = true) }   // isLoading sigue en true
                     delay(SUCCESS_DELAY_MS)

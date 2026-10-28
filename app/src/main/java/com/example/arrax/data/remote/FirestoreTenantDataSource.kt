@@ -117,10 +117,10 @@ class FirestoreTenantDataSource @Inject constructor(
 
     // The invitation code is assumed equal to tenantId for now; the real invitation model
     // (own codes, expiry, assigned role) is left for a later phase.
-    suspend fun joinTenant(invitationCode: String, uid: String): TenantDto {
-        val inviteSnap = firestore.collection(FirestorePaths.INVITES) // agrega INVITES = "invites"
+    suspend fun joinTenant(invitationCode: String, uid: String, userName: String): TenantDto {
+        val inviteSnap = firestore.collection(FirestorePaths.INVITES)
             .document(invitationCode).get().await()
-        if (!inviteSnap.exists()) throw throw AppError.InviteNotFound()
+        if (!inviteSnap.exists()) throw AppError.InviteNotFound()
 
         val tenantId = inviteSnap.getString("tenantId") ?: throw AppError.InviteNotFound()
         val revoked = inviteSnap.getBoolean("revoked") ?: false
@@ -128,14 +128,13 @@ class FirestoreTenantDataSource @Inject constructor(
         if (revoked || expiresAt < System.currentTimeMillis()) throw AppError.InviteExpired()
 
         val memberRef = members(tenantId).document(uid)
-        if (memberRef.get().await().exists()) throw throw AppError.AlreadyMember()
+        if (memberRef.get().await().exists()) throw AppError.AlreadyMember()
 
         val tenantSnap = tenants().document(tenantId).get().await()
         val dto = tenantSnap.toObject<TenantDto>() ?: throw AppError.InviteNotFound()
 
-        val userName = users().document(uid).get().await().getString("name").orEmpty()
+        // BORRADA: val userName = users().document(uid).get().await().getString("name").orEmpty()
 
-        // Atómico: miembro (lo que exigen las reglas) + negocio activo del usuario
         val batch = firestore.batch()
         batch.set(
             memberRef,

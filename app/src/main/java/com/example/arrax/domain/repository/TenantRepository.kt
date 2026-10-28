@@ -10,5 +10,5 @@ interface TenantRepository {
     fun observeCurrentTenant(): Flow<Tenant?>
     fun observeMyTenants(uid: String): Flow<List<TenantMembership>>
     suspend fun createTenant(name: String, ownerUid: String, ownerName: String): Resource<Tenant>
-    suspend fun joinTenant(invitationCode: String, uid: String): Resource<Tenant>
+    suspend fun joinTenant(invitationCode: String, uid: String,userName: String): Resource<Tenant>
 }

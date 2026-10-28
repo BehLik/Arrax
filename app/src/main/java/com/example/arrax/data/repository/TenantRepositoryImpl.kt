@@ -62,9 +62,12 @@ class TenantRepositoryImpl @Inject constructor(
                 ) { it.filterNotNull() }
             }
         }
-    override suspend fun joinTenant(invitationCode: String, uid: String): Resource<Tenant> = try {
-        val dto = tenantDataSource.joinTenant(invitationCode, uid)
-        // was "OPERADOR": the DataStore kept caching the legacy Spanish value
+    override suspend fun joinTenant(
+        invitationCode: String,
+        uid: String,
+        userName: String
+    ): Resource<Tenant> = try {
+        val dto = tenantDataSource.joinTenant(invitationCode, uid, userName)
         sessionLocalDataSource.saveSession(dto.id, Role.OPERATOR.name)
         Resource.Success(dto.toDomain())
     } catch (e: Exception) {

@@ -8,8 +8,8 @@ import javax.inject.Inject
 class JoinTenantUseCase @Inject constructor(
     private val tenantRepository: TenantRepository
 ) {
-    suspend operator fun invoke(invitationCode: String, uid: String): Resource<Tenant> {
+    suspend operator fun invoke(invitationCode: String, uid: String,userName: String): Resource<Tenant> {
         if (invitationCode.isBlank()) return Resource.Error("El código de invitación es obligatorio")
-        return tenantRepository.joinTenant(invitationCode.trim(), uid)
+        return tenantRepository.joinTenant(invitationCode.trim(), uid, userName.trim())
     }
 }
