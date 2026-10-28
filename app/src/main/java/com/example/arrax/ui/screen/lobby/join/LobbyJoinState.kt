@@ -6,6 +6,7 @@ data class LobbyJoinState(
     val method: JoinMethod = JoinMethod.CODE,
     val code: String = "",
     val isLoading: Boolean = false,
+    val isSuccess: Boolean=false,
     val errorMessage: String? = null,
     val torchOn: Boolean = false,
 )

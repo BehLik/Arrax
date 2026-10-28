@@ -8,6 +8,7 @@ import com.example.arrax.core.common.toAppError
 import com.example.arrax.domain.usecase.business.create.CreateBusinessUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,7 +29,7 @@ class LobbyBusinessCreateViewmodel @Inject constructor(
 
     private val _created = Channel<String>(Channel.BUFFERED)
     val created = _created.receiveAsFlow() // emite el businessId
-
+    private companion object { const val SUCCESS_DELAY_MS = 800L }
     fun onNameChange(value: String) {
         _state.update {
             it.copy(name = value.take(CreateBusinessUseCase.MAX_NAME), nameError = null, error = null)
@@ -47,7 +48,8 @@ class LobbyBusinessCreateViewmodel @Inject constructor(
             }
             createBusiness(current.name)
                 .onSuccess { tenant ->
-                    _state.update { it.copy(isLoading = false) }
+                    _state.update { it.copy(isSuccess = true) }
+                    delay(SUCCESS_DELAY_MS)
                     _created.send(tenant.id)
                 }
                 .onFailure { e ->

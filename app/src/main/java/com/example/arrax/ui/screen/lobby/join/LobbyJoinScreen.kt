@@ -26,9 +26,14 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.arrax.R
+import com.example.arrax.core.common.Resource
 import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
 import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
+import com.example.arrax.core.designsystem.components.display.ArxStepLoading
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
 import com.example.arrax.core.model.JoinMethod
@@ -50,78 +55,89 @@ fun LobbyJoinScreen(
     onCodeChange: (String) -> Unit,
     onJoin: () -> Unit,
     onTorchToggle: () -> Unit,
+    isSuccess: Boolean=false,
     modifier: Modifier = Modifier,
-    /** Aquí se inyecta el preview de CameraX cuando se conecte el escáner. */
     cameraContent: @Composable () -> Unit = {}
 ) {
     ArxBackground(decoration = ArxDecoration.Mountains) {
-        Scaffold(
-            modifier = modifier,
-            containerColor = Color.Transparent,
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = if (method == JoinMethod.CODE) "Unirse a negocio" else "Escanear QR",
-                            style = MaterialTheme.typography.headlineMedium
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = onBack) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
-                )
-            }
-        ) { padding ->
-            Column(
-                modifier = Modifier
-                    .padding(padding)
-                    .fillMaxSize()
-                    .padding(horizontal = ArxSpacing.md, vertical = ArxSpacing.sm),
-                verticalArrangement = Arrangement.spacedBy(ArxSpacing.lg)
-            ) {
-                JoinMethodSelector(
-                    selected = method,
-                    onSelected = onMethodChange,
-                    modifier = Modifier.fillMaxWidth()
-                )
+        Box(Modifier.fillMaxSize()) {
+            Scaffold(
+                modifier = modifier,
+                containerColor = Color.Transparent,
+                topBar = {
+                    TopAppBar(
+                        title = {
+                            Text(
+                                text = if (method == JoinMethod.CODE) "Unirse a negocio" else "Escanear QR",
+                                style = MaterialTheme.typography.headlineMedium
+                            )
+                        },
+                        navigationIcon = {
+                            IconButton(onClick = onBack) {
+                                Icon(
+                                    Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = "Volver"
+                                )
+                            }
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
+                    )
+                }
+            ) { padding ->
+                Column(
+                    modifier = Modifier
+                        .padding(padding)
+                        .fillMaxSize()
+                        .padding(horizontal = ArxSpacing.md, vertical = ArxSpacing.sm),
+                    verticalArrangement = Arrangement.spacedBy(ArxSpacing.lg)
+                ) {
+                    JoinMethodSelector(
+                        selected = method,
+                        onSelected = onMethodChange,
+                        modifier = Modifier.fillMaxWidth()
+                    )
 
-                AnimatedContent(
-                    targetState = method,
-                    transitionSpec = { fadeIn() togetherWith fadeOut() },
-                    modifier = Modifier.weight(1f),
-                    label = "join_method"
-                ) { current ->
-                    when (current) {
-                        JoinMethod.CODE -> Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .imePadding()
-                                .verticalScroll(rememberScrollState()),
-                            verticalArrangement = Arrangement.spacedBy(ArxSpacing.xl)
-                        ) {
-                            JoinQrShortcutCard(onClick = { onMethodChange(JoinMethod.QR) })
-                            JoinCodeForm(
-                                code = code,
-                                isLoading = isLoading,
+                    AnimatedContent(
+                        targetState = method,
+                        transitionSpec = { fadeIn() togetherWith fadeOut() },
+                        modifier = Modifier.weight(1f),
+                        label = "join_method"
+                    ) { current ->
+                        when (current) {
+                            JoinMethod.CODE -> Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .imePadding()
+                                    .verticalScroll(rememberScrollState()),
+                                verticalArrangement = Arrangement.spacedBy(ArxSpacing.xl)
+                            ) {
+                                JoinQrShortcutCard(onClick = { onMethodChange(JoinMethod.QR) })
+                                JoinCodeForm(
+                                    code = code,
+                                    isLoading = isLoading,
+                                    errorMessage = errorMessage,
+                                    onCodeChange = onCodeChange,
+                                    onJoin = onJoin
+                                )
+                            }
+
+                            JoinMethod.QR -> JoinQrScannerView(
+                                torchOn = torchOn,
                                 errorMessage = errorMessage,
-                                onCodeChange = onCodeChange,
-                                onJoin = onJoin
+                                onTorchToggle = onTorchToggle,
+                                modifier = Modifier.fillMaxSize(),
+                                cameraContent = cameraContent
                             )
                         }
-
-                        JoinMethod.QR -> JoinQrScannerView(
-                            torchOn = torchOn,
-                            errorMessage = errorMessage,
-                            onTorchToggle = onTorchToggle,
-                            modifier = Modifier.fillMaxSize(),
-                            cameraContent = cameraContent
-                        )
                     }
                 }
             }
+            ArxStepLoading(
+                visible = isLoading,
+                steps = stringArrayResource(R.array.loading_join_business_steps).toList(),
+                doneMessage = stringResource(R.string.loading_join_business_done),
+                isDone = isSuccess
+            )
         }
     }
 }

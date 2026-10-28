@@ -204,4 +204,21 @@
     <string name="event_pigs_label">Cerdos: %1$d</string>
     <string name="event_cuts_title">Cortes:</string>
     <string name="event_cut_line">- %1$s - %2$s / kg</string>
+
+    <!-- Loading: crear negocio -->
+    <string-array name="loading_create_business_steps">
+        <item>Creando tu espacio de trabajo…</item>
+        <item>Configurando el catálogo de cortes…</item>
+        <item>Asignando permisos de propietario…</item>
+        <item>Preparando todo…</item>
+    </string-array>
+    <string name="loading_create_business_done">¡Listo! Tu negocio fue creado</string>
+
+    <!-- Loading: unirse a negocio -->
+    <string-array name="loading_join_business_steps">
+        <item>Verificando la invitación…</item>
+        <item>Identificando el espacio de trabajo…</item>
+        <item>Asignando tu rol en el equipo…</item>
+    </string-array>
+    <string name="loading_join_business_done">¡Bienvenido al equipo!</string>
 </resources>

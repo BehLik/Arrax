@@ -1,5 +1,6 @@
 package com.example.arrax.ui.screen.lobby.join
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.arrax.core.common.AppError
@@ -11,6 +12,7 @@ import com.example.arrax.domain.usecase.tenant.JoinTenantUseCase
 import com.example.arrax.domain.usecase.user.ObserveCurrentUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -35,6 +37,7 @@ class LobbyJoinViewModel @Inject constructor(
 
     private var lastQr: String? = null
     private var lastQrAt = 0L
+    private companion object { const val SUCCESS_DELAY_MS = 800L }
     fun onMethodChange(method: JoinMethod) {
         _uiState.update { it.copy(method = method, errorMessage = null) }
     }
@@ -53,8 +56,15 @@ class LobbyJoinViewModel @Inject constructor(
         if (raw == lastQr && now - lastQrAt < 3_000) return
         lastQr = raw
         lastQrAt = now
-        val code = raw.substringBefore('?').trimEnd('/').substringAfterLast('/')
-        join(code)
+        join(extractInviteCode(raw))
+    }
+
+    private fun extractInviteCode(raw: String): String {
+        val text = raw.trim()
+        return runCatching { Uri.parse(text).getQueryParameter("code") }
+            .getOrNull()
+            ?.takeIf { it.isNotBlank() }
+            ?: text.substringAfterLast('/')   // si el QR trae solo el código
     }
 
     fun onJoin() = join(_uiState.value.code)
@@ -81,7 +91,8 @@ class LobbyJoinViewModel @Inject constructor(
 
             when (val result = joinTenant(code, user.uid)) {
                 is Resource.Success -> {
-                    _uiState.update { it.copy(isLoading = false) }
+                    _uiState.update { it.copy(isSuccess = true) }   // isLoading sigue en true
+                    delay(SUCCESS_DELAY_MS)
                     _events.send(LobbyJoinEvent.Joined(result.data.id))
                 }
                 is Resource.Error -> fail(

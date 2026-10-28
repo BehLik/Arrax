@@ -68,7 +68,8 @@ fun NavGraphBuilder.lobbyGraph(nav: NavController) {
                 onBack = back,
                 onCreated = { id ->
                     nav.navigate(BusinessHome(id)) { popUpTo<BusinessCreate> { inclusive = true } }
-                }
+                },
+
             )
         }
 
@@ -97,6 +98,7 @@ fun NavGraphBuilder.lobbyGraph(nav: NavController) {
                 onMethodChange = viewModel::onMethodChange,
                 onCodeChange = viewModel::onCodeChange,
                 onJoin = viewModel::onJoin,
+                isSuccess = state.isSuccess,
                 onTorchToggle = viewModel::onTorchToggle,
                 cameraContent = {
                     QrCameraContent(
