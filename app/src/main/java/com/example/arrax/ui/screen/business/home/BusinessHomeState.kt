@@ -26,7 +26,6 @@ data class BusinessHomeState(
     val businessName: String = "",
     val roleLabel: String = "",
     val memberCount: Int = 0,
-    val unreadNotifications: Int = 0,
     val upcomingEventsCount: Int = 0,
     val customersCount: Int = 0,
     val nextEvent: HomeNextEventUi? = null,

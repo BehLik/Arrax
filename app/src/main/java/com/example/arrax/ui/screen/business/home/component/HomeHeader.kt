@@ -27,8 +27,7 @@ import com.example.arrax.ui.root.session.CurrentUserAvatar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun HomeHeader(
-    unread: Int,
-    onNotificationsClick: () -> Unit,
+    onMoreClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     ArxTopBar(
@@ -37,16 +36,14 @@ internal fun HomeHeader(
         variant = ArxTopBarVariant.MENU,
         modifier = modifier,
         actions = {
-            IconButton(onClick = onNotificationsClick) {
-                BadgedBox(badge = { if (unread > 0) Badge { Text(unread.toString()) } }) {
-                    ArxIcon(
-                        icon = if (unread > 0) ArxIcons.NotificationFilled else ArxIcons.Notification,
-                        contentDescription = "Notificaciones"
-                    )
-                }
-            }
-            // TODO: reemplazar por ArxAvatar(imageUrl = ...) cuando el state traiga la foto de perfil.
             CurrentUserAvatar(size = 36.dp)
+            IconButton(onClick = onMoreClick) {
+                ArxIcon(
+                    icon = ArxIcons.MoreVertical,
+                    contentDescription = "Ver mas"
+                )
+
+            }
         }
     )
 }

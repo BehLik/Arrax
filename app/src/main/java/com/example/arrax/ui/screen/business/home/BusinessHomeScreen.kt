@@ -36,7 +36,7 @@ fun BusinessHomeScreen(
     onEventClick: () -> Unit,
     modifier: Modifier = Modifier,
     onBusinessClick: () -> Unit = {},
-    onNotificationsClick: () -> Unit = {},
+    onMoreClick: () -> Unit = {},
     onAlertsClick: () -> Unit = {},
     onCustomersClick: () -> Unit = {},
     onTeamClick: () -> Unit = {},
@@ -49,7 +49,7 @@ fun BusinessHomeScreen(
     BusinessHomeContent(
         state = state,
         onBusinessClick = onBusinessClick,
-        onNotificationsClick = onNotificationsClick,
+        onMoreClick = onMoreClick,
         onEventClick = onEventClick,
         onAlertsClick = onAlertsClick,
         onCreateEventClick = onCreateEventClick,
@@ -64,7 +64,7 @@ fun BusinessHomeScreen(
 internal fun BusinessHomeContent(
     state: BusinessHomeState,
     onBusinessClick: () -> Unit,
-    onNotificationsClick: () -> Unit,
+    onMoreClick: () -> Unit,
     onEventClick: () -> Unit,
     onAlertsClick: () -> Unit,
     onCreateEventClick: () -> Unit,
@@ -84,8 +84,7 @@ internal fun BusinessHomeContent(
                 verticalArrangement = Arrangement.spacedBy(ArxSpacing.md)
             ) {
                 HomeHeader(
-                    unread = state.unreadNotifications,
-                    onNotificationsClick = onNotificationsClick
+                    onMoreClick  = onMoreClick
                 )
                 ActiveBusinessCard(
                     businessName = state.businessName,
@@ -126,7 +125,7 @@ private fun BusinessHomePreview() {
                 businessName = "Granja San José",
                 roleLabel = "Owner",
                 memberCount = 8,
-                unreadNotifications = 3,
+//                unreadNotifications = 3,
                 upcomingEventsCount = 2,
                 customersCount = 24,
                 nextEvent = HomeNextEventUi(
@@ -145,7 +144,7 @@ private fun BusinessHomePreview() {
                     HomeSalesSliceUi("Otros", "10%", 0.10f, ArxTone.Neutral)
                 )
             ),
-            onBusinessClick = {}, onNotificationsClick = {}, onEventClick = {}, onAlertsClick = {},
+            onBusinessClick = {}, onMoreClick = {}, onEventClick = {}, onAlertsClick = {},
             onCreateEventClick = {}, onCustomersClick = {}, onTeamClick = {}, onCutsClick = {}
         )
     }

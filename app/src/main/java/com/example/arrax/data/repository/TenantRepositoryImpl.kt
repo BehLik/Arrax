@@ -41,6 +41,9 @@ class TenantRepositoryImpl @Inject constructor(
     } catch (e: Exception) {
         Resource.Error(e.message ?: "Error al crear el negocio", e)
     }
+    override fun observeTenant(tenantId: String): Flow<Tenant?> =
+        tenantDataSource.observeTenant(tenantId).map { it?.toDomain() }
+
     override fun observeMembers(tenantId: String): Flow<List<Member>> =
         tenantDataSource.observeMembers(tenantId).map { list -> list.map { it.toDomain() } }
 
@@ -76,4 +79,5 @@ class TenantRepositoryImpl @Inject constructor(
     } catch (e: Exception) {
         Resource.Error(e.message ?: "Código de invitación inválido", e)
     }
+
 }

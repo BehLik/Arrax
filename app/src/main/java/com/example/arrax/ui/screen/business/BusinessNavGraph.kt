@@ -35,7 +35,7 @@ private fun NavGraphBuilder.businessCore(nav: NavController) {
             onEventClick = { nav.safeNavigate(BusinessEvents(args.businessId)) },
             // Tocar el negocio activo lleva a la lista de negocios (cambiar de negocio).
             onBusinessClick = { nav.safeNavigate(MyBusinesses) },
-            onNotificationsClick = { nav.safeNavigate(Notifications) },
+            onMoreClick = { nav.safeNavigate(BusinessMore(args.businessId)) },
             onAlertsClick = { nav.safeNavigate(BusinessAlerts(args.businessId)) },
             onCustomersClick = { nav.safeNavigate(BusinessCustomers(args.businessId)) },
             onTeamClick = { nav.safeNavigate(BusinessMembers(args.businessId)) },
