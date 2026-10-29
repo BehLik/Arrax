@@ -6,7 +6,8 @@ data class Event(
     val id: String = "",
     val name: String = "",
     val date: Long = 0L,
-    val pigCount: Int = 0,
+    val animalType: String="Pig",
+    val animalCount: Int = 0,
     val status: EventStatus = EventStatus.OPEN,
     val createdBy: String = ""
 )
