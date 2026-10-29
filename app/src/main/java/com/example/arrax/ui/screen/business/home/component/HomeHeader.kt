@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.example.arrax.core.designsystem.components.navigation.ArxTopBar
 import com.example.arrax.core.designsystem.components.navigation.ArxTopBarVariant
 import com.example.arrax.core.designsystem.icons.ArxIcon
@@ -21,6 +22,7 @@ import com.example.arrax.core.designsystem.icons.ArxIconShape
 import com.example.arrax.core.designsystem.icons.ArxIconStyle
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
+import com.example.arrax.ui.root.session.CurrentUserAvatar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,12 +46,7 @@ internal fun HomeHeader(
                 }
             }
             // TODO: reemplazar por ArxAvatar(imageUrl = ...) cuando el state traiga la foto de perfil.
-            ArxIconBadge(
-                icon = ArxIcons.User,
-                style = ArxIconStyle.Soft,
-                shape = ArxIconShape.Circle,
-                contentDescription = "Perfil"
-            )
+            CurrentUserAvatar(size = 36.dp)
         }
     )
 }

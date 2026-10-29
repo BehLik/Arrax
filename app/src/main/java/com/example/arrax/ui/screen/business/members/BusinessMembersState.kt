@@ -9,16 +9,9 @@ data class MemberUi(
     val name: String,
     val initials: String,
     val roleLabel: String,
-    val isOwner: Boolean = false
+    val isOwner: Boolean = false,
+    val photoUrl: String? = null
 )
-
-//data class InvitationUi(
-//    val code: String,
-//    val expiresLabel: String,
-//    val usesLabel: String,
-//    val roleLabel: String,
-//    val qrImage: ImageBitmap? = null
-//)
 data class InvitationUi(
     val code: String,            // ya formateado: K7M2-9QPX
     val roleLabel: String,
@@ -35,4 +28,6 @@ data class BusinessMembersState(
     val isGenerating: Boolean = false,
     val inviteError: String? = null,
     val invitation: InvitationUi? = null,
+    val isLoadingMembers: Boolean = true,
+    val membersError: String? = null,
 )

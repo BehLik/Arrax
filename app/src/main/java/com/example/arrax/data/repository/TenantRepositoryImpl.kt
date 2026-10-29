@@ -4,6 +4,7 @@ import com.example.arrax.core.common.Resource
 import com.example.arrax.data.local.SessionLocalDataSource
 import com.example.arrax.data.mapper.toDomain
 import com.example.arrax.data.remote.FirestoreTenantDataSource
+import com.example.arrax.domain.model.Member
 import com.example.arrax.domain.model.Role
 import com.example.arrax.domain.model.Tenant
 import com.example.arrax.domain.model.TenantMembership
@@ -40,6 +41,8 @@ class TenantRepositoryImpl @Inject constructor(
     } catch (e: Exception) {
         Resource.Error(e.message ?: "Error al crear el negocio", e)
     }
+    override fun observeMembers(tenantId: String): Flow<List<Member>> =
+        tenantDataSource.observeMembers(tenantId).map { list -> list.map { it.toDomain() } }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun observeMyTenants(uid: String): Flow<List<TenantMembership>> =

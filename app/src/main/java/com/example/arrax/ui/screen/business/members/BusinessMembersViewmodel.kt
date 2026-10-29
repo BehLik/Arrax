@@ -27,12 +27,19 @@ import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
 import com.example.arrax.core.common.NetworkMonitor
-
+import com.example.arrax.domain.model.Member
+import com.example.arrax.domain.model.Role
+import com.example.arrax.domain.usecase.business.members.ObserveMembersUseCase
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.launchIn
 @HiltViewModel
 class BusinessMembersViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val createInvitation: CreateInvitationUseCase,
-    private val networkMonitor: NetworkMonitor, // ajusta el tipo/import al tuyo
+    private val observeMembers: ObserveMembersUseCase,
+    private val networkMonitor: NetworkMonitor,
 ) : ViewModel() {
 
     private val businessId = savedStateHandle.toRoute<BusinessMembers>().businessId
@@ -100,4 +107,40 @@ class BusinessMembersViewModel @Inject constructor(
             qrImage = qr
         )
     }
+    init {
+        observeMembers(businessId)
+            .map { list ->
+                list.sortedWith(compareByDescending<Member> { it.role == Role.OWNER }.thenBy { it.joinedAt })
+                    .map { it.toUi() }
+            }
+            .onEach { ui ->
+                _uiState.update { it.copy(members = ui, isLoadingMembers = false, membersError = null) }
+            }
+            .catch { e ->
+                _uiState.update {
+                    it.copy(
+                        isLoadingMembers = false,
+                        membersError = when (e.toAppError()) {
+                            is AppError.PermissionDenied -> "No tienes permiso para ver el equipo."
+                            is AppError.Network -> "No hay conexión a internet."
+                            else -> "No se pudo cargar el equipo."
+                        }
+                    )
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun Member.toUi() = MemberUi(
+        id = uid,
+        name = name,
+        initials = name.split(" ").filter { it.isNotBlank() }.take(2)
+            .joinToString("") { it.first().uppercase() }.ifEmpty { "?" },
+        roleLabel = when (role) {
+            Role.OWNER -> "Propietario"
+            Role.OPERATOR -> "Operador"
+            else -> "Administrador"
+        },
+        isOwner = role == Role.OWNER
+    )
 }

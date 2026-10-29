@@ -33,6 +33,12 @@ data class MembershipDto(
     val tenantId: String,
     val role: String
 )
+data class MemberDto(
+    val uid: String = "",
+    val name: String = "",
+    val role: String = Role.OPERATOR.name,
+    val joinedAt: Long = 0L
+)
 
 /**
  * Firestore is both remote and local (no Room): the SDK keeps a persistent local cache and syncs it,
@@ -133,8 +139,6 @@ class FirestoreTenantDataSource @Inject constructor(
         val tenantSnap = tenants().document(tenantId).get().await()
         val dto = tenantSnap.toObject<TenantDto>() ?: throw AppError.InviteNotFound()
 
-        // BORRADA: val userName = users().document(uid).get().await().getString("name").orEmpty()
-
         val batch = firestore.batch()
         batch.set(
             memberRef,
@@ -152,5 +156,14 @@ class FirestoreTenantDataSource @Inject constructor(
         )
         batch.commit().await()
         return dto
+    }
+    fun observeMembers(tenantId: String): Flow<List<MemberDto>> = callbackFlow {
+        val listener = members(tenantId)
+            .orderBy("joinedAt")
+            .addSnapshotListener { snap, error ->
+                if (error != null) { close(error); return@addSnapshotListener }
+                trySend(snap?.documents.orEmpty().mapNotNull { it.toObject<MemberDto>() })
+            }
+        awaitClose { listener.remove() }
     }
 }
