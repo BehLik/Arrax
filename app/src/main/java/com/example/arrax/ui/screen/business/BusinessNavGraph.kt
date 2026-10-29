@@ -13,6 +13,7 @@ import com.example.arrax.ui.screen.business.customers.BusinessCustomersScreen
 import com.example.arrax.ui.screen.business.home.BusinessHomeScreen
 import com.example.arrax.ui.screen.business.members.BusinessMembersScreen
 import com.example.arrax.ui.screen.business.more.BusinessMoreScreen
+import com.example.arrax.ui.screen.business.more.subscreen.catalog.BusinessCatalogScreen
 
 fun NavGraphBuilder.businessGraph(nav: NavController) {
     businessCore(nav)
@@ -129,6 +130,10 @@ private fun NavGraphBuilder.businessMore(nav: NavController) {
     }
 
     composable<BusinessSettings> { PlaceholderScreen("Ajustes del negocio", back) }
-    composable<BusinessCatalog> { PlaceholderScreen("Catálogo de productos y cortes", back) }
+    composable<BusinessCatalog> {
+        BusinessCatalogScreen(
+
+        )
+    }
     composable<BusinessHistory> { PlaceholderScreen("Historial del negocio", back) }
 }

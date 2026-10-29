@@ -22,5 +22,5 @@ val DefaultCuts = listOf(
     ),
     CutOption("lard", "Manteca", CutState.COOKED, R.drawable.img_cut_lard),
     // Added: the Firestore seed had 9 cuts including "cabeza"; the local list had 8. No image yet.
-    CutOption("head", "Cabeza", CutState.FRESH),
+    CutOption("head", "Cabeza", CutState.FRESH,R.drawable.img_cut_head),
 )
