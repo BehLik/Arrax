@@ -116,7 +116,7 @@ class EventCreateViewModel @Inject constructor(
             val event = Event(
                 name = current.name,
                 date = current.dateMillis ?: 0L,
-                pigCount = current.pigCount,
+                animalCount = current.pigCount,
                 status = EventStatus.OPEN,
                 createdBy = uid
             )

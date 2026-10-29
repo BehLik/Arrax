@@ -13,7 +13,7 @@ fun DocumentSnapshot.toEvent(): Event? {
         id = getString("id") ?: id,
         name = getString("name") ?: "",
         date = getLong("date") ?: 0L,
-        pigCount = (getLong("pigCount") ?: 0L).toInt(),
+        animalCount = (getLong("pigCount") ?: 0L).toInt(),
         status = runCatching { EventStatus.valueOf(statusName) }.getOrDefault(EventStatus.OPEN),
         createdBy = getString("createdBy") ?: ""
     )
@@ -23,7 +23,7 @@ fun Event.toMap(): Map<String, Any> = mapOf(
     "id" to id,
     "name" to name,
     "date" to date,
-    "pigCount" to pigCount,
+    "animalCount" to animalCount,
     "status" to status.name,
     "createdBy" to createdBy
 )

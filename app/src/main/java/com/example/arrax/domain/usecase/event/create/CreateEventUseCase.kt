@@ -16,7 +16,7 @@ class CreateEventUseCase @Inject constructor(
         if (event.name.isBlank()) {
             return Resource.Error("El evento necesita un nombre")
         }
-        if (event.pigCount <= 0) {
+        if (event.animalCount <= 0) {
             return Resource.Error("La cantidad de cerdos debe ser mayor a cero")
         }
         if (cuts.isEmpty()) {

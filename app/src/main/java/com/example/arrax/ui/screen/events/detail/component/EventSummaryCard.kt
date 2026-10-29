@@ -37,7 +37,7 @@ fun EventSummaryCard(eventWithCuts: EventWithCuts) {
                 contentColor = if (isOpen) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(stringResource(R.string.event_date_label, dateLabel))
-            Text(stringResource(R.string.event_pigs_label, event.pigCount))
+            Text(stringResource(R.string.event_pigs_label, event.animalCount))
 
             Text(stringResource(R.string.event_cuts_title))
             eventWithCuts.cuts.forEach { cut ->
