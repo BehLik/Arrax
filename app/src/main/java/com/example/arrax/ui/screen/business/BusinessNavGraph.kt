@@ -12,6 +12,7 @@ import com.example.arrax.ui.screen.business.alerts.BusinessAlertsScreen
 import com.example.arrax.ui.screen.business.customers.BusinessCustomersScreen
 import com.example.arrax.ui.screen.business.home.BusinessHomeScreen
 import com.example.arrax.ui.screen.business.members.BusinessMembersScreen
+import com.example.arrax.ui.screen.business.members.subscreen.invitation.MembersInvitationScreen
 import com.example.arrax.ui.screen.business.more.BusinessMoreScreen
 import com.example.arrax.ui.screen.business.more.subscreen.catalog.BusinessCatalogScreen
 
@@ -74,17 +75,21 @@ private fun NavGraphBuilder.businessMembers(nav: NavController) {
         val args = entry.toRoute<BusinessMembers>()
         BusinessMembersScreen(
             onBack = back,
-            onMemberClick = { id -> nav.safeNavigate(BusinessMemberDetail(args.businessId, id)) }
-            // TODO: onShareQr / onShareLink -> Intent.ACTION_SEND desde la Activity o un helper.
+            onCreateInvitationClick = { nav.safeNavigate(InvitationCreate(args.businessId)) },
+            onMemberClick = {},      // TODO: BusinessMemberDetail(args.businessId, id)
+            onInvitationClick = {}   // TODO: detalle de invitación (siguiente paso)
         )
     }
 
     composable<BusinessMemberDetail> { PlaceholderScreen("Detalle del miembro", back) }
 
-    // Reemplazada por el bottom sheet de BusinessMembersScreen. Borrar si nada navega aquí.
-    composable<BusinessInvite> { PlaceholderScreen("Invitar al negocio", back) }
+    composable<InvitationCreate> {
+        MembersInvitationScreen(
+            onBack = back,
+            onDone = { nav.popBackStack<BusinessMembers>(inclusive = false) }
+        )
+    }
 }
-
 // ── Clientes: lista, crear/editar y detalle ──
 private fun NavGraphBuilder.businessCustomers(nav: NavController) {
     val back = nav.backAction()

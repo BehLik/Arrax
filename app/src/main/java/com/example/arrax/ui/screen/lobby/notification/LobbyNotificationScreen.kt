@@ -35,7 +35,7 @@ fun LobbyNotificationScreen(
     onNotificationClick: (NotificationUi) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    ArxBackground(decoration = ArxDecoration.None) {
+    ArxBackground(decoration = ArxDecoration.Mountains) {
         Scaffold(
             modifier = modifier,
             containerColor = MaterialTheme.colorScheme.background,
