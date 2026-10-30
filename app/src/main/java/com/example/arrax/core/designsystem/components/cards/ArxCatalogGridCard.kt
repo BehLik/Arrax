@@ -35,16 +35,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Surface
-
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import com.example.arrax.core.designsystem.theme.ArxTheme
 
 /** Cómo se acomoda la tarjeta. */
 enum class ArxCatalogCardVariant {
@@ -236,7 +232,6 @@ private fun CatalogImage(
         )
 
         ArxCatalogImage.None -> Box(modifier, contentAlignment = Alignment.Center) {
-            // Cortes sin imagen todavía (ej. "Cabeza"): inicial dentro de un círculo.
             Box(
                 modifier = Modifier
                     .size(48.dp)
@@ -267,7 +262,7 @@ private fun glow(): Brush = Brush.radialGradient(
 @Preview(name = "Grid Variant - Con Imagen y Menú", group = "ArxCatalogCard")
 @Composable
 private fun ArxCatalogGridCardPreview() {
-    MaterialTheme {
+    ArxTheme {
         Surface(modifier = Modifier.padding(16.dp)) {
             ArxCatalogGridCard(
                 title = "Corte Ribeye",
@@ -284,7 +279,7 @@ private fun ArxCatalogGridCardPreview() {
 @Preview(name = "List Variant - Fila Completa", group = "ArxCatalogCard")
 @Composable
 private fun ArxCatalogListCardPreview() {
-    MaterialTheme {
+    ArxTheme {
         Surface(modifier = Modifier.padding(16.dp)) {
             ArxCatalogGridCard(
                 title = "Arrachera Fina",
@@ -301,7 +296,7 @@ private fun ArxCatalogListCardPreview() {
 @Preview(name = "Horizontal Variant - Carrusel", group = "ArxCatalogCard")
 @Composable
 private fun ArxCatalogHorizontalCardPreview() {
-    MaterialTheme {
+    ArxTheme {
         Surface(modifier = Modifier.padding(16.dp)) {
             ArxCatalogGridCard(
                 title = "T-Bone",
@@ -317,8 +312,7 @@ private fun ArxCatalogHorizontalCardPreview() {
 @Preview(name = "Grid Completo (Dark/Light)", showBackground = true, backgroundColor = 0xFF121212, group = "ArxCatalogCard")
 @Composable
 private fun ArxCatalogGridCollectionPreview() {
-    // Si tu app usa un tema personalizado (ej. ArraxTheme), reemplaza "MaterialTheme" por él.
-    MaterialTheme {
+    ArxTheme {
         Surface {
             Column(
                 modifier = Modifier
