@@ -59,13 +59,6 @@ fun LobbyTopBar(
             }
         }
 
-//        IconButton(onClick = onSettingsClick) {
-//            Icon(
-//                painterResource(ArxIcons.Settings),
-//                contentDescription = stringResource(R.string.lobby_settings_cd)
-//            )
-//        }
-
         Box(
             modifier = Modifier
                 .minimumInteractiveComponentSize()

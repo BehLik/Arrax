@@ -48,6 +48,9 @@ private fun NavGraphBuilder.businessCore(nav: NavController) {
         // TODO: reemplazar por la Screen de eventos (Próximos / Abiertos / Historial).
         PlaceholderScreen("Eventos del negocio", back)
     }
+    composable<EventCreate>{
+
+    }
 }
 
 // ── Alertas y recordatorios ──

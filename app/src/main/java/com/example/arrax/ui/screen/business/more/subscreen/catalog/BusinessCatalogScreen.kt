@@ -90,7 +90,8 @@ internal fun BusinessCatalogContent(
         Box(Modifier.fillMaxSize()) {
             Column(Modifier.fillMaxSize()) {
                 ArxTopBar(
-                    title = "",
+                    title = "Cortes",
+                    subtitle = "Administra el catálogo de cortes disponibles para tus eventos.",
                     centeredTitle = false,
                     navigationType = ArxTopBarNavigationType.BACK,
                     onNavigationClick = onBackClick,
@@ -110,10 +111,10 @@ internal fun BusinessCatalogContent(
                         .padding(horizontal = ArxSpacing.md),
                     verticalArrangement = Arrangement.spacedBy(ArxSpacing.sm),
                 ) {
-                    CatalogHeader(
-                        title = "Cortes",
-                        subtitle = "Administra el catálogo de cortes disponibles para tus eventos.",
-                    )
+//                    CatalogHeader(
+//                        title = "",
+//                        subtitle = "Administra el catálogo de cortes disponibles para tus eventos.",
+//                    )
 
                     ArxSearchField(
                         query = query,
