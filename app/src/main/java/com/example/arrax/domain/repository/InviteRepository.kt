@@ -16,4 +16,7 @@ interface InviteRepository {
         validDays: Int = 7
     ): Resource<Invitation>
     fun observeInvites(tenantId: String): Flow<List<Invitation>>
+    fun observeInvite(code: String): Flow<Invitation?>
+    suspend fun revokeInvite(code: String): Resource<Unit>
+    suspend fun deleteInvite(code: String): Resource<Unit>
 }

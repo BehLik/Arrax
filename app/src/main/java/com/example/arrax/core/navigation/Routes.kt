@@ -29,6 +29,7 @@ import kotlinx.serialization.Serializable
 @Serializable data class BusinessMembers(val businessId: String)                           // lista
 @Serializable data class BusinessMemberDetail(val businessId: String, val memberId: String)
 @Serializable data class BusinessInvite(val businessId: String)                            // código de invitación
+@Serializable data class InvitationDetail(val businessId: String, val code: String)
 @Serializable data class InvitationCreate(val businessId: String)
 // Clientes
 @Serializable data class BusinessCustomers(val businessId: String)                         // lista

@@ -37,7 +37,8 @@ data class MemberDto(
     val uid: String = "",
     val name: String = "",
     val role: String = Role.OPERATOR.name,
-    val joinedAt: Long = 0L
+    val joinedAt: Long = 0L,
+    val inviteCode: String? = null
 )
 
 /**
@@ -123,39 +124,74 @@ class FirestoreTenantDataSource @Inject constructor(
 
     // The invitation code is assumed equal to tenantId for now; the real invitation model
     // (own codes, expiry, assigned role) is left for a later phase.
-    suspend fun joinTenant(invitationCode: String, uid: String, userName: String): TenantDto {
-        val inviteSnap = firestore.collection(FirestorePaths.INVITES)
-            .document(invitationCode).get().await()
-        if (!inviteSnap.exists()) throw AppError.InviteNotFound()
+//    suspend fun joinTenant(invitationCode: String, uid: String, userName: String): TenantDto {
+//        val inviteSnap = firestore.collection(FirestorePaths.INVITES)
+//            .document(invitationCode).get().await()
+//        if (!inviteSnap.exists()) throw AppError.InviteNotFound()
+//
+//        val tenantId = inviteSnap.getString("tenantId") ?: throw AppError.InviteNotFound()
+//        val revoked = inviteSnap.getBoolean("revoked") ?: false
+//        val expiresAt = inviteSnap.getLong("expiresAt") ?: 0L
+//        if (revoked || expiresAt < System.currentTimeMillis()) throw AppError.InviteExpired()
+//
+//        val memberRef = members(tenantId).document(uid)
+//        if (memberRef.get().await().exists()) throw AppError.AlreadyMember()
+//
+//        val tenantSnap = tenants().document(tenantId).get().await()
+//        val dto = tenantSnap.toObject<TenantDto>() ?: throw AppError.InviteNotFound()
+//
+//        val batch = firestore.batch()
+//        batch.set(
+//            memberRef,
+//            mapOf(
+//                "uid" to uid,
+//                "role" to Role.OPERATOR.name,
+//                "name" to userName,
+//                "joinedAt" to System.currentTimeMillis()
+//            )
+//        )
+//        batch.set(
+//            users().document(uid),
+//            mapOf("tenantId" to dto.id, "role" to Role.OPERATOR.name),
+//            SetOptions.merge()
+//        )
+//        batch.commit().await()
+//        return dto
+//    }
+    suspend fun joinTenant(invitationCode: String, uid: String, userName: String): TenantDto = try {
+        firestore.runTransaction { tx ->
+            val inviteRef = firestore.collection(FirestorePaths.INVITES).document(invitationCode)
+            // Todas las lecturas van antes de cualquier escritura
+            val invite = tx.get(inviteRef).toObject<InviteDto>() ?: throw AppError.InviteNotFound()
+            if (invite.revoked || invite.expiresAt <= System.currentTimeMillis()) throw AppError.InviteExpired()
+            if (invite.usedCount >= invite.maxUses) throw AppError.InviteFull()
 
-        val tenantId = inviteSnap.getString("tenantId") ?: throw AppError.InviteNotFound()
-        val revoked = inviteSnap.getBoolean("revoked") ?: false
-        val expiresAt = inviteSnap.getLong("expiresAt") ?: 0L
-        if (revoked || expiresAt < System.currentTimeMillis()) throw AppError.InviteExpired()
+            val memberRef = members(invite.tenantId).document(uid)
+            if (tx.get(memberRef).exists()) throw AppError.AlreadyMember()
+            val tenant = tx.get(tenants().document(invite.tenantId)).toObject<TenantDto>()
+                ?: throw AppError.InviteNotFound()
 
-        val memberRef = members(tenantId).document(uid)
-        if (memberRef.get().await().exists()) throw AppError.AlreadyMember()
-
-        val tenantSnap = tenants().document(tenantId).get().await()
-        val dto = tenantSnap.toObject<TenantDto>() ?: throw AppError.InviteNotFound()
-
-        val batch = firestore.batch()
-        batch.set(
-            memberRef,
-            mapOf(
-                "uid" to uid,
-                "role" to Role.OPERATOR.name,
-                "name" to userName,
-                "joinedAt" to System.currentTimeMillis()
+            tx.update(inviteRef, "usedCount", invite.usedCount + 1)
+            tx.set(
+                memberRef,
+                mapOf(
+                    "uid" to uid,
+                    "role" to Role.OPERATOR.name,
+                    "name" to userName,
+                    "joinedAt" to System.currentTimeMillis(),
+                    "inviteCode" to invitationCode
+                )
             )
-        )
-        batch.set(
-            users().document(uid),
-            mapOf("tenantId" to dto.id, "role" to Role.OPERATOR.name),
-            SetOptions.merge()
-        )
-        batch.commit().await()
-        return dto
+            tx.set(
+                users().document(uid),
+                mapOf("tenantId" to tenant.id, "role" to Role.OPERATOR.name),
+                SetOptions.merge()
+            )
+            tenant
+        }.await()
+    } catch (e: Exception) {
+        // Firestore puede envolver lo que lanzas dentro de la transacción
+        throw generateSequence<Throwable>(e) { it.cause }.firstOrNull { it is AppError } ?: e
     }
     fun observeMembers(tenantId: String): Flow<List<MemberDto>> = callbackFlow {
         val listener = members(tenantId)

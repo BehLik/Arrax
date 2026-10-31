@@ -91,13 +91,3 @@ internal fun InvitationDone(
         Spacer(Modifier.height(ArxSpacing.md))
     }
 }
-
-
-
-@Composable
-private fun DetailLine(label: String, value: String) {
-    Column {
-        Text(label, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Text(value, style = MaterialTheme.typography.bodyLarge)
-    }
-}

@@ -25,6 +25,7 @@ sealed class AppError(cause: Throwable? = null) : Exception(cause) {
     class InviteNotFound : AppError()
     class InviteExpired : AppError()
     class AlreadyMember : AppError()
+    class InviteFull: AppError()
 }
 
 private const val TAG = "AppError"
@@ -38,6 +39,7 @@ fun Throwable.toAppError(): AppError = when (this) {
     is FirebaseAuthInvalidUserException -> AppError.UserNotFound(this)
     is FirebaseAuthUserCollisionException -> AppError.EmailInUse(this)
     is FirebaseTooManyRequestsException -> AppError.TooManyRequests(this)
+//    is FirebaseJoinException-> AppError.InviteFull(this)
     is FirebaseFirestoreException -> when (code) {
         FirebaseFirestoreException.Code.PERMISSION_DENIED -> AppError.PermissionDenied(this)
         FirebaseFirestoreException.Code.UNAVAILABLE -> AppError.Network(this)

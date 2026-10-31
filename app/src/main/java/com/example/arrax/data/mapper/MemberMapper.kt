@@ -8,5 +8,6 @@ fun MemberDto.toDomain() = Member(
     uid = uid,
     name = name,
     role = Role.entries.firstOrNull { it.name == role } ?: Role.OPERATOR,
-    joinedAt = joinedAt
+    joinedAt = joinedAt,
+    inviteCode = inviteCode
 )

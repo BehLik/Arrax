@@ -17,7 +17,7 @@ import com.example.arrax.core.navigation.InvitationCreate
 import com.example.arrax.domain.model.Invitation
 import com.example.arrax.domain.model.InviteType
 import com.example.arrax.domain.model.Role
-import com.example.arrax.domain.usecase.business.members.CreateInvitationUseCase
+import com.example.arrax.domain.usecase.business.members.create.CreateInvitationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

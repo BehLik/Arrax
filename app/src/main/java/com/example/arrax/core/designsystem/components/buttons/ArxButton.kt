@@ -171,6 +171,7 @@ fun ArxTextButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    isDestructive: Boolean = false,
     contentColor: Color = MaterialTheme.colorScheme.primary
 ) {
     TextButton(
@@ -178,7 +179,7 @@ fun ArxTextButton(
         enabled = enabled,
         shape = MaterialTheme.shapes.medium,
         colors = ButtonDefaults.textButtonColors(
-            contentColor = contentColor,
+            contentColor = if (isDestructive) MaterialTheme.colorScheme.error else contentColor,
             disabledContentColor = MaterialTheme.extendedColors.disabled
         ),
         modifier = modifier.heightIn(min = ArxTouchTarget)

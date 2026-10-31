@@ -77,7 +77,7 @@ class FirestoreInviteDataSource @Inject constructor(
         return dto
     }
 
-    fun observeInvites(tenantId: String): Flow<List<Invitation>> = callbackFlow {
+        fun observeInvites(tenantId: String): Flow<List<Invitation>> = callbackFlow {
         val listener = invites()
             .whereEqualTo(FirestoreFields.TENANT_ID, tenantId)
             .addSnapshotListener { snap, error ->
@@ -85,5 +85,22 @@ class FirestoreInviteDataSource @Inject constructor(
                 trySend(snap?.documents.orEmpty().mapNotNull { it.toObject<InviteDto>()?.toDomain() })
             }
         awaitClose { listener.remove() }
+    }
+    fun observeInvite(code: String): Flow<Invitation?> = callbackFlow {
+        val listener = invites().document(code).addSnapshotListener { snap, error ->
+            if (error != null) {
+                close(error); return@addSnapshotListener
+            }
+            trySend(snap?.takeIf { it.exists() }?.toObject<InviteDto>()?.toDomain())
+        }
+        awaitClose { listener.remove() }
+    }
+
+    suspend fun revokeInvite(code: String) {
+        invites().document(code).update("revoked", true).await()
+    }
+
+    suspend fun deleteInvite(code: String) {
+        invites().document(code).delete().await()
     }
 }

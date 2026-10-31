@@ -35,4 +35,15 @@ class InviteRepositoryImpl @Inject constructor(
 
     override fun observeInvites(tenantId: String): Flow<List<Invitation>> =
         dataSource.observeInvites(tenantId)
+    override fun observeInvite(code: String) = dataSource.observeInvite(code)
+
+    override suspend fun revokeInvite(code: String): Resource<Unit> = try {
+        dataSource.revokeInvite(code); Resource.Success(Unit)
+    } catch (e: CancellationException) { throw e
+    } catch (e: Exception) { Resource.Error(e.message ?: "No se pudo cancelar la invitación", e) }
+
+    override suspend fun deleteInvite(code: String): Resource<Unit> = try {
+        dataSource.deleteInvite(code); Resource.Success(Unit)
+    } catch (e: CancellationException) { throw e
+    } catch (e: Exception) { Resource.Error(e.message ?: "No se pudo eliminar la invitación", e) }
 }

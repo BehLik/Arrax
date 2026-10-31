@@ -4,5 +4,6 @@ data class Member(
     val uid: String,
     val name: String,
     val role: Role,
-    val joinedAt: Long
+    val joinedAt: Long,
+    val inviteCode: String? = null
 )

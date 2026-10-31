@@ -13,6 +13,7 @@ import com.example.arrax.ui.screen.business.customers.BusinessCustomersScreen
 import com.example.arrax.ui.screen.business.home.BusinessHomeScreen
 import com.example.arrax.ui.screen.business.members.BusinessMembersScreen
 import com.example.arrax.ui.screen.business.members.subscreen.invitation.MembersInvitationScreen
+import com.example.arrax.ui.screen.business.members.subscreen.invitationdetail.MembersInvitationDetailScreen
 import com.example.arrax.ui.screen.business.more.BusinessMoreScreen
 import com.example.arrax.ui.screen.business.more.subscreen.catalog.BusinessCatalogScreen
 
@@ -76,8 +77,8 @@ private fun NavGraphBuilder.businessMembers(nav: NavController) {
         BusinessMembersScreen(
             onBack = back,
             onCreateInvitationClick = { nav.safeNavigate(InvitationCreate(args.businessId)) },
-            onMemberClick = {},      // TODO: BusinessMemberDetail(args.businessId, id)
-            onInvitationClick = {}   // TODO: detalle de invitación (siguiente paso)
+            onInvitationClick = { code -> nav.safeNavigate(InvitationDetail(args.businessId, code)) },
+            onMemberClick = {}
         )
     }
 
@@ -89,6 +90,7 @@ private fun NavGraphBuilder.businessMembers(nav: NavController) {
             onDone = { nav.popBackStack<BusinessMembers>(inclusive = false) }
         )
     }
+    composable<InvitationDetail> { MembersInvitationDetailScreen(onBack = back) }
 }
 // ── Clientes: lista, crear/editar y detalle ──
 private fun NavGraphBuilder.businessCustomers(nav: NavController) {

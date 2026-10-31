@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.example.arrax.core.navigation.BusinessHome
 import com.example.arrax.domain.model.Role
-import com.example.arrax.domain.usecase.business.members.ObserveMembersUseCase
+import com.example.arrax.domain.usecase.business.members.observe.ObserveMembersUseCase
 import com.example.arrax.domain.usecase.tenant.observe.ObserveTenantUseCase
 import com.example.arrax.domain.usecase.user.ObserveCurrentUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

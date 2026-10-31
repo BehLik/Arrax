@@ -14,6 +14,7 @@ data class InvitationItemUi(
     val typeLabel: String,
     val roleLabel: String,
     val details: String,
+    val statusLabel: String,
     val isActive: Boolean
 )
 

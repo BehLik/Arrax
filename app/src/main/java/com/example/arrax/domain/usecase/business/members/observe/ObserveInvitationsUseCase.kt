@@ -1,4 +1,4 @@
-package com.example.arrax.domain.usecase.business.members
+package com.example.arrax.domain.usecase.business.members.observe
 
 import com.example.arrax.domain.model.Invitation
 import com.example.arrax.domain.repository.InviteRepository

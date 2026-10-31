@@ -12,7 +12,7 @@ import com.example.arrax.core.common.QrCodeGenerator
 import com.example.arrax.core.common.toAppError
 import com.example.arrax.core.navigation.BusinessMembers
 import com.example.arrax.domain.model.Invitation
-import com.example.arrax.domain.usecase.business.members.CreateInvitationUseCase
+import com.example.arrax.domain.usecase.business.members.create.CreateInvitationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,10 +29,12 @@ import javax.inject.Inject
 import com.example.arrax.core.common.NetworkMonitor
 import com.example.arrax.core.common.expiryLabel
 import com.example.arrax.core.common.toLabel
+import com.example.arrax.domain.model.InviteStatus
 import com.example.arrax.domain.model.Member
 import com.example.arrax.domain.model.Role
-import com.example.arrax.domain.usecase.business.members.ObserveInvitationsUseCase
-import com.example.arrax.domain.usecase.business.members.ObserveMembersUseCase
+import com.example.arrax.domain.model.status
+import com.example.arrax.domain.usecase.business.members.observe.ObserveInvitationsUseCase
+import com.example.arrax.domain.usecase.business.members.observe.ObserveMembersUseCase
 import com.example.arrax.ui.screen.business.members.subscreen.invitation.toLabel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
@@ -41,6 +43,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.launchIn
+import com.example.arrax.core.common.toLabel
 @HiltViewModel
 class BusinessMembersViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
@@ -62,7 +65,7 @@ class BusinessMembersViewModel @Inject constructor(
             .map { list ->
                 list.sortedWith(
                     compareByDescending<Member> { it.role == Role.OWNER }.thenBy { it.joinedAt }
-                ).map { it.toUi() }
+                ).map { it.toMemberUi() }
             }
             .onEach { ui ->
                 _uiState.update { it.copy(members = ui, isLoadingMembers = false, membersError = null) }
@@ -84,8 +87,8 @@ class BusinessMembersViewModel @Inject constructor(
         combine(observeInvitations(businessId), clock) { list, now ->
             val (active, expired) = list
                 .sortedByDescending { it.createdAt }
-                .partition { !it.revoked && it.expiresAt > now }
-            active.map { it.toItem(now, true) } to expired.map { it.toItem(now, false) }
+                .partition { it.status(now) == InviteStatus.ACTIVE }
+            active.map { it.toItem(now) } to expired.map { it.toItem(now) }
         }
             .onEach { (active, expired) ->
                 _uiState.update { it.copy(activeInvitations = active, expiredInvitations = expired) }
@@ -97,19 +100,40 @@ class BusinessMembersViewModel @Inject constructor(
     fun onToggleActive() = _uiState.update { it.copy(activeExpanded = !it.activeExpanded) }
     fun onToggleExpired() = _uiState.update { it.copy(expiredExpanded = !it.expiredExpanded) }
 
-    private fun Invitation.toItem(now: Long, active: Boolean) = InvitationItemUi(
+//    private fun Invitation.toItem(now: Long, active: Boolean) = InvitationItemUi(
+//        code = code,
+//        typeLabel = type.toLabel(),
+//        roleLabel = role.toLabel(),
+//        details = buildString {
+//            append("$usedCount de $maxUses ${if (maxUses == 1) "persona" else "personas"}")
+//            append(" · ")
+//            append(if (revoked) "Revocada" else expiryLabel(expiresAt, now))
+//        },
+//        isActive = active
+//    )
+private fun Invitation.toItem(now: Long): InvitationItemUi {
+    val s = status(now)
+    val people = "$usedCount de $maxUses ${if (maxUses == 1) "persona" else "personas"}"
+    return InvitationItemUi(
         code = code,
         typeLabel = type.toLabel(),
         roleLabel = role.toLabel(),
-        details = buildString {
-            append("$usedCount de $maxUses ${if (maxUses == 1) "persona" else "personas"}")
-            append(" · ")
-            append(if (revoked) "Revocada" else expiryLabel(expiresAt, now))
+        details = "$people · " + when (s) {
+            InviteStatus.ACTIVE, InviteStatus.EXPIRED -> expiryLabel(expiresAt, now)
+            InviteStatus.FULL -> "Cupo completo"
+            InviteStatus.REVOKED -> "Cancelada"
         },
-        isActive = active
+        statusLabel = when (s) {
+            InviteStatus.ACTIVE -> "Activa"
+            InviteStatus.FULL -> "Agotada"
+            InviteStatus.EXPIRED -> "Vencida"
+            InviteStatus.REVOKED -> "Cancelada"
+        },
+        isActive = s == InviteStatus.ACTIVE
     )
+}
 
-    private fun Member.toUi() = MemberUi(
+    fun Member.toMemberUi() = MemberUi(
         id = uid,
         name = name,
         initials = name.split(" ").filter { it.isNotBlank() }.take(2)

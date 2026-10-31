@@ -14,3 +14,11 @@ data class Invitation(
     val expiresAt: Long,
     val revoked: Boolean
 )
+enum class InviteStatus { ACTIVE, FULL, EXPIRED, REVOKED }
+
+fun Invitation.status(now: Long) = when {
+    revoked -> InviteStatus.REVOKED
+    expiresAt <= now -> InviteStatus.EXPIRED
+    usedCount >= maxUses -> InviteStatus.FULL
+    else -> InviteStatus.ACTIVE
+}

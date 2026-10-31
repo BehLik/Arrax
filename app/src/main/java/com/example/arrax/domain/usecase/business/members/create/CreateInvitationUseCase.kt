@@ -1,4 +1,4 @@
-package com.example.arrax.domain.usecase.business.members
+package com.example.arrax.domain.usecase.business.members.create
 
 import com.example.arrax.core.common.AppError
 import com.example.arrax.core.common.Resource
