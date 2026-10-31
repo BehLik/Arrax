@@ -30,6 +30,7 @@ import com.example.arrax.ui.screen.lobby.join.LobbyJoinScreen
 import com.example.arrax.ui.screen.lobby.join.LobbyJoinViewModel
 import com.example.arrax.ui.screen.lobby.join.component.QrCameraContent
 import com.example.arrax.ui.screen.lobby.notification.LobbyNotificationScreen
+import com.example.arrax.ui.screen.lobby.notification.LobbyNotificationViewModel
 import com.example.arrax.ui.screen.lobby.profile.LobbyProfileScreen
 import com.example.arrax.ui.screen.lobby.profile.changepassword.LobbyChangePasswordScreen
 import com.example.arrax.ui.screen.lobby.profile.component.ProfileOption
@@ -136,7 +137,13 @@ fun NavGraphBuilder.lobbyGraph(nav: NavController) {
             )
         }
         composable<Notifications> {
-            LobbyNotificationScreen(notifications = emptyList(), onBack = back, onNotificationClick = {})
+            val viewModel: LobbyNotificationViewModel = hiltViewModel()
+            val state by viewModel.uiState.collectAsStateWithLifecycle()
+            LobbyNotificationScreen(
+                notifications = state.notifications,
+                onBack = back,
+                onNotificationClick = { viewModel.onNotificationClick(it.id) }
+            )
         }
     }
 }

@@ -1,9 +1,11 @@
 package com.example.arrax.data.remote
 
+import android.util.Log
 import com.example.arrax.core.common.AppError
 import com.example.arrax.core.common.FirestorePaths
 import com.example.arrax.core.model.DefaultCuts
 import com.example.arrax.domain.model.Role
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
@@ -121,56 +123,32 @@ class FirestoreTenantDataSource @Inject constructor(
         batch.commit().await()
         return dto
     }
-
-    // The invitation code is assumed equal to tenantId for now; the real invitation model
-    // (own codes, expiry, assigned role) is left for a later phase.
-//    suspend fun joinTenant(invitationCode: String, uid: String, userName: String): TenantDto {
-//        val inviteSnap = firestore.collection(FirestorePaths.INVITES)
-//            .document(invitationCode).get().await()
-//        if (!inviteSnap.exists()) throw AppError.InviteNotFound()
-//
-//        val tenantId = inviteSnap.getString("tenantId") ?: throw AppError.InviteNotFound()
-//        val revoked = inviteSnap.getBoolean("revoked") ?: false
-//        val expiresAt = inviteSnap.getLong("expiresAt") ?: 0L
-//        if (revoked || expiresAt < System.currentTimeMillis()) throw AppError.InviteExpired()
-//
-//        val memberRef = members(tenantId).document(uid)
-//        if (memberRef.get().await().exists()) throw AppError.AlreadyMember()
-//
-//        val tenantSnap = tenants().document(tenantId).get().await()
-//        val dto = tenantSnap.toObject<TenantDto>() ?: throw AppError.InviteNotFound()
-//
-//        val batch = firestore.batch()
-//        batch.set(
-//            memberRef,
-//            mapOf(
-//                "uid" to uid,
-//                "role" to Role.OPERATOR.name,
-//                "name" to userName,
-//                "joinedAt" to System.currentTimeMillis()
-//            )
-//        )
-//        batch.set(
-//            users().document(uid),
-//            mapOf("tenantId" to dto.id, "role" to Role.OPERATOR.name),
-//            SetOptions.merge()
-//        )
-//        batch.commit().await()
-//        return dto
-//    }
     suspend fun joinTenant(invitationCode: String, uid: String, userName: String): TenantDto = try {
+        // Descarta el token: refresca y muestra email_verified
+        val token = FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()
+        Log.d("QR_JOIN", "uid=$uid code=$invitationCode email_verified=${token?.claims?.get("email_verified")}")
+
         firestore.runTransaction { tx ->
             val inviteRef = firestore.collection(FirestorePaths.INVITES).document(invitationCode)
-            // Todas las lecturas van antes de cualquier escritura
+            val now = System.currentTimeMillis()
+
+            Log.d("QR_JOIN", "1. leyendo invite")
             val invite = tx.get(inviteRef).toObject<InviteDto>() ?: throw AppError.InviteNotFound()
-            if (invite.revoked || invite.expiresAt <= System.currentTimeMillis()) throw AppError.InviteExpired()
+            Log.d("QR_JOIN", "1. invite OK: tenantId=${invite.tenantId} used=${invite.usedCount}/${invite.maxUses} revoked=${invite.revoked} expiresAt=${invite.expiresAt} now=$now")
+            if (invite.revoked || invite.expiresAt <= now) throw AppError.InviteExpired()
             if (invite.usedCount >= invite.maxUses) throw AppError.InviteFull()
 
             val memberRef = members(invite.tenantId).document(uid)
+            Log.d("QR_JOIN", "2. leyendo member")
             if (tx.get(memberRef).exists()) throw AppError.AlreadyMember()
+            Log.d("QR_JOIN", "2. member OK (no existe)")
+
+            Log.d("QR_JOIN", "3. leyendo tenant")
             val tenant = tx.get(tenants().document(invite.tenantId)).toObject<TenantDto>()
                 ?: throw AppError.InviteNotFound()
+            Log.d("QR_JOIN", "3. tenant OK: ${tenant.id}")
 
+            Log.d("QR_JOIN", "4. preparando escrituras (se envían al hacer commit)")
             tx.update(inviteRef, "usedCount", invite.usedCount + 1)
             tx.set(
                 memberRef,
@@ -178,7 +156,7 @@ class FirestoreTenantDataSource @Inject constructor(
                     "uid" to uid,
                     "role" to Role.OPERATOR.name,
                     "name" to userName,
-                    "joinedAt" to System.currentTimeMillis(),
+                    "joinedAt" to now,
                     "inviteCode" to invitationCode
                 )
             )
@@ -187,10 +165,26 @@ class FirestoreTenantDataSource @Inject constructor(
                 mapOf("tenantId" to tenant.id, "role" to Role.OPERATOR.name),
                 SetOptions.merge()
             )
+            tx.set(
+                tenants().document(invite.tenantId)
+                    .collection(FirestorePaths.NOTIFICATIONS).document(),
+                mapOf(
+                    "type" to "MEMBER_JOINED",
+                    "tenantId" to invite.tenantId,
+                    "tenantName" to tenant.name,
+                    "actorUid" to uid,
+                    "actorName" to userName,
+                    "role" to Role.OPERATOR.name,
+                    "inviteCode" to invitationCode,
+                    "createdAt" to now,
+                    "readBy" to emptyList<String>()
+                )
+            )
+            Log.d("QR_JOIN", "5. escrituras listas, falta commit")
             tenant
-        }.await()
+        }.await().also { Log.d("QR_JOIN", "6. COMMIT OK") }
     } catch (e: Exception) {
-        // Firestore puede envolver lo que lanzas dentro de la transacción
+        Log.e("QR_JOIN", "joinTenant falló: ${e::class.simpleName}: ${e.message}", e)
         throw generateSequence<Throwable>(e) { it.cause }.firstOrNull { it is AppError } ?: e
     }
     fun observeMembers(tenantId: String): Flow<List<MemberDto>> = callbackFlow {

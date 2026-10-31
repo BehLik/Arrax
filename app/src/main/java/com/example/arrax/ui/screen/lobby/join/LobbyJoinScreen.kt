@@ -117,7 +117,8 @@ fun LobbyJoinScreen(
                                     isLoading = isLoading,
                                     errorMessage = errorMessage,
                                     onCodeChange = onCodeChange,
-                                    onJoin = onJoin
+                                    onJoin = onJoin,
+                                    isSuccess = isSuccess
                                 )
                             }
 

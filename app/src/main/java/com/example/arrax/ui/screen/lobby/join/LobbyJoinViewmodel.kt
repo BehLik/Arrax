@@ -1,6 +1,7 @@
 package com.example.arrax.ui.screen.lobby.join
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.arrax.core.common.AppError
@@ -10,6 +11,7 @@ import com.example.arrax.core.common.toAppError
 import com.example.arrax.core.model.JoinMethod
 import com.example.arrax.domain.usecase.tenant.JoinTenantUseCase
 import com.example.arrax.domain.usecase.user.ObserveCurrentUserUseCase
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -20,6 +22,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
@@ -95,16 +98,21 @@ class LobbyJoinViewModel @Inject constructor(
                     delay(SUCCESS_DELAY_MS)
                     _events.send(LobbyJoinEvent.Joined(result.data.id))
                 }
-                is Resource.Error -> fail(
-                    when (result.throwable?.toAppError()) {
-                        is AppError.InviteExpired -> "Esta invitación expiró o fue revocada."
-                        is AppError.AlreadyMember -> "Ya eres miembro de este negocio."
-                        is AppError.InviteNotFound -> "Código de invitación inválido."
-                        is AppError.PermissionDenied -> "No tienes permiso para unirte con este código."
-                        is AppError.Network -> "No hay conexión a internet. Intenta de nuevo."
-                        else -> "No se pudo unir al negocio. Intenta de nuevo."
-                    }
-                )
+                is Resource.Error -> {
+                    val token = FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()
+                    Log.d("QR_JOIN", "email_verified=${token?.claims?.get("email_verified")}")
+                    fail(
+                        when (result.throwable?.toAppError()) {
+                            is AppError.InviteExpired -> "Esta invitación expiró o fue revocada."
+                            is AppError.AlreadyMember -> "Ya eres miembro de este negocio."
+                            is AppError.InviteNotFound -> "Código de invitación inválido."
+                            is AppError.PermissionDenied -> "No tienes permiso para unirte con este código."
+                            is AppError.Network -> "No hay conexión a internet. Intenta de nuevo."
+                            is AppError.InviteFull -> "Esta invitación ya alcanzó su límite de personas."
+                            else -> "No se pudo unir al negocio. Intenta de nuevo."
+                        }
+                    )
+                }
                 Resource.Loading -> Unit
             }
         }

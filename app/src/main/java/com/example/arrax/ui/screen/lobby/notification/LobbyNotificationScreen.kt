@@ -25,7 +25,7 @@ import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
 import com.example.arrax.ui.screen.lobby.notification.component.NotificationEmptyContent
 import com.example.arrax.ui.screen.lobby.notification.component.NotificationItem
-import com.example.arrax.ui.screen.lobby.notification.component.NotificationUi
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

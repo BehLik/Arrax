@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
+import com.example.arrax.core.designsystem.components.buttons.ArxPrimaryButton
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.extendedColors
 
@@ -30,12 +31,13 @@ import com.example.arrax.core.designsystem.theme.extendedColors
 fun JoinCodeForm(
     code: String,
     isLoading: Boolean,
+    isSuccess: Boolean,
     errorMessage: String?,
     onCodeChange: (String) -> Unit,
     onJoin: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val canJoin = code.isNotBlank() && !isLoading
+//    val canJoin = code.isNotBlank() && !isLoading
 
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -74,25 +76,14 @@ fun JoinCodeForm(
                 capitalization = KeyboardCapitalization.Characters,
                 imeAction = ImeAction.Done
             ),
-            keyboardActions = KeyboardActions(onDone = { if (canJoin) onJoin() })
+            keyboardActions = KeyboardActions(onDone = { if (code.isNotBlank() && !isLoading) onJoin() })
         )
 
-        Button(
+        ArxPrimaryButton(
+            text = if (isSuccess) "¡Te uniste!" else "Unirse",
             onClick = onJoin,
-            enabled = canJoin,
-            modifier = Modifier
-                .fillMaxWidth()
-                .defaultMinSize(minHeight = 48.dp),
-            shape = MaterialTheme.shapes.medium
-        ) {
-            if (isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.defaultMinSize(minWidth = 20.dp, minHeight = 20.dp),
-                    strokeWidth = 2.dp
-                )
-            } else {
-                Text("Unirse")
-            }
-        }
+            enabled = code.isNotBlank() && !isSuccess,
+            loading = isLoading && !isSuccess
+        )
     }
 }

@@ -24,14 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.extendedColors
+import com.example.arrax.ui.screen.lobby.notification.NotificationUi
 
-data class NotificationUi(
-    val id: String,
-    val title: String,
-    val message: String,
-    val timeLabel: String,
-    val read: Boolean
-)
 
 @Composable
 fun NotificationItem(
@@ -42,7 +36,7 @@ fun NotificationItem(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .semantics { stateDescription = if (notification.read) "Leída" else "No leída" },
+            .semantics { stateDescription = if (notification.isRead) "Leída" else "No leída" },
         shape = MaterialTheme.shapes.medium,
         color = MaterialTheme.extendedColors.glass,
         border = BorderStroke(1.dp, MaterialTheme.extendedColors.glassBorder),
@@ -59,7 +53,7 @@ fun NotificationItem(
                     .size(ArxSpacing.xs)
                     .clip(CircleShape)
                     .background(
-                        if (notification.read) MaterialTheme.colorScheme.surface.copy(alpha = 0f)
+                        if (notification.isRead) MaterialTheme.colorScheme.surface.copy(alpha = 0f)
                         else MaterialTheme.colorScheme.primary
                     )
             )
@@ -67,7 +61,7 @@ fun NotificationItem(
                 Text(
                     text = notification.title,
                     style = MaterialTheme.typography.titleSmall,
-                    fontWeight = if (notification.read) FontWeight.Normal else FontWeight.SemiBold,
+                    fontWeight = if (notification.isRead) FontWeight.Normal else FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
