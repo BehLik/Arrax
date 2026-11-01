@@ -30,4 +30,6 @@ class PreferencesRepositoryImpl @Inject constructor(
 
     override fun setAlertEnabled(channel: AlertChannel, enabled: Boolean) =
         remote.merge(mapOf(PreferencesKeys.ALERTS to mapOf(channel.name to enabled)))
+    override fun setNotificationsEnabled(enabled: Boolean) =
+        remote.merge(mapOf(PreferencesKeys.NOTIFICATIONS_ENABLED to enabled))
 }

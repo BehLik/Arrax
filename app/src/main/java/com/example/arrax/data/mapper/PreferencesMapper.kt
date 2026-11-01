@@ -9,6 +9,7 @@ object PreferencesKeys {
     const val THEME_MODE = "themeMode"
     const val WEIGHT_UNIT = "weightUnit"
     const val ALERTS = "alerts"
+    const val NOTIFICATIONS_ENABLED = "notificationsEnabled"
 }
 
 /** Tolerante: campos ausentes o con valores desconocidos caen al valor por defecto. */
@@ -29,6 +30,14 @@ fun Map<String, Any?>?.toUserPreferences(): UserPreferences {
     val alerts = AlertChannel.entries.associateWith { channel ->
         (rawAlerts?.get(channel.name) as? Boolean) ?: true
     }
+    val master = this[PreferencesKeys.NOTIFICATIONS_ENABLED] as? Boolean
+    return UserPreferences(
+        themeMode = theme,
+        weightUnit = unit,
+        alerts = alerts,
+        notificationsEnabled = master ?: false,
+        notificationsDecided = master != null
+    )
 
     return UserPreferences(theme, unit, alerts)
 }

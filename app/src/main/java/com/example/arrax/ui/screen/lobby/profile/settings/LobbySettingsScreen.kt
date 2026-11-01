@@ -35,7 +35,9 @@ import com.example.arrax.core.designsystem.theme.extendedColors
 //import com.example.arrax.core.model.AboutLink
 import com.example.arrax.core.model.ThemeMode
 import com.example.arrax.domain.model.AlertChannel
+import com.example.arrax.ui.root.notification.rememberNotificationPermission
 import com.example.arrax.ui.screen.lobby.profile.settings.component.AboutLink
+import com.example.arrax.ui.screen.lobby.profile.settings.component.AlertsSection
 import com.example.arrax.ui.screen.lobby.profile.settings.component.SettingsGroupCard
 import com.example.arrax.ui.screen.lobby.profile.settings.component.SettingsNavigationRow
 import com.example.arrax.ui.screen.lobby.profile.settings.component.SettingsSectionHeader
@@ -53,6 +55,7 @@ fun LobbySettingsScreen(
     viewModel: LobbySettingsViewmodel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
+    val permission = rememberNotificationPermission()
     val context = LocalContext.current
     val appVersion = remember {
         val name = runCatching {
@@ -68,6 +71,11 @@ fun LobbySettingsScreen(
         onThemeModeChange = viewModel::onThemeModeChange,
         onAlertToggle = viewModel::onAlertToggle,
         onAboutLinkClick = onAboutLinkClick,
+        masterEnabled = state.notificationsEnabled && permission.isGranted,
+        onNotificationsToggle = { on ->
+            if (on) permission.request { granted -> if (granted) viewModel.onNotificationsToggle(true) }
+            else viewModel.onNotificationsToggle(false)
+        },
         modifier = modifier
     )
 }
@@ -81,6 +89,8 @@ fun LobbySettingsContent(
     onThemeModeChange: (ThemeMode) -> Unit,
     onAlertToggle: (AlertChannel, Boolean) -> Unit,
     onAboutLinkClick: (AboutLink) -> Unit,
+    masterEnabled: Boolean = state.notificationsEnabled,
+    onNotificationsToggle: (Boolean) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     ArxBackground(decoration = ArxDecoration.None) {
@@ -118,23 +128,12 @@ fun LobbySettingsContent(
                 }
 
                 // 2. Notificaciones
-                Column(verticalArrangement = Arrangement.spacedBy(ArxSpacing.xs)) {
-                    SettingsSectionHeader(stringResource(R.string.settings_section_alerts))
-                    SettingsGroupCard {
-                        val channels = AlertChannel.entries
-                        channels.forEachIndexed { index, channel ->
-                            SettingsSwitchRow(
-                                title = stringResource(channel.titleRes),
-                                subtitle = stringResource(channel.subtitleRes),
-                                checked = state.alerts[channel] ?: true,
-                                onCheckedChange = { onAlertToggle(channel, it) }
-                            )
-                            if (index != channels.lastIndex) {
-                                HorizontalDivider(color = MaterialTheme.extendedColors.glassBorder)
-                            }
-                        }
-                    }
-                }
+                AlertsSection(
+                    masterEnabled = masterEnabled,
+                    alerts = state.alerts,
+                    onMasterToggle = onNotificationsToggle,
+                    onAlertToggle = onAlertToggle
+                )
 
                 // 3. General
                 Column(verticalArrangement = Arrangement.spacedBy(ArxSpacing.xs)) {

@@ -170,6 +170,14 @@
     <string name="lobby_empty_action">Crear negocio</string>
     <string name="lobby_recent_title">Recientes</string>
     <string name="lobby_view_all">Ver todo</string>
+    <string name="settings_alert_master_title">Notificaciones</string>
+    <string name="settings_alert_master_subtitle">Elige qué alertas quieres recibir</string>
+    <string name="settings_alert_operator_joined_title">Nuevos operadores</string>
+    <string name="settings_alert_operator_joined_subtitle">Cuando alguien se una a tus negocios como propietario</string>
+    <string name="lobby_notifications_prompt_title">Activa las notificaciones</string>
+    <string name="lobby_notifications_prompt_body">Entérate de pedidos y nuevos integrantes al instante.</string>
+    <string name="lobby_notifications_prompt_enable">Activar</string>
+    <string name="lobby_notifications_prompt_later">Más tarde</string>
     <string name="settings_section_appearance">Apariencia</string>
     <string name="settings_section_alerts">Notificaciones</string>
     <string name="settings_section_general">General</string>

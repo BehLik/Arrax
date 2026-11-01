@@ -23,3 +23,6 @@ class UpdateWeightUnitUseCase @Inject constructor(private val repo: PreferencesR
 class SetAlertEnabledUseCase @Inject constructor(private val repo: PreferencesRepository) {
     operator fun invoke(channel: AlertChannel, enabled: Boolean) = repo.setAlertEnabled(channel, enabled)
 }
+class SetNotificationsEnabledUseCase @Inject constructor(private val repo: PreferencesRepository) {
+    operator fun invoke(enabled: Boolean) = repo.setNotificationsEnabled(enabled)
+}

@@ -22,14 +22,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.arrax.R
 import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
 import com.example.arrax.core.designsystem.components.display.ArxLoading
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
+import com.example.arrax.ui.root.notification.rememberNotificationPermission
 import com.example.arrax.ui.screen.lobby.home.component.BusinessListItem
 import com.example.arrax.ui.screen.lobby.home.component.LobbyEmptyBusinesses
 import com.example.arrax.ui.screen.lobby.home.component.LobbyTopBar
+import com.example.arrax.ui.screen.lobby.home.component.NotificationPromptBanner
 import com.example.arrax.ui.screen.lobby.home.component.RecentHeader
 import com.example.arrax.ui.screen.lobby.home.component.WorkspaceCard
 
@@ -44,6 +47,7 @@ fun LobbyHomeScreen(
     viewModel: LobbyHomeViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
+    val permission = rememberNotificationPermission()
 
     LobbyHomeContent(
         state = state,
@@ -53,7 +57,13 @@ fun LobbyHomeScreen(
         onViewAllClick = onViewAllClick,
         onNotificationsClick = onNotificationsClick,
         onProfileClick = onProfileClick,
-        onRefresh = viewModel::refresh
+        onRefresh = viewModel::refresh,
+        onEnableNotificationsClick = {
+            permission.request { granted ->
+                if (granted) viewModel.onNotificationsAccepted() else viewModel.onNotificationsPostponed()
+            }
+        },
+        onPostponeNotificationsClick = viewModel::onNotificationsPostponed
     )
 }
 
@@ -68,7 +78,9 @@ fun LobbyHomeContent(
     onViewAllClick: () -> Unit,
     onNotificationsClick: () -> Unit,
     onProfileClick: () -> Unit,
-    onRefresh: () -> Unit
+    onRefresh: () -> Unit,
+    onEnableNotificationsClick: () -> Unit = {},
+    onPostponeNotificationsClick: () -> Unit = {}
 ) {
     ArxBackground(modifier = Modifier.fillMaxSize()) {
         Scaffold(
@@ -115,6 +127,15 @@ fun LobbyHomeContent(
                                     )
                                 }
                             }
+                            if (state.canPromptNotifications) {
+                                item {
+                                    NotificationPromptBanner(
+                                        onEnable = onEnableNotificationsClick,
+                                        onLater = onPostponeNotificationsClick,
+                                        modifier = Modifier.padding(bottom = ArxSpacing.lg)
+                                    )
+                                }
+                            }
 
                             item {
                                 WorkspaceCard(
@@ -155,6 +176,7 @@ fun LobbyHomeContent(
         }
     }
 }
+
 
 
 @Composable

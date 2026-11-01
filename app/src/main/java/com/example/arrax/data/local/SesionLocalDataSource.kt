@@ -32,6 +32,6 @@ class SessionLocalDataSource @Inject constructor(
     }
 
     suspend fun clearSession() {
-        dataStore.edit { it.clear() }
+        dataStore.edit { it.remove(tenantIdKey); it.remove(roleKey) }
     }
 }

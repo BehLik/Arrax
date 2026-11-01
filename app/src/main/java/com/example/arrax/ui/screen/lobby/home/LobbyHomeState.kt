@@ -18,5 +18,6 @@ data class LobbyHomeState(
     val unreadNotifications: Int = 0,
     val isLoading: Boolean = true,
     val isOffline: Boolean = false,
-    val isRefreshing:Boolean=false
+    val isRefreshing:Boolean=false,
+    val canPromptNotifications: Boolean = false
 )

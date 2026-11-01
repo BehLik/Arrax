@@ -10,5 +10,6 @@ data class LobbySettingsState(
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val weightUnit: WeightUnit = WeightUnit.KG,
     val alerts: Map<AlertChannel, Boolean> = AlertChannel.entries.associateWith { true },
+    val notificationsEnabled: Boolean = false,
     val isOnline: Boolean = true
 )

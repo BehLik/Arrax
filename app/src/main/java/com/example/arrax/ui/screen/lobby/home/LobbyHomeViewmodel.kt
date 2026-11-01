@@ -3,8 +3,11 @@ package com.example.arrax.ui.screen.lobby.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.arrax.core.common.NetworkMonitor
+import com.example.arrax.data.local.NotificationPromptLocalDataSource
 import com.example.arrax.domain.usecase.business.ObserveMyBusinessesUseCase
 import com.example.arrax.domain.usecase.user.ObserveCurrentUserUseCase
+import com.example.arrax.domain.usecase.user.ObservePreferencesUseCase
+import com.example.arrax.domain.usecase.user.SetNotificationsEnabledUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +23,10 @@ import javax.inject.Inject
 class LobbyHomeViewModel @Inject constructor(
     private val observeMyBusinessesUseCase: ObserveMyBusinessesUseCase,
     private val observeCurrentUserUseCase: ObserveCurrentUserUseCase,
-    private val networkMonitor: NetworkMonitor
+    private val networkMonitor: NetworkMonitor,
+    observePreferences: ObservePreferencesUseCase,
+    private val setNotificationsEnabled: SetNotificationsEnabledUseCase,
+    private val promptStore: NotificationPromptLocalDataSource
 ) : ViewModel() {
     companion object { private const val PAGE_SIZE = 4 }
     private val _state = MutableStateFlow(LobbyHomeState())
@@ -37,6 +43,14 @@ class LobbyHomeViewModel @Inject constructor(
         }
     }
     init {
+        // Banner de notificaciones: colector independiente
+        viewModelScope.launch {
+            combine(observePreferences(), promptStore.snoozedUntil) { prefs, until ->
+                !prefs.notificationsDecided && System.currentTimeMillis() >= until
+            }.collect { can -> _state.update { it.copy(canPromptNotifications = can) } }
+        }
+
+        // Negocios y usuario
         viewModelScope.launch {
             // combine does NOT resubscribe the Firestore flows when connectivity changes;
             // it only re-emits the latest values, so no flatMapLatest is needed here.
@@ -44,25 +58,15 @@ class LobbyHomeViewModel @Inject constructor(
                 observeCurrentUserUseCase(),
                 observeMyBusinessesUseCase().catch { emit(emptyList()) },
                 networkMonitor.isConnected
-            ) {  user, businesses, online -> Triple(user, businesses, online) }
+            ) { user, businesses, online -> Triple(user, businesses, online) }
                 .collect { (user, businesses, online) ->
-                    _state.update {
-                        it.copy(
-                            userName = user?.name.orEmpty(),
-                            recentBusinesses = businesses.map { b ->
-                                BusinessItem(
-                                    id = b.tenant.id,
-                                    name = b.tenant.name,
-                                    isAdmin = b.isAdmin,
-                                    totalEvents = b.totalEvents
-                                )
-                            },
-                            isLoading = false,
-                            isOffline = !online
-                        )
-                    }
                     val items = businesses.map { b ->
-                        BusinessItem(id = b.tenant.id, name = b.tenant.name, isAdmin = b.isAdmin, totalEvents = b.totalEvents)
+                        BusinessItem(
+                            id = b.tenant.id,
+                            name = b.tenant.name,
+                            isAdmin = b.isAdmin,
+                            totalEvents = b.totalEvents
+                        )
                     }
                     _state.update {
                         it.copy(
@@ -76,4 +80,6 @@ class LobbyHomeViewModel @Inject constructor(
                 }
         }
     }
+    fun onNotificationsAccepted() = setNotificationsEnabled(true) // al quedar "decided", el banner se oculta solo
+    fun onNotificationsPostponed() { viewModelScope.launch { promptStore.snooze() } }
 }

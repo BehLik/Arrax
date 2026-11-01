@@ -12,5 +12,6 @@ interface PreferencesRepository {
     // No son suspend a propósito: offline la confirmación del servidor tarda; la caché local ya emite el cambio.
     fun setThemeMode(mode: ThemeMode)
     fun setWeightUnit(unit: WeightUnit)
+    fun setNotificationsEnabled(enabled: Boolean)
     fun setAlertEnabled(channel: AlertChannel, enabled: Boolean)
 }

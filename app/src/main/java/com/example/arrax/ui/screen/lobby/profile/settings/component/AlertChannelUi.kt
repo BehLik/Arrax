@@ -12,6 +12,7 @@ val AlertChannel.titleRes: Int
         AlertChannel.CONFIRMATIONS -> R.string.settings_alert_confirmations_title
         AlertChannel.PROMOTIONS -> R.string.settings_alert_promotions_title
         AlertChannel.SYSTEM -> R.string.settings_alert_system_title
+        AlertChannel.OPERATOR_JOINED -> R.string.settings_alert_operator_joined_title
     }
 
 @get:StringRes
@@ -22,4 +23,6 @@ val AlertChannel.subtitleRes: Int
         AlertChannel.CONFIRMATIONS -> R.string.settings_alert_confirmations_subtitle
         AlertChannel.PROMOTIONS -> R.string.settings_alert_promotions_subtitle
         AlertChannel.SYSTEM -> R.string.settings_alert_system_subtitle
+        AlertChannel.OPERATOR_JOINED -> R.string.settings_alert_operator_joined_subtitle
     }
+

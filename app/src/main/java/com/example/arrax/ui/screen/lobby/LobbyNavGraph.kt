@@ -5,19 +5,13 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.example.arrax.core.model.JoinMethod
 import com.example.arrax.core.navigation.*
-import com.example.arrax.ui.root.navigation.PlaceholderAction
 import com.example.arrax.ui.root.navigation.PlaceholderScreen
 import com.example.arrax.ui.root.navigation.backAction
 import com.example.arrax.ui.root.navigation.logoutToAuth
@@ -53,7 +47,6 @@ fun NavGraphBuilder.lobbyGraph(nav: NavController) {
                 onJoinClick = { nav.safeNavigate(BusinessJoin) },
                 onViewAllClick = { nav.safeNavigate(MyBusinesses) },
                 onNotificationsClick = { nav.safeNavigate(Notifications) },
-//                onSettingsClick = { nav.safeNavigate(Settings) },
                 onProfileClick = { nav.safeNavigate(Profile) }
 
             )
