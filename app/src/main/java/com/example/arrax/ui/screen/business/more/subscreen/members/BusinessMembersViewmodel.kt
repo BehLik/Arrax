@@ -1,4 +1,4 @@
-package com.example.arrax.ui.screen.business.members
+package com.example.arrax.ui.screen.business.more.subscreen.members
 
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
@@ -35,7 +35,6 @@ import com.example.arrax.domain.model.Role
 import com.example.arrax.domain.model.status
 import com.example.arrax.domain.usecase.business.members.observe.ObserveInvitationsUseCase
 import com.example.arrax.domain.usecase.business.members.observe.ObserveMembersUseCase
-import com.example.arrax.ui.screen.business.members.subscreen.invitation.toLabel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.catch
@@ -44,6 +43,8 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.launchIn
 import com.example.arrax.core.common.toLabel
+import com.example.arrax.ui.screen.business.more.subscreen.members.subscreen.invitation.toLabel
+
 @HiltViewModel
 class BusinessMembersViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,

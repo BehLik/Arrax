@@ -1,4 +1,4 @@
-package com.example.arrax.ui.screen.business.members.subscreen.invitation.component
+package com.example.arrax.ui.screen.business.more.subscreen.members.subscreen.invitation.component
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
@@ -27,8 +27,9 @@ import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.domain.model.InviteType
 import com.example.arrax.domain.model.Role
-import com.example.arrax.ui.screen.business.members.subscreen.invitation.InvitationCreateState
-import com.example.arrax.ui.screen.business.members.subscreen.invitation.toLabel
+import com.example.arrax.ui.screen.business.more.subscreen.members.subscreen.invitation.InvitationCreateState
+import com.example.arrax.ui.screen.business.more.subscreen.members.subscreen.invitation.toLabel
+
 
 @Composable
 internal fun InvitationForm(

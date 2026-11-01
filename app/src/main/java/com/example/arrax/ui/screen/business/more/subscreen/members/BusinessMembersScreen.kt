@@ -1,4 +1,4 @@
-package com.example.arrax.ui.screen.business.members
+package com.example.arrax.ui.screen.business.more.subscreen.members
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -33,9 +33,10 @@ import com.example.arrax.core.designsystem.icons.ArxIcon
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
-import com.example.arrax.ui.screen.business.members.component.InviteMemberButton
-import com.example.arrax.ui.screen.business.members.component.MemberRow
 import androidx.compose.foundation.lazy.items
+import com.example.arrax.ui.screen.business.more.subscreen.members.component.InviteMemberButton
+import com.example.arrax.ui.screen.business.more.subscreen.members.component.MemberRow
+
 @Composable
 fun BusinessMembersScreen(
     onBack: () -> Unit,

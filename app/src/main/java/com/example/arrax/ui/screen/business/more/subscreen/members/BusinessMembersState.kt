@@ -1,4 +1,4 @@
-package com.example.arrax.ui.screen.business.members
+package com.example.arrax.ui.screen.business.more.subscreen.members
 
 data class MemberUi(
     val id: String,

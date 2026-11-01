@@ -1,4 +1,4 @@
-package com.example.arrax.ui.screen.business.members.component
+package com.example.arrax.ui.screen.business.more.subscreen.members.component
 
 import android.content.Context
 import android.content.Intent

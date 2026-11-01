@@ -1,4 +1,4 @@
-package com.example.arrax.ui.screen.business.members.subscreen.invitation
+package com.example.arrax.ui.screen.business.more.subscreen.members.subscreen.invitation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,9 +16,10 @@ import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
 import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
 import com.example.arrax.core.designsystem.components.navigation.ArxTopBar
 import com.example.arrax.core.designsystem.components.navigation.ArxTopBarNavigationType
-import com.example.arrax.ui.screen.business.members.component.InviteSharing
-import com.example.arrax.ui.screen.business.members.subscreen.invitation.component.InvitationDone
-import com.example.arrax.ui.screen.business.members.subscreen.invitation.component.InvitationForm
+import com.example.arrax.ui.screen.business.more.subscreen.members.component.InviteSharing
+import com.example.arrax.ui.screen.business.more.subscreen.members.subscreen.invitation.component.InvitationDone
+import com.example.arrax.ui.screen.business.more.subscreen.members.subscreen.invitation.component.InvitationForm
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

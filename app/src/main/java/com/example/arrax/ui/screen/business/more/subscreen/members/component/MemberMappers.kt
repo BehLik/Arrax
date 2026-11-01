@@ -1,11 +1,11 @@
-package com.example.arrax.ui.screen.business.members.component
+package com.example.arrax.ui.screen.business.more.subscreen.members.component
 
 import androidx.compose.ui.graphics.ImageBitmap
 import com.example.arrax.core.common.toLabel
 import com.example.arrax.domain.model.InviteStatus
 import com.example.arrax.domain.model.Member
 import com.example.arrax.domain.model.Role
-import com.example.arrax.ui.screen.business.members.MemberUi
+import com.example.arrax.ui.screen.business.more.subscreen.members.MemberUi
 
 enum class InviteConfirm { Revoke, Delete }
 

@@ -11,11 +11,11 @@ import com.example.arrax.ui.root.navigation.safeNavigate
 import com.example.arrax.ui.screen.business.alerts.BusinessAlertsScreen
 import com.example.arrax.ui.screen.business.customers.BusinessCustomersScreen
 import com.example.arrax.ui.screen.business.home.BusinessHomeScreen
-import com.example.arrax.ui.screen.business.members.BusinessMembersScreen
-import com.example.arrax.ui.screen.business.members.subscreen.invitation.MembersInvitationScreen
-import com.example.arrax.ui.screen.business.members.subscreen.invitationdetail.MembersInvitationDetailScreen
 import com.example.arrax.ui.screen.business.more.BusinessMoreScreen
 import com.example.arrax.ui.screen.business.more.subscreen.catalog.BusinessCatalogScreen
+import com.example.arrax.ui.screen.business.more.subscreen.members.BusinessMembersScreen
+import com.example.arrax.ui.screen.business.more.subscreen.members.subscreen.invitation.MembersInvitationScreen
+import com.example.arrax.ui.screen.business.more.subscreen.members.subscreen.invitationdetail.MembersInvitationDetailScreen
 
 fun NavGraphBuilder.businessGraph(nav: NavController) {
     businessCore(nav)

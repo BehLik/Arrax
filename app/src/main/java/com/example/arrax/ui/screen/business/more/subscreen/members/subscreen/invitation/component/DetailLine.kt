@@ -1,4 +1,4 @@
-package com.example.arrax.ui.screen.business.members.subscreen.invitation.component
+package com.example.arrax.ui.screen.business.more.subscreen.members.subscreen.invitation.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme

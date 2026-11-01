@@ -1,4 +1,4 @@
-package com.example.arrax.ui.screen.business.members.component
+package com.example.arrax.ui.screen.business.more.subscreen.members.component
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -9,7 +9,7 @@ import com.example.arrax.core.designsystem.components.display.ArxListItem
 import com.example.arrax.core.designsystem.components.feedback.ArxChipStatus
 import com.example.arrax.core.designsystem.components.feedback.ArxStatusChip
 import com.example.arrax.ui.root.session.CurrentUserAvatar
-import com.example.arrax.ui.screen.business.members.MemberUi
+import com.example.arrax.ui.screen.business.more.subscreen.members.MemberUi
 
 @Composable
 internal fun MemberRow(

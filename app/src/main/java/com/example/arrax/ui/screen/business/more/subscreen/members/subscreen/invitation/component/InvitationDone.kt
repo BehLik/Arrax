@@ -1,4 +1,4 @@
-package com.example.arrax.ui.screen.business.members.subscreen.invitation.component
+package com.example.arrax.ui.screen.business.more.subscreen.members.subscreen.invitation.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -29,7 +29,7 @@ import com.example.arrax.core.designsystem.icons.ArxIcon
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.domain.model.InviteType
-import com.example.arrax.ui.screen.business.members.subscreen.invitation.CreatedInvitationUi
+import com.example.arrax.ui.screen.business.more.subscreen.members.subscreen.invitation.CreatedInvitationUi
 
 @Composable
 internal fun InvitationDone(

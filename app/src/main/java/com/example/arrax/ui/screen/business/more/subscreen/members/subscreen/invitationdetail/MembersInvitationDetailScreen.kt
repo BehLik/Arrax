@@ -1,4 +1,4 @@
-package com.example.arrax.ui.screen.business.members.subscreen.invitationdetail
+package com.example.arrax.ui.screen.business.more.subscreen.members.subscreen.invitationdetail
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -43,11 +43,11 @@ import com.example.arrax.core.designsystem.components.navigation.ArxTopBarNaviga
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.domain.model.InviteStatus
-import com.example.arrax.ui.screen.business.members.component.InvitationDetailEvent
-import com.example.arrax.ui.screen.business.members.component.InvitationDetailState
-import com.example.arrax.ui.screen.business.members.component.InviteConfirm
-import com.example.arrax.ui.screen.business.members.component.InviteSharing
-import com.example.arrax.ui.screen.business.members.component.MemberRow
+import com.example.arrax.ui.screen.business.more.subscreen.members.component.InvitationDetailEvent
+import com.example.arrax.ui.screen.business.more.subscreen.members.component.InvitationDetailState
+import com.example.arrax.ui.screen.business.more.subscreen.members.component.InviteConfirm
+import com.example.arrax.ui.screen.business.more.subscreen.members.component.InviteSharing
+import com.example.arrax.ui.screen.business.more.subscreen.members.component.MemberRow
 
 @Composable
 fun MembersInvitationDetailScreen (

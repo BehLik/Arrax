@@ -1,4 +1,4 @@
-package com.example.arrax.ui.screen.business.members.subscreen.invitationdetail
+package com.example.arrax.ui.screen.business.more.subscreen.members.subscreen.invitationdetail
 
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.SavedStateHandle
@@ -21,11 +21,6 @@ import com.example.arrax.domain.usecase.business.members.delete.DeleteInvitation
 import com.example.arrax.domain.usecase.business.members.observe.ObserveInvitationUseCase
 import com.example.arrax.domain.usecase.business.members.observe.ObserveMembersUseCase
 import com.example.arrax.domain.usecase.business.members.revoke.RevokeInvitationUseCase
-import com.example.arrax.ui.screen.business.members.component.InvitationDetailEvent
-import com.example.arrax.ui.screen.business.members.component.InvitationDetailState
-import com.example.arrax.ui.screen.business.members.component.InvitationDetailUi
-import com.example.arrax.ui.screen.business.members.component.InviteConfirm
-import com.example.arrax.ui.screen.business.members.subscreen.invitation.toLabel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -47,7 +42,13 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.launchIn
 import com.example.arrax.core.common.toAppError
-import com.example.arrax.ui.screen.business.members.component.toMemberUi
+import com.example.arrax.ui.screen.business.more.subscreen.members.component.InvitationDetailEvent
+import com.example.arrax.ui.screen.business.more.subscreen.members.component.InvitationDetailState
+import com.example.arrax.ui.screen.business.more.subscreen.members.component.InvitationDetailUi
+import com.example.arrax.ui.screen.business.more.subscreen.members.component.InviteConfirm
+import com.example.arrax.ui.screen.business.more.subscreen.members.component.toMemberUi
+import com.example.arrax.ui.screen.business.more.subscreen.members.subscreen.invitation.toLabel
+
 
 @HiltViewModel
 class MembersInvitationDetailViewmodel @Inject constructor(

@@ -1,4 +1,4 @@
-package com.example.arrax.ui.screen.business.members.subscreen.invitation
+package com.example.arrax.ui.screen.business.more.subscreen.members.subscreen.invitation
 
 import androidx.compose.ui.graphics.ImageBitmap
 import com.example.arrax.domain.model.InviteType
