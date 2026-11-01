@@ -41,8 +41,8 @@ fun BusinessHomeScreen(
     onMoreClick: () -> Unit = {},
     onAlertsClick: () -> Unit = {},
     onCustomersClick: () -> Unit = {},
-    onTeamClick: () -> Unit = {},
-    onCutsClick: () -> Unit = {},
+//    onTeamClick: () -> Unit = {},
+//    onCutsClick: () -> Unit = {},
     onBackClik:()->Unit={},
     viewModel: BusinessHomeViewModel = hiltViewModel()
 ) {
@@ -58,8 +58,8 @@ fun BusinessHomeScreen(
         onAlertsClick = onAlertsClick,
         onCreateEventClick = onCreateEventClick,
         onCustomersClick = onCustomersClick,
-        onTeamClick = onTeamClick,
-        onCutsClick = onCutsClick,
+//        onTeamClick = onTeamClick,
+//        onCutsClick = onCutsClick,
         onBackClik=onBackClik,
         modifier = modifier
     )
@@ -74,8 +74,8 @@ internal fun BusinessHomeContent(
     onAlertsClick: () -> Unit,
     onCreateEventClick: () -> Unit,
     onCustomersClick: () -> Unit,
-    onTeamClick: () -> Unit,
-    onCutsClick: () -> Unit,
+//    onTeamClick: () -> Unit,
+//    onCutsClick: () -> Unit,
     onBackClik:()-> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -137,9 +137,7 @@ internal fun BusinessHomeContent(
 
                 QuickActionsSection(
                     onCreateEventClick = onCreateEventClick,
-                    onCustomersClick = onCustomersClick,
-                    onTeamClick = onTeamClick,
-                    onCutsClick = onCutsClick
+                    onCustomersClick = onCustomersClick
                 )
             }
         }
@@ -187,22 +185,22 @@ private fun BusinessHomePreviewContent() {
                 message = "Revisa la estimación de cortes y la disponibilidad de insumos para el evento de mañana."
             ),
             alerts = listOf(
-                HomeAlertUi(
-                    "1",
-                    "Evento del sábado",
-                    "Faltan 2 días • 6 cerdos estimados",
-                    "En preparación",
-                    ArxTone.Success,
-                    ArxIcons.Event
-                ),
-                HomeAlertUi(
-                    "2",
-                    "Invitación por vencer",
-                    "Código #AB12 • Vence en 3 días",
-                    "Atención",
-                    ArxTone.Warning,
-                    ArxIcons.GroupAdd
-                ),
+//                HomeAlertUi(
+//                    "1",
+//                    "Evento del sábado",
+//                    "Faltan 2 días • 6 cerdos estimados",
+//                    "En preparación",
+//                    ArxTone.Success,
+//                    ArxIcons.Event
+//                ),
+//                HomeAlertUi(
+//                    "2",
+//                    "Invitación por vencer",
+//                    "Código #AB12 • Vence en 3 días",
+//                    "Atención",
+//                    ArxTone.Warning,
+//                    ArxIcons.GroupAdd
+//                ),
                 HomeAlertUi(
                     "3",
                     "Pedidos pendientes de pesar",
@@ -240,8 +238,8 @@ private fun BusinessHomePreviewContent() {
         onAlertsClick = {},
         onCreateEventClick = {},
         onCustomersClick = {},
-        onTeamClick = {},
-        onCutsClick = {},
+//        onTeamClick = {},
+//        onCutsClick = {},
         onBackClik = {}
     )
 }

@@ -41,8 +41,8 @@ private fun NavGraphBuilder.businessCore(nav: NavController) {
             onMoreClick = { nav.safeNavigate(BusinessMore(args.businessId)) },
             onAlertsClick = { nav.safeNavigate(BusinessAlerts(args.businessId)) },
             onCustomersClick = { nav.safeNavigate(BusinessCustomers(args.businessId)) },
-            onTeamClick = { nav.safeNavigate(BusinessMembers(args.businessId)) },
-            onCutsClick = { nav.safeNavigate(BusinessCatalog(args.businessId)) }
+//            onTeamClick = { nav.safeNavigate(BusinessMembers(args.businessId)) },
+//            onCutsClick = { nav.safeNavigate(BusinessCatalog(args.businessId)) }
         )
     }
 

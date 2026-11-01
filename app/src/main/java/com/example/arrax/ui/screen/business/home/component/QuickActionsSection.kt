@@ -28,8 +28,8 @@ import com.example.arrax.core.designsystem.theme.extendedColors
 internal fun QuickActionsSection(
     onCreateEventClick: () -> Unit,
     onCustomersClick: () -> Unit,
-    onTeamClick: () -> Unit,
-    onCutsClick: () -> Unit,
+//    onTeamClick: () -> Unit,
+//    onCutsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -40,8 +40,6 @@ internal fun QuickActionsSection(
         Row(horizontalArrangement = Arrangement.spacedBy(ArxSpacing.xs)) {
             QuickActionTile("Crear evento", ArxIcons.Event, true, onCreateEventClick, Modifier.weight(1f))
             QuickActionTile("Clientes", ArxIcons.User, false, onCustomersClick, Modifier.weight(1f))
-            QuickActionTile("Equipo", ArxIcons.TeamOutline, false, onTeamClick, Modifier.weight(1f))
-            QuickActionTile("Cortes", ArxIcons.Box, false, onCutsClick, Modifier.weight(1f))
         }
     }
 }
