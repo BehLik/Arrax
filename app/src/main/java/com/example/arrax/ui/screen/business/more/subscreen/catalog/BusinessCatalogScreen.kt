@@ -273,27 +273,3 @@ private fun CatalogHeader(
         )
     }
 }
-
-//@Preview(showBackground = true, widthDp = 390, heightDp = 844, uiMode = Configuration.UI_MODE_NIGHT_YES)
-//@Composable
-//private fun BusinessCatalogScreenPreview() {
-//    ArxTheme {
-//        BusinessCatalogContent(
-//            cuts = DefaultCuts,
-//            query = "",
-//            onQueryChange = {},
-//        )
-//    }
-//}
-//
-//@Preview(showBackground = true, widthDp = 390, heightDp = 844)
-//@Composable
-//private fun BusinessCatalogScreenSearchPreview() {
-//    ArxTheme {
-//        BusinessCatalogContent(
-//            cuts = DefaultCuts,
-//            query = "co",
-//            onQueryChange = {},
-//        )
-//    }
-//}

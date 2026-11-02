@@ -206,7 +206,7 @@ internal fun InvitationRow(
 //            state = BusinessMembersState(
 //                isLoadingMembers = false,
 //                activeInvitations = listOf(
-//                    InvitationItemUi("A1", "Código + QR", "Operador", "2 de 5 personas · Expira en 3 días", isActive = true)
+//                    InvitationItemUi("A1", "Código + QR", "Operador", "2 de 5 personas · Expira en 3 días", isActive = false)
 //                ),
 //                members = listOf(
 //                    MemberUi("1", "Alex Caamal", "AC", "Propietario", isOwner = true),
