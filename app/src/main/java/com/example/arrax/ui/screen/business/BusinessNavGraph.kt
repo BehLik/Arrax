@@ -142,6 +142,9 @@ private fun NavGraphBuilder.businessMore(nav: NavController) {
     composable<BusinessSettings> { PlaceholderScreen("Ajustes del negocio", back) }
     composable<BusinessCatalog> {
         BusinessCatalogScreen(
+            onBackClick = back,
+            onEditClick = {}
+
 
         )
     }
