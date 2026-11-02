@@ -9,20 +9,31 @@ import com.example.arrax.R
  * no necesariamente el nombre físico del drawable.
  *
  * Ejemplo:
- * ArraxIcons.Search
- * ArraxIcons.Order
- * ArraxIcons.Inventory
- * flujo de la app
- *Negocio->Evento->Area de trabajo
+ * ArxIcons.Search
+ * ArxIcons.Order
+ * ArxIcons.Inventory
+ *
+ * Flujo de la app:
+ * Negocio -> Evento -> Área de trabajo
  *
  * Esto permite cambiar el recurso gráfico sin modificar las pantallas.
  */
 object ArxIcons {
+
+    // ============================================================
+    // MARCA E INICIO DE SESIÓN
+    // ============================================================
+
+    /** Logo de Google para inicio de sesión con cuenta Google. */
     val Google = R.drawable.ic_google
+
     // ============================================================
     // NAVEGACIÓN
     // ============================================================
+
+    /** Abre el menú lateral o de opciones. */
     val Menu = R.drawable.ic_menu
+
     /** Regresa a la pantalla anterior. */
     val Back = R.drawable.ic_arrow_back
 
@@ -34,45 +45,12 @@ object ArxIcons {
 
     /** Abandona el flujo o pantalla actual. */
     val Exit = R.drawable.ic_goout
+
     /** Restricción o advertencia para no retroceder o abandonar el flujo actual. */
     val DontGoBack = R.drawable.ic_dont_go_back
+
     // ============================================================
-    // ACCIONES PRINCIPALES
-    // ============================================================
-
-    /** Crea un nuevo registro u operación. */
-    val Add = R.drawable.ic_fab_add
-
-    /**Quita registros u operacion*/
-    val Remove = R.drawable.ic_remove
-
-    /** Confirma una acción u operación. */
-    val Check = R.drawable.ic_check
-
-    /** Guarda los cambios realizados. */
-    val Save = R.drawable.ic_save
-
-    /** Edita un registro existente. */
-    val Edit = R.drawable.ic_edit
-
-    /** Elimina un registro. */
-    val Delete = R.drawable.ic_delete
-
-    /** Actualiza la información mostrada. */
-    val Refresh = R.drawable.ic_refresh
-
-    /**Lista Conponentes*/
-    val List =R.drawable.ic_list
-    /**Unirse a un Grupo*/
-    val GroupAdd=R.drawable.ic_group_add
-    /**Evento <--nivel operativo*/
-    val Event=R.drawable.ic_event
-
-    val Handshake = R.drawable.ic_handshake
-    val OrderRegistered = R.drawable.ic_clipboard_check
-    val Piggy = R.drawable.ic_piggy
-    // ============================================================
-    // NAVEGACIÓN PRINCIPAL
+    // NAVEGACIÓN PRINCIPAL (barra inferior)
     // ============================================================
 
     /** Inicio — estado activo. */
@@ -99,18 +77,132 @@ object ArxIcons {
     /** Proyecciones / estimaciones — inactivo. */
     val EstimationOutline = R.drawable.ic_nav_estimation_outline
 
-    /** Perfil del usuario. */
-    val Profile = R.drawable.ic_nav_profile_outline
-
-    /** Actividades o tareas operativas.Pedido u orden <--nivel transaccional */
-    val Tasks = R.drawable.ic_nav_tasks_outline
-
     /** Equipo — estado activo. */
     val TeamFilled = R.drawable.ic_nav_team_filled
 
     /** Equipo — estado inactivo. */
     val TeamOutline = R.drawable.ic_nav_team_outline
 
+    /** Perfil del usuario. */
+    val Profile = R.drawable.ic_nav_profile_outline
+
+    /** Actividades o tareas operativas. Pedido u orden (nivel transaccional). */
+    val Tasks = R.drawable.ic_nav_tasks_outline
+
+    /** Evento (nivel operativo). */
+    val Event = R.drawable.ic_event
+
+    // ============================================================
+    // ACCIONES PRINCIPALES
+    // ============================================================
+
+    /** Crea un nuevo registro u operación. */
+    val Add = R.drawable.ic_fab_add
+
+    /** Quita registros u operaciones. */
+    val Remove = R.drawable.ic_remove
+
+    /** Confirma una acción u operación. */
+    val Check = R.drawable.ic_check
+
+    /** Guarda los cambios realizados. */
+    val Save = R.drawable.ic_save
+
+    /** Edita un registro existente. */
+    val Edit = R.drawable.ic_edit
+
+    /** Elimina un registro. */
+    val Delete = R.drawable.ic_delete
+
+    /** Actualiza la información mostrada. */
+    val Refresh = R.drawable.ic_refresh
+
+    /** Copia contenido al portapapeles. */
+    val ContentCopy = R.drawable.ic_content_copy
+
+    /** Repite una operación o proceso. */
+    val Repeat = R.drawable.ic_repeat
+
+    // ============================================================
+    // PEDIDOS
+    // ============================================================
+
+    /**
+     * Pedido u orden de un cliente.
+     * Si no existe un drawable específico, puede reutilizarse
+     * un icono de inventario/producto.
+     */
+    val Order = R.drawable.ic_orders
+
+    /** Representa una línea o elemento de pedido. */
+    val OrderLine = R.drawable.ic_box
+
+    /** Pedido registrado correctamente. */
+    val OrderRegistered = R.drawable.ic_clipboard_check
+
+    /** Pedido apartado o reservado. */
+    val Reserved = R.drawable.ic_lock
+
+    /** Producto en proceso de pesado/procesamiento. */
+    val Processing = R.drawable.ic_scale
+
+    /** Pedido listo para entregar. */
+    val Ready = R.drawable.ic_takeout
+
+    /** Pedido entregado al cliente. */
+    val Delivered = R.drawable.ic_hand_package
+
+    /** Vehículo, ruta o estado de entrega de un pedido. */
+    val Delivery = R.drawable.ic_delivery
+
+    /** Representa una operación pendiente. */
+    val Pending = R.drawable.ic_schedule
+
+    /** Representa una operación completada. */
+    val Done = R.drawable.ic_check
+
+    /** Representa múltiples operaciones completadas. */
+    val DoneAll = R.drawable.ic_done_all
+
+    /** Representa procesamiento o flujo de trabajo. */
+    val Workflow = R.drawable.ic_timeline
+
+    /** Acuerdo cerrado o trato con el cliente. */
+    val Handshake = R.drawable.ic_handshake
+
+    // ============================================================
+    // PESAJE Y ASISTENTE DE VOZ
+    // ============================================================
+
+    /** Medición de peso o cantidad. */
+    val Scale = R.drawable.ic_scale
+
+    /** Pesaje de una operación o proceso. */
+    val Balance = R.drawable.ic_balance
+
+    /** Representa peso o cantidad medida. */
+    val Weight = R.drawable.ic_weight
+
+    /** Repite la instrucción de voz. */
+    val Replay = R.drawable.ic_replay
+
+    /** Volumen activado. */
+    val VolumeUp = R.drawable.ic_volume_up
+
+    /** Volumen apagado. */
+    val VolumeOff = R.drawable.ic_volume_off
+
+    /** Activación del micrófono para interacción por voz. */
+    val Mic = R.drawable.ic_mic
+
+    /** Micrófono desactivado. */
+    val MicOff = R.drawable.ic_mic_off
+
+    /** Linterna encendida. */
+    val FlashLightON = R.drawable.ic_flashlight_on
+
+    /** Linterna apagada. */
+    val FlashLightOFF = R.drawable.ic_flashlight_off
 
     // ============================================================
     // OPERACIÓN
@@ -128,60 +220,14 @@ object ArxIcons {
     /** Representa disminución o decremento. */
     val Decrease = R.drawable.ic_decrement
 
-    /** Representa peso o cantidad medida. */
-    val Weight = R.drawable.ic_weight
-
     /** Representa una advertencia operativa. */
     val Warning = R.drawable.ic_warning
 
     // ============================================================
-    // PEDIDOS
-    // ============================================================
-
-    /**
-     * Producto solicitado dentro de un pedido.
-     * Si no existe un drawable específico, puede reutilizarse
-     * un icono de inventario/producto.
-     */
-    val Order = R.drawable.ic_orders
-
-    /** Representa una línea o elemento de pedido. */
-    val OrderLine = R.drawable.ic_box
-
-    /** Representa una operación completada. */
-    val Done = R.drawable.ic_check
-
-    /** Representa múltiples operaciones completadas. */
-    val DoneAll = R.drawable.ic_done_all
-
-    /** Representa una operación pendiente. */
-    val Pending = R.drawable.ic_schedule
-
-    /** Representa procesamiento o flujo de trabajo. */
-    val Workflow = R.drawable.ic_timeline
-
-    val PaymentDone = R.drawable.ic_payment_done
-
-    /** Vehículo, ruta o estado de entrega de un pedido. */
-    val Delivery = R.drawable.ic_delivery
-
-    val Sort=R.drawable.ic_sort
-    /**repetir instruccion*/
-    val Replay = R.drawable.ic_replay
-
-    /**Volumen */
-    val VolumeUp = R.drawable.ic_volume_up
-
-    /**Volumen Apagado*/
-    val VolumeOff = R.drawable.ic_volume_off
-
-    val FlashLightON=R.drawable.ic_flashlight_on
-    val FlashLightOFF=R.drawable.ic_flashlight_off
-    // ============================================================
     // INVENTARIO
     // ============================================================
 
-    /** Inventario disponible.o pedido preparado para entregar */
+    /** Inventario disponible o pedido preparado para entregar. */
     val Inventory = R.drawable.ic_inventory
 
     /** Existencias o stock actual. */
@@ -212,13 +258,29 @@ object ArxIcons {
     /** Venta realizada. */
     val Sale = R.drawable.ic_sell
 
-    /** Factura o comprobante. */
-    val Invoice = R.drawable.ic_receipt
+    /** Recibo o comprobante de pago. */
+    val Receipt = R.drawable.ic_receipt
+
+    /** Factura. */
+    val Invoice = R.drawable.ic_invoice
 
     /** Balance disponible. */
     val Wallet = R.drawable.ic_wallet
+
     /** Representación de moneda, divisa o valores monetarios. */
     val Dollar = R.drawable.ic_dollar
+
+    /** Ahorro o fondo acumulado. */
+    val Piggy = R.drawable.ic_piggy
+
+    /** Pago completado. */
+    val Payment = R.drawable.ic_payment_done
+
+    /** Pago completado (alias de Payment). */
+    val PaymentDone = R.drawable.ic_payment_done
+
+    /** Pago pendiente. */
+    val PaymentPending = R.drawable.ic_payment_pending
 
     // ============================================================
     // ANALÍTICA
@@ -233,16 +295,18 @@ object ArxIcons {
     /** Reporte operativo o financiero. */
     val Report = R.drawable.ic_report
 
-    /** Gráfica de datos. */
+    /** Gráfica de líneas. */
     val ChartLine = R.drawable.ic_chart_line
+
+    /** Gráfica de barras para representación de datos. */
+    val ChartBar = R.drawable.ic_chart_bar
 
     /** Información derivada de los datos. */
     val Insight = R.drawable.ic_insight
 
     /** Predicción o estimación generada por el sistema. */
     val Prediction = R.drawable.ic_prediction
-    /** Gráfica de barras para representación de datos. */
-    val ChartBar = R.drawable.ic_chart_bar
+
     // ============================================================
     // USUARIOS Y EQUIPO
     // ============================================================
@@ -259,11 +323,20 @@ object ArxIcons {
     /** Asignación de una tarea o elemento. */
     val Assign = R.drawable.ic_assign
 
+    /** Agrega una persona. */
+    val PersonAdd = R.drawable.ic_person_add
+
+    /** Unirse a un grupo o agregar miembros. */
+    val GroupAdd = R.drawable.ic_group_add
+
+    /** Quitar miembros de un grupo. */
+    val GroupRemove = R.drawable.ic_group_remove
+
     /** Cierra la sesión del usuario. */
     val Logout = R.drawable.ic_logout
 
     // ============================================================
-    // BÚSQUEDA Y FILTRADO
+    // BÚSQUEDA, FILTRADO Y LISTAS
     // ============================================================
 
     /** Busca información. */
@@ -275,11 +348,23 @@ object ArxIcons {
     /** Filtra información. */
     val Filter = R.drawable.ic_filter
 
+    /** Ordena información. */
+    val Sort = R.drawable.ic_sort
+
     /** Muestra opciones adicionales. */
     val More = R.drawable.ic_more
 
     /** Muestra opciones adicionales en orientación vertical. */
     val MoreVertical = R.drawable.ic_more_vert
+
+    /** Lista de componentes. */
+    val List = R.drawable.ic_list
+
+    /** Vista en formato de lista. */
+    val ViewList = R.drawable.ic_view_list
+
+    /** Vista en formato de cuadrícula. */
+    val GridView = R.drawable.ic_grid_view
 
     // ============================================================
     // ESTADOS Y FEEDBACK
@@ -315,8 +400,10 @@ object ArxIcons {
 
     /** Sincronización en progreso. */
     val Sync = R.drawable.ic_sync
+
     /** Sincronización desactivada, pausada o fallida. */
     val SyncOff = R.drawable.ic_sync_off
+
     // ============================================================
     // INTERACCIÓN Y HARDWARE
     // ============================================================
@@ -326,14 +413,9 @@ object ArxIcons {
 
     /** Escaneo de códigos QR o elementos físicos. */
     val ScanQr = R.drawable.ic_scan_qr
-//    enlace code
+
+    /** Enlace o código de invitación. */
     val Link = R.drawable.ic_link
-
-    /** Activación del micrófono para interacción por voz. */
-    val Mic = R.drawable.ic_mic
-
-    /** Micrófono desactivado. */
-    val MicOff = R.drawable.ic_mic_off
 
     /** Envía un mensaje, comando o información. */
     val Send = R.drawable.ic_send
@@ -342,7 +424,7 @@ object ArxIcons {
     val Photo = R.drawable.ic_add_photo_alternate
 
     // ============================================================
-    // TIEMPO Y MEDICIÓN
+    // TIEMPO
     // ============================================================
 
     /** Fecha específica. */
@@ -353,14 +435,6 @@ object ArxIcons {
 
     /** Línea temporal de operaciones. */
     val Timeline = R.drawable.ic_timeline
-
-    /** Medición de peso o cantidad. */
-    val Scale = R.drawable.ic_scale
-
-    /** Repite una operación o proceso. */
-    val Repeat = R.drawable.ic_repeat
-    /** Pesaje de  una operación o proceso. */
-    val Balance=R.drawable.ic_balance
 
     // ============================================================
     // SEGURIDAD Y SISTEMA
@@ -387,6 +461,12 @@ object ArxIcons {
     /** Seguridad mediante contraseña inactiva. */
     val PasswordOutline = R.drawable.ic_password_outline
 
+    /** Gestión de credenciales o contraseña. */
+    val PasswordShield = R.drawable.ic_passkey_edit
+
+    /** Estado de seguridad, protección o permisos verificados. */
+    val Shield = R.drawable.ic_shield
+
     /** Bloqueo o contenido protegido. */
     val Lock = R.drawable.ic_lock
 
@@ -396,31 +476,8 @@ object ArxIcons {
     /** Correo electrónico verificado. */
     val EmailVerified = R.drawable.ic_mark_email
 
-    /** Gestión de credenciales o contraseña. */
-    val PasswordShield = R.drawable.ic_passkey_edit
-
     /** Ubicación física. */
     val Location = R.drawable.ic_location
-
-    /** Pedido apartado o reservado. */
-    val Reserved = R.drawable.ic_lock
-
-    /** Producto en proceso de pesado/procesamiento. */
-    val Processing = R.drawable.ic_scale
-
-    /** Pedido listo para entregar. */
-    val Ready = R.drawable.ic_takeout
-
-    /** Pedido entregado al cliente. */
-    val Delivered = R.drawable.ic_hand_package
-
-    /** Pago pendiente. */
-    val PaymentPending = R.drawable.ic_payment_pending
-    /** Estado de seguridad, protección o permisos verificados. */
-    val Shield = R.drawable.ic_shield
-
-    /** Pago completado. */
-    val Payment = R.drawable.ic_payment_done
 
     // ============================================================
     // APARIENCIA

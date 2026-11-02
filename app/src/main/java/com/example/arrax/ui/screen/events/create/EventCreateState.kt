@@ -12,7 +12,7 @@ data class EventCreateState(
     // Step 1
     val name: String = "",
     val dateMillis: Long? = null,
-    val pigCount: Int = 1,
+    val animalCount: Int = 1,
 
     // Step 2
     val availableCuts: List<CutCatalog> = emptyList(),
@@ -27,7 +27,7 @@ data class EventCreateState(
     val createdEventId: String? = null
 ) {
     val canContinueFromBasicData: Boolean
-        get() = name.isNotBlank() && dateMillis != null && pigCount >= 1
+        get() = name.isNotBlank() && dateMillis != null && animalCount >= 1
 
     val selectedCuts: List<CutCatalog>
         get() = availableCuts.filter { it.id in selectedCutIds }

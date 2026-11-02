@@ -62,7 +62,7 @@ fun EventCreateScreen(
                 state.step == 0 -> EventBasicDataStep(
                     name = state.name,
                     dateMillis = state.dateMillis,
-                    pigCount = state.pigCount,
+                    pigCount = state.animalCount,
                     canContinue = state.canContinueFromBasicData,
                     onNameChange = viewModel::onNameChange,
                     onDateChange = viewModel::onDateChange,

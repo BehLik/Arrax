@@ -26,6 +26,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.arrax.R
+import com.example.arrax.core.designsystem.images.ArxImages
 import com.example.arrax.core.designsystem.theme.ArxTheme
 
 /**
@@ -52,7 +53,7 @@ fun ArxMountains(
     }
 
     Image(
-        painter = painterResource(R.drawable.bg_mountains),
+        painter = painterResource(ArxImages.BackgroundMountains),
         contentDescription = null, // decorativa: TalkBack la ignora
         contentScale = ContentScale.FillWidth,
         colorFilter = filter,

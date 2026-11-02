@@ -17,7 +17,7 @@ data class EventDto(
     @DocumentId val id: String = "",
     val name: String = "",
     val date: Long = 0L,
-    val pigCount: Int = 0,
+    val animalCount: Int = 0,
     val status: String = EventStatus.OPEN.name,
     val createdBy: String = ""
 )

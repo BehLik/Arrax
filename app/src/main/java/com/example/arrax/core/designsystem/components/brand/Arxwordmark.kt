@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.arrax.R
+import com.example.arrax.core.designsystem.images.ArxImages
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
 
@@ -60,7 +61,7 @@ fun ArxWordmark(
         )
     }
     Image(
-        painter = painterResource(R.drawable.logo_wordmark),
+        painter = painterResource(ArxImages.LogoWordmark),
         contentDescription = contentDescription,
         contentScale = ContentScale.Fit,
         colorFilter = filter,

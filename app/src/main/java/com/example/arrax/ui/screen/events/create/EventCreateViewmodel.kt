@@ -68,7 +68,7 @@ class EventCreateViewModel @Inject constructor(
     // Step 1 - basic data
     fun onNameChange(value: String) = _state.update { it.copy(name = value) }
     fun onDateChange(millis: Long) = _state.update { it.copy(dateMillis = millis) }
-    fun onPigCountChange(value: Int) = _state.update { it.copy(pigCount = value.coerceAtLeast(1)) }
+    fun onPigCountChange(value: Int) = _state.update { it.copy(animalCount = value.coerceAtLeast(1)) }
 
     fun onContinueFromBasicData() {
         if (_state.value.canContinueFromBasicData) {
@@ -116,7 +116,7 @@ class EventCreateViewModel @Inject constructor(
             val event = Event(
                 name = current.name,
                 date = current.dateMillis ?: 0L,
-                animalCount = current.pigCount,
+                animalCount = current.animalCount,
                 status = EventStatus.OPEN,
                 createdBy = uid
             )

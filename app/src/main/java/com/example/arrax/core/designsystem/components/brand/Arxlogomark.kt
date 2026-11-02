@@ -38,7 +38,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.arrax.R
+import com.example.arrax.core.designsystem.images.ArxImages
 import com.example.arrax.core.designsystem.theme.ArxBrand
 import com.example.arrax.core.designsystem.theme.ArxShapes
 import com.example.arrax.core.designsystem.theme.ArxSpacing
@@ -90,13 +90,13 @@ fun ArxLogoMark(
                 .aspectRatio(ArxLogoMarkDefaults.Aspect),
         ) {
             Image(
-                painter = painterResource(R.drawable.logo_mark_inner),
+                painter = painterResource(ArxImages.LogoMarkInner),
                 contentDescription = contentDescription,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier.fillMaxSize(),
             )
             Image(
-                painter = painterResource(R.drawable.logo_mark_outer),
+                painter = painterResource(ArxImages.LogoMarkOuter),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 colorFilter = if (outerColor.isSpecified) ColorFilter.tint(outerColor) else null,
@@ -118,7 +118,7 @@ fun ArxLogoMark(
             contentAlignment = Alignment.Center,
         ) {
             Image(
-                painter = painterResource(R.drawable.logo_mark),
+                painter = painterResource(ArxImages.LogoMark),
                 contentDescription = contentDescription,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
