@@ -38,7 +38,13 @@ import coil3.compose.AsyncImage
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.arrax.core.designsystem.theme.ArxTheme
 
@@ -76,6 +82,9 @@ fun ArxCatalogGridCard(
     subtitle: String? = null,
     onClick: (() -> Unit)? = null,
     onMenuClick: (() -> Unit)? = null,
+    onViewClick: (() -> Unit)? = null,
+    onEditClick: (() -> Unit)? = null,
+    onDeleteClick: (() -> Unit)? = null,
 ) {
     val colors = MaterialTheme.colorScheme
     val shape = RoundedCornerShape(20.dp)
@@ -90,12 +99,38 @@ fun ArxCatalogGridCard(
             .then(sizeModifier)
             .clip(shape)
             .background(colors.surface)
-            .border(BorderStroke(1.dp, colors.primary.copy(alpha = 0.25f)), shape)
-            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier),
+            .border(
+                BorderStroke(1.dp, colors.primary.copy(alpha = 0.25f)),
+                shape
+            )
+            .then(
+                if (onClick != null) {
+                    Modifier.clickable(onClick = onClick)
+                } else {
+                    Modifier
+                }
+            ),
     ) {
         when (variant) {
-            ArxCatalogCardVariant.List -> ListLayout(title, subtitle, image, onMenuClick)
-            else -> VerticalLayout(title, subtitle, image, onMenuClick)
+            ArxCatalogCardVariant.List -> ListLayout(
+                title = title,
+                subtitle = subtitle,
+                image = image,
+                onMenuClick = onMenuClick,
+                onViewClick = onViewClick,
+                onEditClick = onEditClick,
+                onDeleteClick = onDeleteClick,
+            )
+
+            else -> VerticalLayout(
+                title = title,
+                subtitle = subtitle,
+                image = image,
+                onMenuClick = onMenuClick,
+                onViewClick = onViewClick,
+                onEditClick = onEditClick,
+                onDeleteClick = onDeleteClick,
+            )
         }
     }
 }
@@ -106,6 +141,9 @@ private fun VerticalLayout(
     subtitle: String?,
     image: ArxCatalogImage,
     onMenuClick: (() -> Unit)?,
+    onViewClick: (() -> Unit)?,
+    onEditClick: (() -> Unit)?,
+    onDeleteClick: (() -> Unit)?,
 ) {
     Column(Modifier.fillMaxWidth()) {
         Box(
@@ -124,7 +162,20 @@ private fun VerticalLayout(
                     .padding(horizontal = 12.dp, vertical = 8.dp),
             )
         }
-        CatalogTextRow(title, subtitle, onMenuClick, Modifier.padding(start = 12.dp, end = 4.dp, top = 4.dp, bottom = 4.dp))
+        CatalogTextRow(
+            title = title,
+            subtitle = subtitle,
+            onMenuClick = onMenuClick,
+            onViewClick = onViewClick,
+            onEditClick = onEditClick,
+            onDeleteClick = onDeleteClick,
+            modifier = Modifier.padding(
+                start = 12.dp,
+                end = 4.dp,
+                top = 4.dp,
+                bottom = 4.dp
+            )
+        )
     }
 }
 
@@ -134,6 +185,9 @@ private fun ListLayout(
     subtitle: String?,
     image: ArxCatalogImage,
     onMenuClick: (() -> Unit)?,
+    onViewClick: (() -> Unit)?,
+    onEditClick: (() -> Unit)?,
+    onDeleteClick: (() -> Unit)?,
 ) {
     Row(
         modifier = Modifier
@@ -161,9 +215,15 @@ private fun ListLayout(
             title = title,
             subtitle = subtitle,
             onMenuClick = onMenuClick,
-            modifier = Modifier
-                .weight(1f)
-                .padding(start = 12.dp, end = 4.dp),
+            onViewClick = onViewClick,
+            onEditClick = onEditClick,
+            onDeleteClick = onDeleteClick,
+            modifier = Modifier.padding(
+                start = 12.dp,
+                end = 4.dp,
+                top = 4.dp,
+                bottom = 4.dp
+            )
         )
     }
 }
@@ -173,8 +233,13 @@ private fun CatalogTextRow(
     title: String,
     subtitle: String?,
     onMenuClick: (() -> Unit)?,
+    onViewClick: (() -> Unit)?,
+    onEditClick: (() -> Unit)?,
+    onDeleteClick: (() -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
+    var expanded by remember { mutableStateOf(false) }
+
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -188,6 +253,7 @@ private fun CatalogTextRow(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
+
             if (subtitle != null) {
                 Text(
                     text = subtitle,
@@ -198,13 +264,66 @@ private fun CatalogTextRow(
                 )
             }
         }
-        if (onMenuClick != null) {
-            IconButton(onClick = onMenuClick) {
-                Icon(
-                    imageVector = Icons.Filled.MoreVert,
-                    contentDescription = "Opciones de $title",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+
+        if (
+            onMenuClick != null ||
+            onViewClick != null ||
+            onEditClick != null ||
+            onDeleteClick != null
+        ) {
+            Box {
+                IconButton(
+                    onClick = {
+                        onMenuClick?.invoke()
+                        expanded = true
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.MoreVert,
+                        contentDescription = "Opciones de $title",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    if (onViewClick != null) {
+                        DropdownMenuItem(
+                            text = { Text("Ver") },
+                            onClick = {
+                                expanded = false
+                                onViewClick()
+                            }
+                        )
+                    }
+
+                    if (onEditClick != null) {
+                        DropdownMenuItem(
+                            text = { Text("Editar") },
+                            onClick = {
+                                expanded = false
+                                onEditClick()
+                            }
+                        )
+                    }
+
+                    if (onDeleteClick != null) {
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    "Eliminar",
+                                    color = MaterialTheme.colorScheme.error
+                                )
+                            },
+                            onClick = {
+                                expanded = false
+                                onDeleteClick()
+                            }
+                        )
+                    }
+                }
             }
         }
     }
@@ -267,7 +386,7 @@ private fun ArxCatalogGridCardPreview() {
             ArxCatalogGridCard(
                 title = "Corte Ribeye",
                 subtitle = "$250.00 / kg",
-                image = ArxCatalogImage.None, // Cambiar por ArxCatalogImage.Resource(R.drawable.tu_imagen) si tienes un recurso
+                image = ArxCatalogImage.None,
                 variant = ArxCatalogCardVariant.Grid,
                 onClick = {},
                 onMenuClick = {}
