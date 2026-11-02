@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -56,6 +57,7 @@ import com.google.api.Context
 fun BusinessCatalogScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit = {},
+    onEditClick: () -> Unit
 ) {
     var query by rememberSaveable { mutableStateOf("") }
     val cuts = remember { DefaultCuts }
@@ -66,6 +68,7 @@ fun BusinessCatalogScreen(
         onQueryChange = { query = it },
         onBackClick = onBackClick,
         modifier = modifier,
+        onEditClick = {}
     )
 }
 
@@ -77,11 +80,12 @@ internal fun BusinessCatalogContent(
     onQueryChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit = {},
-    onFilterClick: () -> Unit = {},
+    onEditClick: () -> Unit = {},
     onAddCutClick: () -> Unit = {},
     onCutClick: (CutOption) -> Unit = {},
     onCutMenuClick: (CutOption) -> Unit = {},
 ) {
+    var isGridView by rememberSaveable { mutableStateOf(true) }
     val visibleCuts = remember(cuts, query) {
         if (query.isBlank()) cuts else cuts.filter { it.name.contains(query.trim(), ignoreCase = true) }
     }
@@ -96,11 +100,26 @@ internal fun BusinessCatalogContent(
                     navigationType = ArxTopBarNavigationType.BACK,
                     onNavigationClick = onBackClick,
                     actions = {
-                        // Ajusta el nombre si tu ArxIcons usa otro (ej. ArxIcons.Filter)
                         ArxTopBarAction(
-                            iconRes = ArxIcons.Filter,
-                            contentDescription = "Filtros",
-                            onClick = onFilterClick,
+                            iconRes = if (isGridView) {
+                                ArxIcons.ViewList
+                            } else {
+                                ArxIcons.GridView
+                            },
+                            contentDescription = if (isGridView) {
+                                "Cambiar a vista de lista"
+                            } else {
+                                "Cambiar a vista de cuadrícula"
+                            },
+                            onClick = {
+                                isGridView = !isGridView
+                            }
+                        )
+
+                        ArxTopBarAction(
+                            iconRes = ArxIcons.Edit,
+                            contentDescription = "Editar",
+                            onClick = onEditClick
                         )
                     },
                 )
@@ -127,27 +146,63 @@ internal fun BusinessCatalogContent(
                             text = "No hay cortes que coincidan con \"$query\".",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(top = ArxSpacing.md),
+                            modifier = Modifier.padding(top = ArxSpacing.md)
                         )
                     } else {
-                        LazyVerticalGrid(
-                            columns = GridCells.Fixed(2),
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp),
-                            verticalArrangement = Arrangement.spacedBy(12.dp),
-                            // Espacio abajo para que el FAB no tape la última fila
-                            contentPadding = PaddingValues(top = 4.dp, bottom = 96.dp),
-                        ) {
-                            items(visibleCuts, key = { it.id }) { cut ->
-                                ArxCatalogGridCard(
-                                    title = cut.name,
-                                    image = cut.imageRes
-                                        ?.let { ArxCatalogImage.Resource(it) }
-                                        ?: ArxCatalogImage.None,
-                                    variant = ArxCatalogCardVariant.Grid,
-                                    onClick = { onCutClick(cut) },
-                                    onMenuClick = { onCutMenuClick(cut) },
+                        if (isGridView) {
+                            LazyVerticalGrid(
+                                columns = GridCells.Fixed(2),
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                verticalArrangement = Arrangement.spacedBy(12.dp),
+                                contentPadding = PaddingValues(
+                                    top = 4.dp,
+                                    bottom = 96.dp
                                 )
+                            ) {
+                                items(
+                                    items = visibleCuts,
+                                    key = { it.id }
+                                ) { cut ->
+                                    ArxCatalogGridCard(
+                                        title = cut.name,
+                                        image = cut.imageRes
+                                            ?.let { ArxCatalogImage.Resource(it) }
+                                            ?: ArxCatalogImage.None,
+                                        variant = ArxCatalogCardVariant.Grid,
+                                        onClick = { onCutClick(cut) },
+                                        onMenuClick = { onCutMenuClick(cut) }
+                                    )
+                                }
+                            }
+                        } else {
+                            androidx.compose.foundation.lazy.LazyColumn(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxWidth(),
+                                verticalArrangement = Arrangement.spacedBy(12.dp),
+                                contentPadding = PaddingValues(
+                                    top = 4.dp,
+                                    bottom = 96.dp
+                                )
+                            ) {
+                                items(
+                                    items = visibleCuts,
+                                    key = { it.id }
+                                ) { cut ->
+                                    ArxCatalogGridCard(
+                                        title = cut.name,
+                                        image = cut.imageRes
+                                            ?.let { ArxCatalogImage.Resource(it) }
+                                            ?: ArxCatalogImage.None,
+                                        variant = ArxCatalogCardVariant.List,
+                                        onClick = { onCutClick(cut) },
+                                        onMenuClick = { onCutMenuClick(cut) },
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
+                                }
                             }
                         }
                     }
