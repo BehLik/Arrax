@@ -35,9 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
 import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
-import com.example.arrax.core.designsystem.components.cards.ArxCatalogCardVariant
 import com.example.arrax.core.designsystem.components.cards.ArxCatalogGridCard
-import com.example.arrax.core.designsystem.components.cards.ArxCatalogImage
 import com.example.arrax.core.designsystem.components.inputs.ArxSearchField
 import com.example.arrax.core.designsystem.components.navigation.ArxTopBar
 import com.example.arrax.core.designsystem.components.navigation.ArxTopBarAction
@@ -47,7 +45,6 @@ import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
 import com.example.arrax.core.model.CutOption
 import com.example.arrax.core.model.DefaultCuts
-import com.google.api.Context
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -55,7 +52,18 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.togetherWith
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.lazy.LazyColumn
-
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.arrax.core.designsystem.components.cards.ArxCatalogMenuAction
+import com.example.arrax.core.designsystem.components.dialogs.ArxConfirmDialog
+import com.example.arrax.domain.model.CutCatalog
+import com.example.arrax.domain.model.CutOrigin
+import com.example.arrax.ui.screen.business.more.subscreen.catalog.component.CutEditorSheet
+import com.example.arrax.core.designsystem.components.cards.ArxCatalogCardVariant
+import com.example.arrax.core.designsystem.components.cards.ArxCatalogImage
 /**
  * Pantalla de catálogo de cortes.
  * Por ahora usa DefaultCuts (funciona sin internet); luego se conecta al ViewModel/Firestore.
@@ -64,37 +72,42 @@ import androidx.compose.foundation.lazy.LazyColumn
 fun BusinessCatalogScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit = {},
-    onEditClick: () -> Unit
+    viewModel: BusinessCatalogViewModel = hiltViewModel(),
 ) {
-    var query by rememberSaveable { mutableStateOf("") }
-    val cuts = remember { DefaultCuts }
-
-    BusinessCatalogContent(
-        cuts = cuts,
-        query = query,
-        onQueryChange = { query = it },
-        onBackClick = onBackClick,
-        modifier = modifier,
-        onEditClick = {}
-    )
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val actions = remember(viewModel, onBackClick) {
+        BusinessCatalogActions(
+            onBackClick = onBackClick,
+            onQueryChange = viewModel::onQueryChange,
+            onToggleView = viewModel::onToggleView,
+            onAddClick = viewModel::onAddClick,
+            onEditClick = viewModel::onEditClick,
+            onToggleActive = viewModel::onToggleActive,
+            onDeleteRequest = viewModel::onDeleteRequest,
+            onDeleteConfirm = viewModel::onDeleteConfirm,
+            onDeleteDismiss = viewModel::onDeleteDismiss,
+            onResetRequest = viewModel::onResetRequest,
+            onResetConfirm = viewModel::onResetConfirm,
+            onResetDismiss = viewModel::onResetDismiss,
+            onEditorChange = viewModel::onEditorChange,
+            onEditorSave = viewModel::onEditorSave,
+            onEditorDismiss = viewModel::onEditorDismiss,
+            onMessageShown = viewModel::onMessageShown,
+        )
+    }
+    BusinessCatalogContent(state = state, actions = actions, modifier = modifier)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun BusinessCatalogContent(
-    cuts: List<CutOption>,
-    query: String,
-    onQueryChange: (String) -> Unit,
+    state: BusinessCatalogState,
+    actions: BusinessCatalogActions,
     modifier: Modifier = Modifier,
-    onBackClick: () -> Unit = {},
-    onEditClick: () -> Unit = {},
-    onAddCutClick: () -> Unit = {},
-    onCutClick: (CutOption) -> Unit = {},
-    onCutMenuClick: (CutOption) -> Unit = {},
 ) {
-    var isGridView by rememberSaveable { mutableStateOf(true) }
-    val visibleCuts = remember(cuts, query) {
-        if (query.isBlank()) cuts else cuts.filter { it.name.contains(query.trim(), ignoreCase = true) }
+    val snackbar = remember { SnackbarHostState() }
+    LaunchedEffect(state.message) {
+        state.message?.let { snackbar.showSnackbar(it); actions.onMessageShown() }
     }
 
     ArxBackground(modifier, decoration = ArxDecoration.None) {
@@ -105,132 +118,75 @@ internal fun BusinessCatalogContent(
                     subtitle = "Administra el catálogo de cortes disponibles para tus eventos.",
                     centeredTitle = false,
                     navigationType = ArxTopBarNavigationType.BACK,
-                    onNavigationClick = onBackClick,
+                    onNavigationClick = actions.onBackClick,
                     actions = {
                         ArxTopBarAction(
-                            iconRes = if (isGridView) {
-                                ArxIcons.ViewList
-                            } else {
-                                ArxIcons.GridView
-                            },
-                            contentDescription = if (isGridView) {
-                                "Cambiar a vista de lista"
-                            } else {
-                                "Cambiar a vista de cuadrícula"
-                            },
-                            onClick = {
-                                isGridView = !isGridView
-                            }
+                            iconRes = if (state.isGridView) ArxIcons.ViewList else ArxIcons.GridView,
+                            contentDescription = if (state.isGridView) "Cambiar a vista de lista"
+                            else "Cambiar a vista de cuadrícula",
+                            onClick = actions.onToggleView,
                         )
                     },
                 )
 
                 Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = ArxSpacing.md),
+                    modifier = Modifier.weight(1f).padding(horizontal = ArxSpacing.md),
                     verticalArrangement = Arrangement.spacedBy(ArxSpacing.sm),
                 ) {
-                    CatalogHeader(
-                        title = "",
-                        subtitle = "Administra el catálogo de cortes disponibles para tus eventos.",
-                    )
-
                     ArxSearchField(
-                        query = query,
-                        onQueryChange = onQueryChange,
+                        query = state.query,
+                        onQueryChange = actions.onQueryChange,
                         placeholder = "Buscar corte...",
                     )
 
-                    if (visibleCuts.isEmpty()) {
+                    if (state.visibleCuts.isEmpty() && !state.isLoading) {
                         Text(
-                            text = "No hay cortes que coincidan con \"$query\".",
+                            text = "No hay cortes que coincidan con \"${state.query}\".",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(top = ArxSpacing.md)
+                            modifier = Modifier.padding(top = ArxSpacing.md),
                         )
                     } else {
                         AnimatedContent(
-                            targetState = isGridView,
-                            modifier = Modifier
-                                .weight(1f)
-                                .fillMaxWidth(),
+                            targetState = state.isGridView,
+                            modifier = Modifier.weight(1f).fillMaxWidth(),
                             transitionSpec = {
-                                (
-                                        fadeIn(
-                                            animationSpec = tween(durationMillis = 180)
-                                        ) + scaleIn(
-                                            initialScale = 0.98f,
-                                            animationSpec = tween(durationMillis = 180)
-                                        )
-                                        ) togetherWith fadeOut(
-                                    animationSpec = tween(durationMillis = 100)
-                                )
+                                (fadeIn(tween(180)) + scaleIn(initialScale = 0.98f, animationSpec = tween(180))) togetherWith
+                                        fadeOut(tween(100))
                             },
-                            label = "CatalogViewTransition"
+                            label = "CatalogViewTransition",
                         ) { gridView ->
-
+                            val padding = PaddingValues(top = 4.dp, bottom = 96.dp)
                             if (gridView) {
                                 LazyVerticalGrid(
                                     columns = GridCells.Fixed(2),
                                     modifier = Modifier.fillMaxSize(),
                                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                                     verticalArrangement = Arrangement.spacedBy(12.dp),
-                                    contentPadding = PaddingValues(
-                                        top = 4.dp,
-                                        bottom = 96.dp
-                                    )
+                                    contentPadding = padding,
                                 ) {
-                                    items(
-                                        items = visibleCuts,
-                                        key = { it.id }
-                                    ) { cut ->
-                                        ArxCatalogGridCard(
-                                            title = cut.name,
-                                            image = cut.imageRes
-                                                ?.let { ArxCatalogImage.Resource(it) }
-                                                ?: ArxCatalogImage.None,
-                                            variant = ArxCatalogCardVariant.Grid,
-                                            onClick = { onCutClick(cut) },
-                                            onMenuClick = { onCutMenuClick(cut) }
-                                        )
+                                    items(state.visibleCuts, key = { it.id }) { cut ->
+                                        CutCard(cut, ArxCatalogCardVariant.Grid, actions)
                                     }
                                 }
                             } else {
                                 LazyColumn(
                                     modifier = Modifier.fillMaxSize(),
                                     verticalArrangement = Arrangement.spacedBy(12.dp),
-                                    contentPadding = PaddingValues(
-                                        top = 4.dp,
-                                        bottom = 96.dp
-                                    )
+                                    contentPadding = padding,
                                 ) {
-                                    items(
-                                        items = visibleCuts,
-                                        key = { it.id }
-                                    ) { cut ->
-                                        ArxCatalogGridCard(
-                                            title = cut.name,
-                                            image = cut.imageRes
-                                                ?.let { ArxCatalogImage.Resource(it) }
-                                                ?: ArxCatalogImage.None,
-                                            variant = ArxCatalogCardVariant.List,
-                                            onClick = { onCutClick(cut) },
-                                            onMenuClick = { onCutMenuClick(cut) },
-                                            modifier = Modifier.fillMaxWidth()
-                                        )
+                                    items(state.visibleCuts, key = { it.id }) { cut ->
+                                        CutCard(cut, ArxCatalogCardVariant.List, actions, Modifier.fillMaxWidth())
                                     }
                                 }
                             }
-
                         }
                     }
                 }
             }
 
-            // Si ya tienes ArxFab, cámbialo aquí.
             FloatingActionButton(
-                onClick = onAddCutClick,
+                onClick = actions.onAddClick,
                 shape = CircleShape,
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
@@ -238,13 +194,66 @@ internal fun BusinessCatalogContent(
                     .align(Alignment.BottomEnd)
                     .windowInsetsPadding(WindowInsets.navigationBars)
                     .padding(ArxSpacing.md),
-            ) {
-                Icon(Icons.Filled.Add, contentDescription = "Agregar corte")
-            }
+            ) { Icon(Icons.Filled.Add, contentDescription = "Agregar corte") }
+
+            SnackbarHost(snackbar, Modifier.align(Alignment.BottomCenter))
         }
     }
-}
 
+    state.editor?.let {
+        CutEditorSheet(it, actions.onEditorChange, actions.onEditorSave, actions.onEditorDismiss)
+    }
+    state.cutToDelete?.let {
+        ArxConfirmDialog(
+            title = "Eliminar corte",
+            message = "¿Eliminar \"${it.name}\" de tu catálogo? Los eventos anteriores conservan su nombre.",
+            confirmLabel = "Eliminar", destructive = true,
+            onConfirm = actions.onDeleteConfirm, onDismiss = actions.onDeleteDismiss,
+        )
+    }
+    state.cutToReset?.let {
+        ArxConfirmDialog(
+            title = "Restablecer corte",
+            message = "\"${it.name}\" volverá al nombre, estado y descripción originales del sistema.",
+            confirmLabel = "Restablecer",
+            onConfirm = actions.onResetConfirm, onDismiss = actions.onResetDismiss,
+        )
+    }
+}
+@Composable
+private fun CutCard(
+    cut: CutCatalog,
+    variant: ArxCatalogCardVariant,
+    actions: BusinessCatalogActions,
+    modifier: Modifier = Modifier,
+) {
+    ArxCatalogGridCard(
+        title = cut.name,
+        subtitle = cut.state.label + if (!cut.active) " · Oculto" else "",
+        tag = when (cut.origin) {
+            CutOrigin.DEFAULT -> "Sistema"
+            CutOrigin.MODIFIED -> "Modificado"
+            CutOrigin.CUSTOM -> "Personalizado"
+        },
+        image = cut.imageRes?.let { ArxCatalogImage.Resource(it) }
+            ?: cut.imageUrl?.let { ArxCatalogImage.Remote(it) }
+            ?: ArxCatalogImage.None,
+        variant = variant,
+        muted = !cut.active,
+        onClick = { actions.onEditClick(cut) },
+        menuActions = buildList {
+            add(ArxCatalogMenuAction("Editar") { actions.onEditClick(cut) })
+            add(ArxCatalogMenuAction(if (cut.active) "Ocultar" else "Mostrar") { actions.onToggleActive(cut) })
+            if (cut.origin == CutOrigin.MODIFIED) {
+                add(ArxCatalogMenuAction("Restablecer original") { actions.onResetRequest(cut) })
+            }
+            if (cut.origin == CutOrigin.CUSTOM) {
+                add(ArxCatalogMenuAction("Eliminar", destructive = true) { actions.onDeleteRequest(cut) })
+            }
+        },
+        modifier = modifier,
+    )
+}
 @Composable
 private fun CatalogHeader(
     title: String,
@@ -265,26 +274,26 @@ private fun CatalogHeader(
     }
 }
 
-@Preview(showBackground = true, widthDp = 390, heightDp = 844, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun BusinessCatalogScreenPreview() {
-    ArxTheme {
-        BusinessCatalogContent(
-            cuts = DefaultCuts,
-            query = "",
-            onQueryChange = {},
-        )
-    }
-}
-
-@Preview(showBackground = true, widthDp = 390, heightDp = 844)
-@Composable
-private fun BusinessCatalogScreenSearchPreview() {
-    ArxTheme {
-        BusinessCatalogContent(
-            cuts = DefaultCuts,
-            query = "co",
-            onQueryChange = {},
-        )
-    }
-}
+//@Preview(showBackground = true, widthDp = 390, heightDp = 844, uiMode = Configuration.UI_MODE_NIGHT_YES)
+//@Composable
+//private fun BusinessCatalogScreenPreview() {
+//    ArxTheme {
+//        BusinessCatalogContent(
+//            cuts = DefaultCuts,
+//            query = "",
+//            onQueryChange = {},
+//        )
+//    }
+//}
+//
+//@Preview(showBackground = true, widthDp = 390, heightDp = 844)
+//@Composable
+//private fun BusinessCatalogScreenSearchPreview() {
+//    ArxTheme {
+//        BusinessCatalogContent(
+//            cuts = DefaultCuts,
+//            query = "co",
+//            onQueryChange = {},
+//        )
+//    }
+//}

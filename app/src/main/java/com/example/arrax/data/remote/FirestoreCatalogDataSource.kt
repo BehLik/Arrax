@@ -15,7 +15,10 @@ import javax.inject.Singleton
 data class CutCatalogDto(
     @DocumentId val id: String = "",
     val name: String = "",
-    val active: Boolean = true
+    val state: String? = null,
+    val description: String? = null,
+    val imageUrl: String? = null,
+    val active: Boolean = true,
 )
 
 @Singleton
@@ -37,13 +40,25 @@ class FirestoreCatalogDataSource @Inject constructor(
 
     // Seeds DefaultCuts using the stable English id as document id (idempotent and matches
     // CutOption.id), and the Spanish display name as the stored name.
+    fun newId(tenantId: String): String = catalog(tenantId).document().id
+
+    suspend fun upsert(tenantId: String, dto: CutCatalogDto) {
+        catalog(tenantId).document(dto.id).set(dto).await()
+    }
+
+    suspend fun delete(tenantId: String, cutId: String) {
+        catalog(tenantId).document(cutId).delete().await()
+    }
+
     suspend fun seedIfEmpty(tenantId: String) {
         val existing = catalog(tenantId).get().await()
         if (!existing.isEmpty) return
         val batch = firestore.batch()
         DefaultCuts.forEach { cut ->
-            val ref = catalog(tenantId).document(cut.id)
-            batch.set(ref, CutCatalogDto(id = cut.id, name = cut.name, active = true))
+            batch.set(
+                catalog(tenantId).document(cut.id),
+                CutCatalogDto(cut.id, cut.name, cut.state.name, cut.description, null, true)
+            )
         }
         batch.commit().await()
     }

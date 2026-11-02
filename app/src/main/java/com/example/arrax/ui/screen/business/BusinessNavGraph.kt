@@ -143,7 +143,6 @@ private fun NavGraphBuilder.businessMore(nav: NavController) {
     composable<BusinessCatalog> {
         BusinessCatalogScreen(
             onBackClick = back,
-            onEditClick = {}
 
 
         )
