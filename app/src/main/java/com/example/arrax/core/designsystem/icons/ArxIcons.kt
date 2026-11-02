@@ -478,7 +478,12 @@ object ArxIcons {
 
     /** Ubicación física. */
     val Location = R.drawable.ic_location
-
+    /**Ubicacion fisica denegada*/
+    val LocationOff=R.drawable.ic_location_off
+    /**Buscando ubicacion*/
+    val LocationShare=R.drawable.ic_share_location
+    /**Origin travel*/
+    val TripOrigin=R.drawable.ic_trip_origin
     // ============================================================
     // APARIENCIA
     // ============================================================
