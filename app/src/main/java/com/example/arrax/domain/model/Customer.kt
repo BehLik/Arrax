@@ -7,4 +7,5 @@ data class Customer(
     val address: String = "",
     val reference: String = "",
     val photoUrl: String? = null,
+    val createdAt: Long = 0L,
 )

@@ -18,13 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import javax.inject.Inject
 import com.example.arrax.core.common.NetworkMonitor
 import com.example.arrax.core.common.expiryLabel
@@ -42,7 +36,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.launchIn
-import com.example.arrax.core.common.toLabel
 import com.example.arrax.ui.screen.business.more.subscreen.members.subscreen.invitation.toLabel
 
 @HiltViewModel
@@ -83,7 +76,7 @@ class BusinessMembersViewModel @Inject constructor(
                     )
                 }
             }
-            .launchIn(viewModelScope)          // <- faltaba
+            .launchIn(viewModelScope)
 
         combine(observeInvitations(businessId), clock) { list, now ->
             val (active, expired) = list

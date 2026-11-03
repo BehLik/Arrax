@@ -3,6 +3,7 @@ package com.example.arrax.di
 
 import com.example.arrax.data.repository.AuthRepositoryImpl
 import com.example.arrax.data.repository.CatalogCutRepositoryImpl
+import com.example.arrax.data.repository.CustomerRepositoryImpl
 import com.example.arrax.data.repository.EventRepositoryImpl
 import com.example.arrax.data.repository.InviteRepositoryImpl
 import com.example.arrax.data.repository.NotificationRepositoryImpl
@@ -10,6 +11,7 @@ import com.example.arrax.data.repository.PreferencesRepositoryImpl
 import com.example.arrax.data.repository.TenantRepositoryImpl
 import com.example.arrax.data.repository.UserRepositoryImpl
 import com.example.arrax.domain.repository.AuthRepository
+import com.example.arrax.domain.repository.CustomerRepository
 import com.example.arrax.domain.repository.CutCatalogRepository
 import com.example.arrax.domain.repository.EventRepository
 import com.example.arrax.domain.repository.InviteRepository
@@ -50,4 +52,6 @@ abstract class RepositoryModule {
     abstract fun bindInviteRepository(impl: InviteRepositoryImpl): InviteRepository
     @Binds @Singleton
     abstract fun bindNotificationRepository(impl: NotificationRepositoryImpl): NotificationRepository
+    @Binds @Singleton
+    abstract fun bindCustomerRepository(impl: CustomerRepositoryImpl): CustomerRepository
 }

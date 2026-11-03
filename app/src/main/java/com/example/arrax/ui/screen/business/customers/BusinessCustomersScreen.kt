@@ -16,6 +16,7 @@ import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
 import com.example.arrax.core.designsystem.components.backgrounds.ArxScreenSurface
 import com.example.arrax.core.designsystem.components.inputs.ArxSearchField
 import com.example.arrax.core.designsystem.components.navigation.ArxTopBar
+import com.example.arrax.core.designsystem.components.navigation.ArxTopBarNavigationType
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
 import com.example.arrax.ui.screen.business.customers.component.AddCustomerAction
@@ -51,12 +52,12 @@ internal fun BusinessCustomersContent(
     onCustomerClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
         ArxBackground(decoration = ArxDecoration.None) {
             Column(modifier = Modifier.fillMaxSize()) {
                 ArxTopBar(
                     title = "Clientes",
                     centeredTitle = false,
+                    navigationType = ArxTopBarNavigationType.BACK ,
                     actions = { AddCustomerAction(onClick = onAddCustomerClick) }
                 )
 
@@ -79,7 +80,7 @@ internal fun BusinessCustomersContent(
                     CustomersEmptyState(
                         isSearching = state.query.isNotBlank(),
                         modifier = Modifier.weight(1f),
-                        onAddClick ={}
+                        onAddClick =onAddCustomerClick
                     )
                 } else {
                     CustomersList(

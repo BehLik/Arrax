@@ -32,7 +32,7 @@ fun CustomerAddScreen(
     onBack: () -> Unit,
     onDone: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: CustomerAddViewModel = hiltViewModel(),
+    viewModel: CustomerAddViewmodel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val actions = remember(viewModel, onBack) {

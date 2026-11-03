@@ -147,8 +147,6 @@ private fun NavGraphBuilder.businessMore(nav: NavController) {
     composable<BusinessCatalog> {
         BusinessCatalogScreen(
             onBackClick = back,
-
-
         )
     }
     composable<BusinessHistory> { PlaceholderScreen("Historial del negocio", back) }

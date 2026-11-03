@@ -14,9 +14,9 @@ internal fun AddCustomerAction(
 ) {
     IconButton(onClick = onClick, modifier = modifier) {
         ArxIcon(
-            icon = ArxIcons.Add,
+            icon = ArxIcons.PersonAdd,
             contentDescription = "Agregar cliente",
-            tint = MaterialTheme.colorScheme.primary
+            tint = MaterialTheme.colorScheme.onBackground
         )
     }
 }
