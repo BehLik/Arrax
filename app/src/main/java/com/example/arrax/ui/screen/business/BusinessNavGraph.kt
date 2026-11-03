@@ -10,6 +10,8 @@ import com.example.arrax.ui.root.navigation.backAction
 import com.example.arrax.ui.root.navigation.safeNavigate
 import com.example.arrax.ui.screen.business.alerts.BusinessAlertsScreen
 import com.example.arrax.ui.screen.business.customers.BusinessCustomersScreen
+import com.example.arrax.ui.screen.business.customers.subscreen.add.CustomerAddScreen
+import com.example.arrax.ui.screen.business.customers.subscreen.view.CustomerViewScreen
 import com.example.arrax.ui.screen.business.home.BusinessHomeScreen
 import com.example.arrax.ui.screen.business.more.BusinessMoreScreen
 import com.example.arrax.ui.screen.business.more.subscreen.catalog.BusinessCatalogScreen
@@ -99,21 +101,23 @@ private fun NavGraphBuilder.businessCustomers(nav: NavController) {
     composable<BusinessCustomers> { entry ->
         val args = entry.toRoute<BusinessCustomers>()
         BusinessCustomersScreen(
-            onAddCustomerClick = { nav.safeNavigate(BusinessCustomerEdit(args.businessId)) },
-            onCustomerClick = { id -> nav.safeNavigate(BusinessCustomerDetail(args.businessId, id)) }
+            onAddCustomerClick = { nav.safeNavigate(BusinessCustomerAdd(args.businessId)) },
+            onCustomerClick = { id -> nav.safeNavigate(BusinessCustomerView(args.businessId, id)) }
         )
     }
 
-    composable<BusinessCustomerEdit> { entry ->
-        val args = entry.toRoute<BusinessCustomerEdit>()
-        // TODO: al guardar -> nav.safePopBackStack()
-        PlaceholderScreen(
-            title = if (args.customerId == null) "Nuevo cliente" else "Editar cliente",
-            onBack = back
-        )
+    composable<BusinessCustomerAdd> {
+        CustomerAddScreen(onBack = back, onDone = back)
     }
 
-    composable<BusinessCustomerDetail> { PlaceholderScreen("Detalle del cliente", back) }
+    composable<BusinessCustomerView> { entry ->
+        val args = entry.toRoute<BusinessCustomerView>()
+        CustomerViewScreen(
+            onBack = back,
+            onEditClick = { id -> nav.safeNavigate(BusinessCustomerAdd(args.businessId, id)) },
+            onDeleted = back,
+        )
+    }
 }
 
 // ── Más: administración, información y salida del negocio ──
