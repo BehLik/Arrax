@@ -1,4 +1,4 @@
-package com.example.arrax.ui.screen.lobby.create
+package com.example.arrax.ui.screen.lobby.business
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,12 +11,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,16 +39,12 @@ import com.example.arrax.core.designsystem.components.buttons.ArxPrimaryButton
 import com.example.arrax.core.designsystem.components.display.ArxStepLoading
 import com.example.arrax.core.designsystem.components.inputs.ArxTextField
 import com.example.arrax.core.designsystem.icons.ArxIcon
-import com.example.arrax.core.designsystem.icons.ArxIconBadge
-import com.example.arrax.core.designsystem.icons.ArxIconShape
-import com.example.arrax.core.designsystem.icons.ArxIconStyle
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
-import com.example.arrax.core.designsystem.theme.extendedColors
 import com.example.arrax.domain.usecase.business.create.CreateBusinessUseCase
-import com.example.arrax.ui.screen.lobby.create.component.CreateHeaderBusiness
-import com.example.arrax.ui.screen.lobby.create.component.ErrorBanner
-import com.example.arrax.ui.screen.lobby.create.component.OwnerPrivilegesCard
+import com.example.arrax.ui.screen.lobby.business.component.CreateHeaderBusiness
+import com.example.arrax.ui.screen.lobby.business.component.ErrorBanner
+import com.example.arrax.ui.screen.lobby.business.component.OwnerPrivilegesCard
 
 @Composable
 fun LobbyBusinessCreateScreen(

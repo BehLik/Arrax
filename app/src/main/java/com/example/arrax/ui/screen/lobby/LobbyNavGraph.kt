@@ -17,7 +17,7 @@ import com.example.arrax.ui.root.navigation.backAction
 import com.example.arrax.ui.root.navigation.logoutToAuth
 import com.example.arrax.ui.root.navigation.safeNavigate
 import com.example.arrax.ui.root.session.LocalCurrentUser
-import com.example.arrax.ui.screen.lobby.create.LobbyBusinessCreateScreen
+import com.example.arrax.ui.screen.lobby.business.LobbyBusinessCreateScreen
 import com.example.arrax.ui.screen.lobby.home.LobbyHomeScreen
 import com.example.arrax.ui.screen.lobby.join.LobbyJoinEvent
 import com.example.arrax.ui.screen.lobby.join.LobbyJoinScreen

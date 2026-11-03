@@ -1,4 +1,4 @@
-package com.example.arrax.ui.screen.lobby.create.component
+package com.example.arrax.ui.screen.lobby.business.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

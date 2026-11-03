@@ -1,4 +1,4 @@
-package com.example.arrax.ui.screen.lobby.create
+package com.example.arrax.ui.screen.lobby.business
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -1,4 +1,4 @@
-package com.example.arrax.ui.screen.lobby.create
+package com.example.arrax.ui.screen.lobby.business
 
 data class LobbyBusinessCreateState(
     val name: String = "",
