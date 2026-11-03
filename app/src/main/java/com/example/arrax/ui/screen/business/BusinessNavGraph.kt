@@ -118,7 +118,6 @@ private fun NavGraphBuilder.businessCustomers(nav: NavController) {
         )
     }
 }
-
 // ── Más: administración, información y salida del negocio ──
 private fun NavGraphBuilder.businessMore(nav: NavController) {
     val back = nav.backAction()
@@ -130,6 +129,7 @@ private fun NavGraphBuilder.businessMore(nav: NavController) {
             onCatalogClick = { nav.safeNavigate(BusinessCatalog(args.businessId)) },
             onHistoryClick = { nav.safeNavigate(BusinessHistory(args.businessId)) },
             onSettingsClick = { nav.safeNavigate(BusinessSettings(args.businessId)) },
+            onBack = back,
             // TODO: Ayuda y Acerca de (rutas aún no definidas).
             onHelpClick = {},
 //            onAboutClick = {},

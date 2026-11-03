@@ -18,6 +18,7 @@ import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
 import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
 import com.example.arrax.core.designsystem.components.backgrounds.ArxScreenSurface
 import com.example.arrax.core.designsystem.components.navigation.ArxTopBar
+import com.example.arrax.core.designsystem.components.navigation.ArxTopBarNavigationType
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
 import com.example.arrax.ui.screen.business.more.component.LeaveBusinessButton
@@ -34,6 +35,7 @@ fun BusinessMoreScreen(
     onSettingsClick: () -> Unit = {},
     onHelpClick: () -> Unit = {},
     onAboutClick: () -> Unit = {},
+    onBack:()-> Unit={},
     onLeaveBusinessClick: () -> Unit = {},
     viewModel: BusinessMoreViewModel = hiltViewModel()
 ) {
@@ -46,6 +48,7 @@ fun BusinessMoreScreen(
         onSettingsClick = onSettingsClick,
         onHelpClick = onHelpClick,
         onAboutClick = onAboutClick,
+        onBack = onBack,
         onLeaveBusinessClick = onLeaveBusinessClick,
         modifier = modifier
     )
@@ -61,12 +64,13 @@ internal fun BusinessMoreContent(
     onSettingsClick: () -> Unit,
     onHelpClick: () -> Unit,
     onAboutClick: () -> Unit,
+    onBack:()-> Unit,
     onLeaveBusinessClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     ArxBackground(modifier = modifier, decoration = ArxDecoration.None) {
         Column(modifier = Modifier.fillMaxSize()) {
-            ArxTopBar(title = "Más", centeredTitle = false)
+            ArxTopBar(title = "Más", centeredTitle = false, navigationType = ArxTopBarNavigationType.BACK, onNavigationClick = onBack)
 
             Column(
                 modifier = Modifier
@@ -101,7 +105,7 @@ private fun BusinessMorePreview() {
         BusinessMoreContent(
             state = BusinessMoreState(appVersion = "1.0.0"),
             onTeamClick = {}, onCatalogClick = {}, onHistoryClick = {}, onSettingsClick = {},
-            onHelpClick = {}, onAboutClick = {}, onLeaveBusinessClick = {}
+            onBack = {}, onHelpClick = {}, onAboutClick = {}, onLeaveBusinessClick = {}
         )
     }
 }

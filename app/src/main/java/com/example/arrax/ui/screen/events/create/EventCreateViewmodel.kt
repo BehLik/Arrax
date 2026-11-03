@@ -40,7 +40,7 @@ class EventCreateViewModel @Inject constructor(
         viewModelScope.launch {
             val role = sessionLocalDataSource.role.first()
             _state.update {
-                it.copy(isAdmin = role.equals("ADMIN", ignoreCase = true), isCheckingRole = false)
+                it.copy(isAdmin = role.equals("Owner", ignoreCase = true), isCheckingRole = false)
             }
             loadCatalog()
         }
