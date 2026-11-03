@@ -1,6 +1,4 @@
 package com.example.arrax.data.remote
-//
-//package com.example.arrax.data.remote
 
 import android.util.Log
 import com.example.arrax.core.common.FirestorePaths
@@ -23,7 +21,7 @@ data class CustomerDto(
     val address: String? = null,
     val reference: String? = null,
     val photoUrl: String? = null,
-    val lastDeliveryLocation: GeoPoint? = null, // F4: lo escribe la entrega, nunca el formulario
+    val lastDeliveryLocation: GeoPoint? = null,
     val lastDeliveryAt: Long? = null,
     val createdAt: Long = 0L,
     val createdBy: String = "",

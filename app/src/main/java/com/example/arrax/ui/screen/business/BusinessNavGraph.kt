@@ -39,12 +39,10 @@ private fun NavGraphBuilder.businessCore(nav: NavController) {
             // TODO: cuando onEventClick reciba el id -> nav.safeNavigate(EventHome(args.businessId, eventId))
             onEventClick = { nav.safeNavigate(BusinessEvents(args.businessId)) },
             // Tocar el negocio activo lleva a la lista de negocios (cambiar de negocio).
-            onBusinessClick = { nav.safeNavigate(MyBusinesses) },
+            onBusinessClick = { nav.safeNavigate(LobbyGraph) },
             onMoreClick = { nav.safeNavigate(BusinessMore(args.businessId)) },
             onAlertsClick = { nav.safeNavigate(BusinessAlerts(args.businessId)) },
             onCustomersClick = { nav.safeNavigate(BusinessCustomers(args.businessId)) },
-//            onTeamClick = { nav.safeNavigate(BusinessMembers(args.businessId)) },
-//            onCutsClick = { nav.safeNavigate(BusinessCatalog(args.businessId)) }
         )
     }
 
@@ -101,6 +99,7 @@ private fun NavGraphBuilder.businessCustomers(nav: NavController) {
     composable<BusinessCustomers> { entry ->
         val args = entry.toRoute<BusinessCustomers>()
         BusinessCustomersScreen(
+            onBack =back,
             onAddCustomerClick = { nav.safeNavigate(BusinessCustomerAdd(args.businessId)) },
             onCustomerClick = { id -> nav.safeNavigate(BusinessCustomerView(args.businessId, id)) }
         )

@@ -29,16 +29,18 @@ fun BusinessCustomersScreen(
     modifier: Modifier = Modifier,
     onAddCustomerClick: () -> Unit = {},
     onCustomerClick: (customerId: String) -> Unit = {},
+    onBack:()-> Unit={},
     viewModel: BusinessCustomersViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     BusinessCustomersContent(
         state = state,
+        onBack = onBack,
         onQueryChange = viewModel::onQueryChange,
         onTabSelected = viewModel::onTabSelected,
         onAddCustomerClick = onAddCustomerClick,
         onCustomerClick = onCustomerClick,
-        modifier = modifier
+    modifier = modifier
     )
 }
 
@@ -50,6 +52,7 @@ internal fun BusinessCustomersContent(
     onTabSelected: (CustomersTab) -> Unit,
     onAddCustomerClick: () -> Unit,
     onCustomerClick: (String) -> Unit,
+    onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
         ArxBackground(decoration = ArxDecoration.None) {
@@ -58,7 +61,8 @@ internal fun BusinessCustomersContent(
                     title = "Clientes",
                     centeredTitle = false,
                     navigationType = ArxTopBarNavigationType.BACK ,
-                    actions = { AddCustomerAction(onClick = onAddCustomerClick) }
+                    onNavigationClick = onBack,
+                    actions = { AddCustomerAction(onClick = onAddCustomerClick)}
                 )
 
                 ArxSearchField(
@@ -113,7 +117,7 @@ private fun BusinessCustomersPreview() {
                     CustomerUi("5", "JM", "José Martínez", "+52 773 111 7799", 3)
                 )
             ),
-            onQueryChange = {}, onTabSelected = {}, onAddCustomerClick = {}, onCustomerClick = {}
+            onBack = {}, onQueryChange = {}, onTabSelected = {}, onAddCustomerClick = {}, onCustomerClick = {}
         )
     }
 }

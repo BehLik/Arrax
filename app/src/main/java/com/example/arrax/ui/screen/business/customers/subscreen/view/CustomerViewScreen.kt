@@ -7,12 +7,15 @@ import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -33,10 +36,17 @@ import com.example.arrax.core.designsystem.components.buttons.ArxTextButton
 import com.example.arrax.core.designsystem.components.dialogs.ArxConfirmDialog
 import com.example.arrax.core.designsystem.components.navigation.ArxTopBar
 import com.example.arrax.core.designsystem.components.navigation.ArxTopBarNavigationType
+import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.ui.screen.business.customers.subscreen.view.component.CustomerContactSection
 import com.example.arrax.ui.screen.business.customers.subscreen.view.component.CustomerHeader
 import com.example.arrax.ui.screen.business.customers.subscreen.view.component.CustomerOrdersSection
+import androidx.compose.ui.res.painterResource
+import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 
 @Composable
 fun CustomerViewScreen(
@@ -114,14 +124,36 @@ internal fun CustomerViewContent(
                         CustomerHeader(customer)
                         CustomerContactSection(customer, actions.onCallClick, actions.onMapsClick)
                         CustomerOrdersSection()
-                        ArxSecondaryButton(text = "Editar", onClick = actions.onEditClick)
-                        ArxTextButton(
-                            text = "Eliminar cliente",
-                            onClick = actions.onDeleteRequest,
-                            isDestructive = true,
-                            enabled = !state.isDeleting,
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
-                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(ArxSpacing.sm),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            ArxSecondaryButton(
+                                text = "Editar",
+                                onClick = actions.onEditClick,
+                                modifier = Modifier.weight(1f),
+                                leadingIcon = {
+                                    Icon(
+                                       painter = painterResource(id = ArxIcons.Edit),
+                                        contentDescription = null,
+                                    )
+                                },
+                            )
+                            ArxTextButton(
+                                text = "Eliminar",
+                                onClick = actions.onDeleteRequest,
+                                modifier = Modifier.weight(1f),
+                                isDestructive = true,
+                                enabled = !state.isDeleting,
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(id=ArxIcons.Delete) ,
+                                        contentDescription = null,
+                                    )
+                                },
+                            )
+                        }
                     }
                 }
             }

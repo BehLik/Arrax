@@ -172,7 +172,8 @@ fun ArxTextButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     isDestructive: Boolean = false,
-    contentColor: Color = MaterialTheme.colorScheme.primary
+    contentColor: Color = MaterialTheme.colorScheme.primary,
+    leadingIcon: (@Composable () -> Unit)? = null,
 ) {
     TextButton(
         onClick = onClick,
