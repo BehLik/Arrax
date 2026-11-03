@@ -12,6 +12,7 @@ import com.example.arrax.ui.screen.business.alerts.BusinessAlertsScreen
 import com.example.arrax.ui.screen.business.customers.BusinessCustomersScreen
 import com.example.arrax.ui.screen.business.customers.subscreen.add.CustomerAddScreen
 import com.example.arrax.ui.screen.business.customers.subscreen.view.CustomerViewScreen
+import com.example.arrax.ui.screen.business.event.BusinessEventCreateScreen
 import com.example.arrax.ui.screen.business.home.BusinessHomeScreen
 import com.example.arrax.ui.screen.business.more.BusinessMoreScreen
 import com.example.arrax.ui.screen.business.more.subscreen.catalog.BusinessCatalogScreen
@@ -51,6 +52,10 @@ private fun NavGraphBuilder.businessCore(nav: NavController) {
         PlaceholderScreen("Eventos del negocio", back)
     }
     composable<EventCreate>{
+        BusinessEventCreateScreen(
+            onBack = {},
+            onEventCreated = {}
+        )
 
     }
 }

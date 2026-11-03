@@ -16,7 +16,7 @@ import com.example.arrax.core.designsystem.components.buttons.ArxPrimaryButton
 import com.example.arrax.core.designsystem.components.inputs.ArxTextField
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.domain.model.CutCatalog
-import com.example.arrax.ui.screen.events.create.PriceInput
+import com.example.arrax.ui.screen.business.event.component.PriceInput
 
 @Composable
 fun EventCutsPriceStep(

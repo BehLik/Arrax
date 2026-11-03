@@ -24,17 +24,17 @@ fun NavGraphBuilder.eventGraph(nav: NavController) {
 private fun NavGraphBuilder.eventCore(nav: NavController) {
     val back = nav.backAction()
 
-    composable<EventCreate> { entry ->
-        val args = entry.toRoute<EventCreate>()
-        EventCreateScreen(
-            onBack = back,
-            onEventCreated = { eventId ->
-                nav.safeNavigate(EventHome(args.businessId, eventId)) {
-                    popUpTo<EventCreate> { inclusive = true }
-                }
-            }
-        )
-    }
+//    composable<EventCreate> { entry ->
+//        val args = entry.toRoute<EventCreate>()
+//        EventCreateScreen(
+//            onBack = back,
+//            onEventCreated = { eventId ->
+//                nav.safeNavigate(EventHome(args.businessId, eventId)) {
+//                    popUpTo<EventCreate> { inclusive = true }
+//                }
+//            }
+//        )
+//    }
 
     composable<EventHome> {
         EventDetailScreen(onBack = back)

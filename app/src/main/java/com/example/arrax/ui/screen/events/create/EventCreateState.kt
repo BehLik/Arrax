@@ -2,6 +2,7 @@ package com.example.arrax.ui.screen.events.create
 
 import androidx.compose.runtime.Immutable
 import com.example.arrax.domain.model.CutCatalog
+import com.example.arrax.ui.screen.business.event.component.PriceInput
 
 @Immutable
 data class EventCreateState(

@@ -1,4 +1,4 @@
-package com.example.arrax.ui.screen.events.create
+package com.example.arrax.ui.screen.business.event.component
 
 import androidx.compose.runtime.Immutable
 import java.math.BigDecimal
