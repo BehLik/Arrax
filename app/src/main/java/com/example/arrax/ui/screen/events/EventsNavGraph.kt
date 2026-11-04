@@ -9,7 +9,6 @@ import com.example.arrax.ui.root.navigation.PlaceholderAction
 import com.example.arrax.ui.root.navigation.PlaceholderScreen
 import com.example.arrax.ui.root.navigation.backAction
 import com.example.arrax.ui.root.navigation.safeNavigate
-import com.example.arrax.ui.screen.events.create.EventCreateScreen
 import com.example.arrax.ui.screen.events.detail.EventDetailScreen
 
 fun NavGraphBuilder.eventGraph(nav: NavController) {
@@ -23,18 +22,6 @@ fun NavGraphBuilder.eventGraph(nav: NavController) {
 // ── Crear evento y pantalla principal del evento ──
 private fun NavGraphBuilder.eventCore(nav: NavController) {
     val back = nav.backAction()
-
-//    composable<EventCreate> { entry ->
-//        val args = entry.toRoute<EventCreate>()
-//        EventCreateScreen(
-//            onBack = back,
-//            onEventCreated = { eventId ->
-//                nav.safeNavigate(EventHome(args.businessId, eventId)) {
-//                    popUpTo<EventCreate> { inclusive = true }
-//                }
-//            }
-//        )
-//    }
 
     composable<EventHome> {
         EventDetailScreen(onBack = back)
