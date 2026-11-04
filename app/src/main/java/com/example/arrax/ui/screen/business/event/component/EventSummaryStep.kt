@@ -16,10 +16,7 @@ import com.example.arrax.core.designsystem.components.cards.ArxCard
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.ui.screen.business.event.BusinessEventCreateState
-import com.example.arrax.ui.screen.business.event.SummaryRow
-import com.example.arrax.ui.screen.business.event.animalsLabel
-import com.example.arrax.ui.screen.business.event.formatDate
-import com.example.arrax.ui.screen.business.event.toMoney
+
 
 @Composable
 fun SummaryStep(state: BusinessEventCreateState) {

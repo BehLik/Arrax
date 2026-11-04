@@ -6,6 +6,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.arrax.core.designsystem.components.buttons.ArxPrimaryButton
 import com.example.arrax.core.designsystem.components.buttons.ArxSecondaryButton
@@ -65,7 +66,7 @@ fun BusinessEventCreateScreen(
                     description = "Solo el propietario o un administrador puede crear eventos.",
                     iconRes = ArxIcons.Lock
                 )
-                else -> Column(Modifier.fillMaxSize()) {
+                else -> Column(Modifier.fillMaxSize().imePadding()) {
                     StepIndicator(current = step.ordinal)
 
                     AnimatedContent(

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,7 +24,9 @@ import com.example.arrax.core.designsystem.components.cards.ArxCard
 import com.example.arrax.core.designsystem.components.inputs.ArxTextField
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.domain.model.CutCatalog
-
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.text.input.ImeAction
 
 @Composable
 fun PricesStep(
@@ -31,6 +34,7 @@ fun PricesStep(
     prices: Map<String, PriceInput>,
     onPriceChange: (String, String) -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(ArxSpacing.md),
@@ -53,7 +57,18 @@ fun PricesStep(
                             value = prices[cut.id]?.rawText.orEmpty(),
                             onValueChange = { onPriceChange(cut.id, it) },
                             label = "Precio por kg ($)",
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Decimal,
+                                imeAction = ImeAction.Next
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onNext = {
+                                    focusManager.moveFocus(FocusDirection.Down)
+                                },
+                                onDone = {
+                                    focusManager.clearFocus()
+                                }
+                            )
                         )
                     }
                 }

@@ -175,7 +175,7 @@ private fun BusinessHomePreviewDark() {
 private fun BusinessHomePreviewContent() {
     BusinessHomeContent(
         state = BusinessHomeState(
-            businessName = "Granja San José",
+            businessName = " San José",
             roleLabel = "Owner",
             memberCount = 8,
             upcomingEventsCount = 2,

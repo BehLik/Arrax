@@ -32,7 +32,12 @@ import com.example.arrax.core.designsystem.icons.ArxIconShape
 import com.example.arrax.core.designsystem.icons.ArxIconStyle
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
-import com.example.arrax.ui.screen.business.event.formatDate
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,6 +49,7 @@ fun DataStep(
     onDateChange: (Long) -> Unit,
     onAnimalCountChange: (Int) -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
     var showPicker by remember { mutableStateOf(false) }
 
     if (showPicker) {
@@ -61,8 +67,10 @@ fun DataStep(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(ArxSpacing.md),
-        verticalArrangement = Arrangement.spacedBy(ArxSpacing.md)
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(ArxSpacing.md)
     ) {
         // Placeholder de la ilustración del cerdo 3D: reemplaza por tu drawable cuando lo tengas.
         ArxIconBadge(
@@ -75,8 +83,20 @@ fun DataStep(
         )
         StepHeader("Nuevo evento", "Configura los detalles de tu venta porcina.")
 
-        ArxTextField(value = name, onValueChange = onNameChange, label = "Nombre del evento")
-
+        ArxTextField(
+            value = name,
+            onValueChange = onNameChange,
+            label = "Nombre del evento",
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.Words,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    focusManager.clearFocus()
+                }
+            )
+        )
         ArxCard(onClick = { showPicker = true }) {
             Row(
                 modifier = Modifier.fillMaxWidth().padding(ArxSpacing.md),
@@ -93,12 +113,18 @@ fun DataStep(
             }
         }
 
-        Text("Cantidad de animales", style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(
+            text = "Cantidad de animales",
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
         ArxQuantitySelector(
             value = animalCount.toDouble(),
-            minValue = 1.0,
-            onValueChange = { onAnimalCountChange(it.toInt()) }
+            onValueChange = { onAnimalCountChange(it.toInt()) },
+            step = 1.0,
+            unit = "animales",
+            minValue = 1.0
         )
     }
 }

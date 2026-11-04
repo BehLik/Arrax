@@ -19,8 +19,7 @@ import com.example.arrax.core.designsystem.icons.ArxIconStyle
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.ui.screen.business.event.BusinessEventCreateState
-import com.example.arrax.ui.screen.business.event.animalsLabel
-import com.example.arrax.ui.screen.business.event.formatDate
+
 
 @Composable
 fun DoneStep(state: BusinessEventCreateState) {

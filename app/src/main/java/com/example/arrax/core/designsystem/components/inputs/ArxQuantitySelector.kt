@@ -67,7 +67,11 @@ fun ArxQuantitySelector(
         }
 
         Text(
-            text = "$value $unit",
+            text = if (step % 1.0 == 0.0) {
+                "${value.toInt()} $unit"
+            } else {
+                "$value $unit"
+            },
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center,
