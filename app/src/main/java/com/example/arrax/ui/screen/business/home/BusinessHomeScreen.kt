@@ -5,6 +5,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -19,6 +20,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
 import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
+import com.example.arrax.core.designsystem.components.buttons.ArxFabMenu
+import com.example.arrax.core.designsystem.components.buttons.ArxFabMenuItem
 import com.example.arrax.core.designsystem.components.display.ArxTone
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
@@ -41,6 +44,8 @@ fun BusinessHomeScreen(
     onMoreClick: () -> Unit = {},
     onAlertsClick: () -> Unit = {},
     onCustomersClick: () -> Unit = {},
+    onCreateCustomerClick:()-> Unit={},
+    onEventsClick:()-> Unit={},
 //    onTeamClick: () -> Unit = {},
 //    onCutsClick: () -> Unit = {},
     onBackClik:()->Unit={},
@@ -58,6 +63,8 @@ fun BusinessHomeScreen(
         onAlertsClick = onAlertsClick,
         onCreateEventClick = onCreateEventClick,
         onCustomersClick = onCustomersClick,
+        onCreateCustomerClick = onCreateCustomerClick,
+        onEventsClick = onEventsClick,
 //        onTeamClick = onTeamClick,
 //        onCutsClick = onCutsClick,
         onBackClik=onBackClik,
@@ -74,6 +81,8 @@ internal fun BusinessHomeContent(
     onAlertsClick: () -> Unit,
     onCreateEventClick: () -> Unit,
     onCustomersClick: () -> Unit,
+    onCreateCustomerClick:()-> Unit,
+    onEventsClick:()-> Unit,
 //    onTeamClick: () -> Unit,
 //    onCutsClick: () -> Unit,
     onBackClik:()-> Unit,
@@ -86,11 +95,14 @@ internal fun BusinessHomeContent(
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             containerColor = Color.Transparent,
-            contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0, 0, 0, 0),
-            topBar = {
-                HomeHeader(
-                    onMoreClick = onMoreClick,
-                    onBackClik = onBackClik
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
+            topBar = { HomeHeader(onMoreClick = onMoreClick, onBackClik = onBackClik) },
+            floatingActionButton = {
+                ArxFabMenu(
+                    items = listOf(
+                        ArxFabMenuItem("Nuevo evento", ArxIcons.Event, onCreateEventClick),
+                        ArxFabMenuItem("Nuevo cliente", ArxIcons.PersonAdd, onCreateCustomerClick)
+                    )
                 )
             }
         ) { innerPadding ->
@@ -115,15 +127,14 @@ internal fun BusinessHomeContent(
 
                 HomeStatsRow(
                     upcomingEvents = state.upcomingEventsCount,
-                    customers = state.customersCount
+                    customers = state.customersCount,
+                    onEventsClick = onEventsClick,
+                    onCustomersClick = onCustomersClick
                 )
 
-                state.nextEvent?.let { next ->
-                    NextEventBanner(
-                        event = next,
-                        onClick = onEventClick
-                    )
-                }
+
+                state.nextEvent?.let { NextEventBanner(event = it, onClick = onEventClick) }
+
 
                 HomeAlertsSection(
                     alerts = state.alerts,
@@ -135,15 +146,14 @@ internal fun BusinessHomeContent(
                     slices = state.salesBreakdown
                 )
 
-                QuickActionsSection(
-                    onCreateEventClick = onCreateEventClick,
-                    onCustomersClick = onCustomersClick
-                )
+//                QuickActionsSection(
+//                    onCreateEventClick = onCreateEventClick,
+//                    onCustomersClick = onCustomersClick
+//                )
             }
         }
     }
 }
-
 @Preview(
     showBackground = true,
     widthDp = 360,
@@ -238,6 +248,8 @@ private fun BusinessHomePreviewContent() {
         onAlertsClick = {},
         onCreateEventClick = {},
         onCustomersClick = {},
+        onEventsClick = {},
+        onCreateCustomerClick = {},
 //        onTeamClick = {},
 //        onCutsClick = {},
         onBackClik = {}

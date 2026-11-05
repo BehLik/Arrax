@@ -12,6 +12,8 @@ import com.example.arrax.core.designsystem.theme.ArxSpacing
 internal fun HomeStatsRow(
     upcomingEvents: Int,
     customers: Int,
+    onEventsClick: () -> Unit,
+    onCustomersClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -23,13 +25,15 @@ internal fun HomeStatsRow(
             value = upcomingEvents.toString(),
             subtitle = "Este mes",
             iconRes = ArxIcons.Event,
+            onClick = onEventsClick,
             modifier = Modifier.weight(1f)
         )
         ArxMetricCard(
             title = "Clientes",
             value = customers.toString(),
             subtitle = "Registrados",
-            iconRes = ArxIcons.GroupAdd,
+            iconRes = ArxIcons.TeamOutline,
+            onClick = onCustomersClick,
             modifier = Modifier.weight(1f)
         )
     }

@@ -13,6 +13,7 @@ import com.example.arrax.ui.screen.business.customers.BusinessCustomersScreen
 import com.example.arrax.ui.screen.business.customers.subscreen.add.CustomerAddScreen
 import com.example.arrax.ui.screen.business.customers.subscreen.view.CustomerViewScreen
 import com.example.arrax.ui.screen.business.event.BusinessEventCreateScreen
+import com.example.arrax.ui.screen.business.event.subscreen.view.BusinessEventViewScreen
 import com.example.arrax.ui.screen.business.home.BusinessHomeScreen
 import com.example.arrax.ui.screen.business.more.BusinessMoreScreen
 import com.example.arrax.ui.screen.business.more.subscreen.catalog.BusinessCatalogScreen
@@ -37,9 +38,10 @@ private fun NavGraphBuilder.businessCore(nav: NavController) {
         BusinessHomeScreen(
             onBack = back,
             onCreateEventClick = { nav.safeNavigate(EventCreate(args.businessId)) },
-            // TODO: cuando onEventClick reciba el id -> nav.safeNavigate(EventHome(args.businessId, eventId))
+            onCreateCustomerClick = { nav.safeNavigate(BusinessCustomerAdd(args.businessId)) },
+            // TODO: cuando exista EventHome -> nav.safeNavigate(EventHome(args.businessId, eventId))
             onEventClick = { nav.safeNavigate(BusinessEvents(args.businessId)) },
-            // Tocar el negocio activo lleva a la lista de negocios (cambiar de negocio).
+            onEventsClick = { nav.safeNavigate(BusinessEvents(args.businessId)) },
             onBusinessClick = { nav.safeNavigate(LobbyGraph) },
             onMoreClick = { nav.safeNavigate(BusinessMore(args.businessId)) },
             onAlertsClick = { nav.safeNavigate(BusinessAlerts(args.businessId)) },
@@ -48,15 +50,23 @@ private fun NavGraphBuilder.businessCore(nav: NavController) {
     }
 
     composable<BusinessEvents> {
-        // TODO: reemplazar por la Screen de eventos (Próximos / Abiertos / Historial).
-        PlaceholderScreen("Eventos del negocio", back)
-    }
-    composable<EventCreate>{
-        BusinessEventCreateScreen(
-            onBack = {},
-            onEventCreated = {}
+        BusinessEventViewScreen(
+            onBack = back,
+            onEventClick = { eventId -> /* TODO: EventHome(args.businessId, eventId) */ }
         )
+    }
+    composable<EventCreate> { entry ->
+        val args = entry.toRoute<EventCreate>()
+        BusinessEventCreateScreen(
+            onBack = back,
+            onEventCreated = {
+                nav.navigate(BusinessEvents(args.businessId)) {
+                    popUpTo<EventCreate> { inclusive = true }
+                }
+            },
+            onBackBusiness = {},
 
+        )
     }
 }
 

@@ -29,7 +29,8 @@ fun ArxMetricCard(
     iconRes: Int,
     modifier: Modifier = Modifier,
     subtitle: String? = null,
-    isHighlighted: Boolean = false
+    isHighlighted: Boolean = false,
+    onClick:(()-> Unit)?=null
 ) {
     val titleColor = if (isHighlighted) {
         MaterialTheme.colorScheme.onPrimaryContainer
@@ -44,6 +45,7 @@ fun ArxMetricCard(
 
     ArxCard(
         modifier = modifier,
+        onClick = onClick,
         variant = if (isHighlighted) ArxCardVariant.Standard else ArxCardVariant.Glass,
         colors = if (isHighlighted) {
             CardDefaults.cardColors(

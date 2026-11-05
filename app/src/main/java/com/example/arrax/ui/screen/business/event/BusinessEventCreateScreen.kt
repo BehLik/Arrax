@@ -26,6 +26,7 @@ import com.example.arrax.ui.screen.business.event.component.SummaryStep
 @Composable
 fun BusinessEventCreateScreen(
     onBack: () -> Unit,
+    onBackBusiness:()-> Unit,
     onEventCreated: (eventId: String) -> Unit,
     viewModel: BusinessEventCreateViewmodel = hiltViewModel()
 ) {

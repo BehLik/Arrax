@@ -217,9 +217,6 @@
              ============================================================  -->
     <string name="business_role_admin">Propietario</string>
     <string name="business_role_member">Miembro</string>
-    <!--  Pendiente de revisar: ¿siguen vigentes "Productor" y "Granjas" en una app de carnicería?  -->
-    <string name="role_producer">Productor</string>
-    <string name="my_farms">Mis Granjas</string>
     <!--  ============================================================
              AUTENTICACIÓN
              ============================================================  -->
@@ -263,6 +260,7 @@
     <string name="lobby_notifications_cd">Notificaciones</string>
     <string name="lobby_settings_cd">Configuración</string>
     <string name="lobby_profile_cd">Abrir perfil</string>
+    <string name="business_more_cd">Mas Opciones</string>
     <!--  Lobby · aviso para activar notificaciones  -->
     <string name="lobby_notifications_prompt_title">Activa las notificaciones</string>
     <string name="lobby_notifications_prompt_body">Entérate de pedidos y nuevos integrantes al instante.</string>

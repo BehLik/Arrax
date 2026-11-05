@@ -24,6 +24,7 @@ zxing = "3.5.3"
 cameraX = "1.4.1"
 mlkitBarcodeScanning = "17.3.0"
 guava = "33.4.0-android"
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
