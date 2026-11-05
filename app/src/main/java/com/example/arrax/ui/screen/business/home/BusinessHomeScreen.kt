@@ -1,10 +1,9 @@
 package com.example.arrax.ui.screen.business.home
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -13,6 +12,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,6 +24,7 @@ import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
 import com.example.arrax.core.designsystem.components.backgrounds.ArxDecoration
 import com.example.arrax.core.designsystem.components.buttons.ArxFabMenu
 import com.example.arrax.core.designsystem.components.buttons.ArxFabMenuItem
+import com.example.arrax.core.designsystem.components.buttons.ArxFabMenuScrim
 import com.example.arrax.core.designsystem.components.display.ArxTone
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
@@ -31,7 +34,6 @@ import com.example.arrax.ui.screen.business.home.component.HomeAlertsSection
 import com.example.arrax.ui.screen.business.home.component.HomeHeader
 import com.example.arrax.ui.screen.business.home.component.HomeStatsRow
 import com.example.arrax.ui.screen.business.home.component.NextEventBanner
-import com.example.arrax.ui.screen.business.home.component.QuickActionsSection
 import com.example.arrax.ui.screen.business.home.component.SalesSummaryCard
 
 @Composable
@@ -46,9 +48,8 @@ fun BusinessHomeScreen(
     onCustomersClick: () -> Unit = {},
     onCreateCustomerClick:()-> Unit={},
     onEventsClick:()-> Unit={},
-//    onTeamClick: () -> Unit = {},
+    onTeamClick: () -> Unit = {},
 //    onCutsClick: () -> Unit = {},
-    onBackClik:()->Unit={},
     viewModel: BusinessHomeViewModel = hiltViewModel()
 ) {
     BackHandler(onBack = onBack)
@@ -57,6 +58,7 @@ fun BusinessHomeScreen(
 
     BusinessHomeContent(
         state = state,
+        onBack =onBack,
         onBusinessClick = onBusinessClick,
         onMoreClick = onMoreClick,
         onEventClick = onEventClick,
@@ -65,9 +67,8 @@ fun BusinessHomeScreen(
         onCustomersClick = onCustomersClick,
         onCreateCustomerClick = onCreateCustomerClick,
         onEventsClick = onEventsClick,
-//        onTeamClick = onTeamClick,
+        onTeamClick = onTeamClick,
 //        onCutsClick = onCutsClick,
-        onBackClik=onBackClik,
         modifier = modifier
     )
 }
@@ -83,11 +84,13 @@ internal fun BusinessHomeContent(
     onCustomersClick: () -> Unit,
     onCreateCustomerClick:()-> Unit,
     onEventsClick:()-> Unit,
-//    onTeamClick: () -> Unit,
+    onTeamClick: () -> Unit,
 //    onCutsClick: () -> Unit,
-    onBackClik:()-> Unit,
+    onBack:()-> Unit,
     modifier: Modifier = Modifier
 ) {
+    var fabExpanded by rememberSaveable { mutableStateOf(false) }
+
     ArxBackground(
         modifier = modifier.fillMaxSize(),
         decoration = ArxDecoration.None
@@ -96,9 +99,11 @@ internal fun BusinessHomeContent(
             modifier = Modifier.fillMaxSize(),
             containerColor = Color.Transparent,
             contentWindowInsets = WindowInsets(0, 0, 0, 0),
-            topBar = { HomeHeader(onMoreClick = onMoreClick, onBackClik = onBackClik) },
+            topBar = { HomeHeader(onMoreClick = onMoreClick, onBackClik = onBack) },
             floatingActionButton = {
                 ArxFabMenu(
+                    expanded = fabExpanded,
+                    onExpandedChange = { fabExpanded = it },
                     items = listOf(
                         ArxFabMenuItem("Nuevo evento", ArxIcons.Event, onCreateEventClick),
                         ArxFabMenuItem("Nuevo cliente", ArxIcons.PersonAdd, onCreateCustomerClick)
@@ -106,6 +111,7 @@ internal fun BusinessHomeContent(
                 )
             }
         ) { innerPadding ->
+        Box (Modifier.fillMaxSize()){
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -122,7 +128,7 @@ internal fun BusinessHomeContent(
                     businessName = state.businessName,
                     roleLabel = state.roleLabel,
                     memberCount = state.memberCount,
-                    onClick = onBusinessClick
+                    onClick = onTeamClick
                 )
 
                 HomeStatsRow(
@@ -145,11 +151,8 @@ internal fun BusinessHomeContent(
                     total = state.salesTotal,
                     slices = state.salesBreakdown
                 )
-
-//                QuickActionsSection(
-//                    onCreateEventClick = onCreateEventClick,
-//                    onCustomersClick = onCustomersClick
-//                )
+                }
+            ArxFabMenuScrim(visible = fabExpanded, onDismiss = { fabExpanded = false })
             }
         }
     }
@@ -250,8 +253,7 @@ private fun BusinessHomePreviewContent() {
         onCustomersClick = {},
         onEventsClick = {},
         onCreateCustomerClick = {},
-//        onTeamClick = {},
-//        onCutsClick = {},
-        onBackClik = {}
+        onBack = {},
+        onTeamClick = {}
     )
 }

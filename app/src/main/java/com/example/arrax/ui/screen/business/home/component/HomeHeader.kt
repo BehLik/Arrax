@@ -29,6 +29,7 @@ internal fun HomeHeader(
         title = "Arrax",
         subtitle = "Negocios. Personas. Resultados.",
         variant = ArxTopBarVariant.MENU,
+        onNavigationClick = onBackClik,
         modifier = modifier,
         actions = {
             Box(

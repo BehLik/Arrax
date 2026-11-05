@@ -39,6 +39,7 @@ private fun NavGraphBuilder.businessCore(nav: NavController) {
             onBack = back,
             onCreateEventClick = { nav.safeNavigate(EventCreate(args.businessId)) },
             onCreateCustomerClick = { nav.safeNavigate(BusinessCustomerAdd(args.businessId)) },
+            onTeamClick = {nav.safeNavigate(BusinessMembers(args.businessId))},
             // TODO: cuando exista EventHome -> nav.safeNavigate(EventHome(args.businessId, eventId))
             onEventClick = { nav.safeNavigate(BusinessEvents(args.businessId)) },
             onEventsClick = { nav.safeNavigate(BusinessEvents(args.businessId)) },
