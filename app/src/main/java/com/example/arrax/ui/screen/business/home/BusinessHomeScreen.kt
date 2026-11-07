@@ -30,6 +30,7 @@ import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
 import com.example.arrax.ui.screen.business.home.component.ActiveBusinessCard
+import com.example.arrax.ui.screen.business.home.component.EventIntroSheet
 import com.example.arrax.ui.screen.business.home.component.HomeAlertsSection
 import com.example.arrax.ui.screen.business.home.component.HomeHeader
 import com.example.arrax.ui.screen.business.home.component.HomeStatsRow
@@ -90,7 +91,7 @@ internal fun BusinessHomeContent(
     modifier: Modifier = Modifier
 ) {
     var fabExpanded by rememberSaveable { mutableStateOf(false) }
-
+    var showEventIntro by rememberSaveable { mutableStateOf(false) }
     ArxBackground(
         modifier = modifier.fillMaxSize(),
         decoration = ArxDecoration.None
@@ -105,7 +106,7 @@ internal fun BusinessHomeContent(
                     expanded = fabExpanded,
                     onExpandedChange = { fabExpanded = it },
                     items = listOf(
-                        ArxFabMenuItem("Nuevo evento", ArxIcons.Event, onCreateEventClick),
+                        ArxFabMenuItem("Nuevo evento", ArxIcons.Event, { showEventIntro = true }),
                         ArxFabMenuItem("Nuevo cliente", ArxIcons.PersonAdd, onCreateCustomerClick)
                     )
                 )
@@ -154,6 +155,15 @@ internal fun BusinessHomeContent(
                 }
             ArxFabMenuScrim(visible = fabExpanded, onDismiss = { fabExpanded = false })
             }
+        }
+        if (showEventIntro) {
+            EventIntroSheet(
+                onDismiss = { showEventIntro = false },
+                onContinue = {
+                    showEventIntro = false
+                    onCreateEventClick()
+                }
+            )
         }
     }
 }

@@ -3,8 +3,10 @@ package com.example.arrax.ui.screen.business.event.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -70,61 +72,101 @@ fun DataStep(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(ArxSpacing.md)
+            .padding(horizontal = ArxSpacing.md, vertical = ArxSpacing.sm),
+                verticalArrangement = Arrangement.spacedBy(ArxSpacing.xl)
     ) {
         // Placeholder de la ilustración del cerdo 3D: reemplaza por tu drawable cuando lo tengas.
-        ArxIconBadge(
-            icon = ArxIcons.Event,
-            style = ArxIconStyle.Soft,
-            shape = ArxIconShape.Circle,
-            containerSize = 72.dp,
-            iconSize = 36.dp,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
-        StepHeader("Nuevo evento", "Configura los detalles de tu venta porcina.")
-
-        ArxTextField(
-            value = name,
-            onValueChange = onNameChange,
-            label = "Nombre del evento",
-            keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.Words,
-                imeAction = ImeAction.Done
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    focusManager.clearFocus()
-                }
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(ArxSpacing.md)
+        ) {
+            // Placeholder del cerdo 3D: reemplaza por tu drawable cuando lo tengas.
+            ArxIconBadge(
+                icon = ArxIcons.Event,
+                style = ArxIconStyle.Soft,
+                shape = ArxIconShape.Circle,
+                containerSize = 96.dp,
+                iconSize = 44.dp
             )
-        )
-        ArxCard(onClick = { showPicker = true }) {
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(ArxSpacing.md),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(ArxSpacing.md)
-            ) {
-                ArxIcon(ArxIcons.Date, tint = MaterialTheme.colorScheme.primary)
-                Column {
-                    Text("Fecha del evento", style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    Text(dateMillis?.let(::formatDate) ?: "Selecciona una fecha",
-                        style = MaterialTheme.typography.bodyLarge)
+            StepHeader("Nuevo evento", "Configura los detalles de tu venta porcina.")
+        }
+        Column(verticalArrangement = Arrangement.spacedBy(ArxSpacing.sm)) {
+            SectionLabel("Nombre")
+            ArxTextField(
+                value = name,
+                onValueChange = onNameChange,
+                label = "Nombre del evento",
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Words,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
+            )
+        }
+        Column(verticalArrangement = Arrangement.spacedBy(ArxSpacing.sm)) {
+            SectionLabel("Fecha")
+            ArxCard(onClick = { showPicker = true }) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(ArxSpacing.md),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(ArxSpacing.md)
+                ) {
+                    ArxIconBadge(icon = ArxIcons.Date, style = ArxIconStyle.Soft)
+                    Column(Modifier.weight(1f)) {
+                        Text(
+                            "Fecha del evento",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Text(
+                            dateMillis?.let(::formatDate) ?: "Selecciona una fecha",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = if (dateMillis == null) MaterialTheme.colorScheme.onSurfaceVariant
+                            else MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                    ArxIcon(
+                        ArxIcons.Forward,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        size = 20.dp
+                    )
                 }
             }
         }
 
-        Text(
-            text = "Cantidad de animales",
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+        Column(verticalArrangement = Arrangement.spacedBy(ArxSpacing.sm)) {
+            SectionLabel("Cantidad")
+            ArxCard {
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(ArxSpacing.md),
+                    verticalArrangement = Arrangement.spacedBy(ArxSpacing.md)
+                ) {
+                    Text(
+                        "¿Cuántos animales vas a vender?",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    ArxQuantitySelector(
+                        value = animalCount.toDouble(),
+                        onValueChange = { onAnimalCountChange(it.toInt()) },
+                        step = 1.0,
+                        unit = "animales",
+                        minValue = 1.0
+                    )
+                }
+            }
+        }
 
-        ArxQuantitySelector(
-            value = animalCount.toDouble(),
-            onValueChange = { onAnimalCountChange(it.toInt()) },
-            step = 1.0,
-            unit = "animales",
-            minValue = 1.0
-        )
+        Spacer(Modifier.height(ArxSpacing.md)) // respiro antes del botón Continuar
+
     }
+}
+@Composable
+private fun SectionLabel(text: String) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.titleSmall,
+        color = MaterialTheme.colorScheme.onSurface
+    )
 }

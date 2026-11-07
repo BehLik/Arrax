@@ -195,7 +195,7 @@ private fun ArxBottomSheetContent(
                                 .width(ArxSpacing.huge)
                                 .height(ArxSpacing.xxs)
                                 .background(
-                                    color = colors.primary.copy(alpha = 0.5f),
+                                    color = colors.onBackground.copy(alpha = 0.5f),
                                     shape = CircleShape
                                 )
                         )

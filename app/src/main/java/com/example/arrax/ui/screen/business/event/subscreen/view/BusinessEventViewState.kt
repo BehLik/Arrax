@@ -13,6 +13,7 @@ data class BusinessEventViewState(
     val events: List<Event> = emptyList(),
     val filter: EventFilter = EventFilter.ALL,
     val message: String? = null,
+    val canCreate: Boolean = false
 ) {
     fun countOf(f: EventFilter): Int = events.filterBy(f).size
 

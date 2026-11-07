@@ -44,6 +44,7 @@ import kotlinx.serialization.Serializable
 
 // ── Event (alcance evento) ───────────────────────────────────────────────────────────────────────
 @Serializable data class EventCreate(val businessId: String)
+@Serializable data class EventList(val businessId: String)
 @Serializable data class EventHome(val businessId: String, val eventId: String)
 
 // Pedidos

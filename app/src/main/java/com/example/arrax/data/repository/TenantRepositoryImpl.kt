@@ -47,6 +47,9 @@ class TenantRepositoryImpl @Inject constructor(
     override fun observeMembers(tenantId: String): Flow<List<Member>> =
         tenantDataSource.observeMembers(tenantId).map { list -> list.map { it.toDomain() } }
 
+    override fun observeMyRole(tenantId: String, uid: String): Flow<Role> =
+        tenantDataSource.observeMyRole(tenantId, uid)
+
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun observeMyTenants(uid: String): Flow<List<TenantMembership>> =
         tenantDataSource.observeMyMemberships(uid).flatMapLatest { memberships ->

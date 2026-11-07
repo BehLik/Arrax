@@ -196,4 +196,15 @@ class FirestoreTenantDataSource @Inject constructor(
             }
         awaitClose { listener.remove() }
     }
+    // FirestoreTenantDataSource
+    fun observeMyRole(tenantId: String, uid: String): Flow<Role> = callbackFlow {
+        val l = members(tenantId).document(uid).addSnapshotListener { snap, error ->
+            if (error != null) { close(error); return@addSnapshotListener }
+            trySend(
+                snap?.getString("role")
+                    ?.let { runCatching { Role.valueOf(it) }.getOrNull() } ?: Role.NONE
+            )
+        }
+        awaitClose { l.remove() }
+    }
 }

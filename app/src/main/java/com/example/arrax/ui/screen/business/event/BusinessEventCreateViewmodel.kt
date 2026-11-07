@@ -1,15 +1,21 @@
 package com.example.arrax.ui.screen.business.event
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.example.arrax.core.common.Resource
+import com.example.arrax.core.navigation.EventCreate
 import com.example.arrax.data.local.SessionLocalDataSource
 import com.example.arrax.domain.model.Event
 import com.example.arrax.domain.model.EventCut
 import com.example.arrax.domain.model.EventStatus
+import com.example.arrax.domain.model.Permission
+import com.example.arrax.domain.model.can
 import com.example.arrax.domain.repository.AuthRepository
 import com.example.arrax.domain.usecase.catalog.GetCatalogCutUseCase
 import com.example.arrax.domain.usecase.event.create.CreateEventUseCase
+import com.example.arrax.domain.usecase.tenant.observe.ObserveMyRoleUseCase
 import com.example.arrax.domain.usecase.tenant.observe.ObserveTenantCurrentUseCase
 import com.example.arrax.ui.screen.business.event.component.PriceInput
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,45 +34,41 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-// + imports de ObserveTenantCurrentUseCase, GetCatalogCutUseCase y CreateEventUseCase (según tus paquetes)
+
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class BusinessEventCreateViewmodel @Inject constructor(
-    observeTenant: ObserveTenantCurrentUseCase,
+    savedStateHandle: SavedStateHandle,
     getCatalog: GetCatalogCutUseCase,
     private val createEventUseCase: CreateEventUseCase,
+    private val observeMyRole: ObserveMyRoleUseCase,
     private val sessionLocalDataSource: SessionLocalDataSource,
     private val authRepository: AuthRepository,
 ) : ViewModel() {
+    private val tenantId: String = savedStateHandle.toRoute<EventCreate>().businessId
 
-    private val _state = MutableStateFlow(BusinessEventCreateState())
+    private val _state = MutableStateFlow(BusinessEventCreateState(tenantId = tenantId))
     val state: StateFlow<BusinessEventCreateState> = _state.asStateFlow()
 
     init {
         viewModelScope.launch {
-            val role = sessionLocalDataSource.role.first()
-            _state.update {
-                it.copy(
-                    isAdmin = role.equals("Owner", true) || role.equals("Admin", true),
-                    isCheckingRole = false
-                )
-            }
+            val uid = authRepository.observeCurrentUser().first()?.uid
+            if (uid == null) {
+                _state.update { it.copy(isAdmin = false, isCheckingRole = false) }
+                return@launch }
+            observeMyRole(tenantId, uid)
+                .map { it.can(Permission.EVENT_CREATE) }
+                .catch { emit(false) }
+                .collect { canCreate ->
+                    _state.update { it.copy(isAdmin = canCreate, isCheckingRole = false) }
+                }
         }
 
-        // Mismo flujo que BusinessCatalogViewModel; `.catch` no se traga CancellationException.
-        observeTenant()
-            .filterNotNull()
-            .map { it.id }
-            .distinctUntilChanged()
-            .flatMapLatest { id -> getCatalog(id).map { id to it } }
-            .onEach { (id, catalog) ->
+        getCatalog(tenantId)
+            .onEach { catalog ->
                 _state.update {
-                    it.copy(
-                        tenantId = id,
-                        cuts = catalog.filter { cut -> cut.active },
-                        isLoadingCatalog = false
-                    )
+                    it.copy(cuts = catalog.filter { c -> c.active }, isLoadingCatalog = false)
                 }
             }
             .catch {
