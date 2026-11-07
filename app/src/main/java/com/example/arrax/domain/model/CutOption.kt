@@ -1,6 +1,7 @@
-package com.example.arrax.core.model
+package com.example.arrax.domain.model
 
 import androidx.annotation.DrawableRes
+import com.example.arrax.domain.model.CutState
 
 data class CutOption(
     val id: String,                       // fijo para siempre: es lo que guardas en Firestore

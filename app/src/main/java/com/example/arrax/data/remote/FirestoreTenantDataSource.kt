@@ -3,7 +3,7 @@ package com.example.arrax.data.remote
 import android.util.Log
 import com.example.arrax.core.common.AppError
 import com.example.arrax.core.common.FirestorePaths
-import com.example.arrax.core.model.DefaultCuts
+import com.example.arrax.domain.model.DefaultCuts
 import com.example.arrax.domain.model.Role
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentId
@@ -14,7 +14,6 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
-import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 

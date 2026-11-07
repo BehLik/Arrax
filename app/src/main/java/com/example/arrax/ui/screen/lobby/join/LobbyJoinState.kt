@@ -1,6 +1,6 @@
 package com.example.arrax.ui.screen.lobby.join
 
-import com.example.arrax.core.model.JoinMethod
+import com.example.arrax.domain.model.JoinMethod
 
 data class LobbyJoinState(
     val method: JoinMethod = JoinMethod.CODE,

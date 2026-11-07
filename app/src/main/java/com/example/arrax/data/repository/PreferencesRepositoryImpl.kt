@@ -1,6 +1,6 @@
 package com.example.arrax.data.repository
 
-import com.example.arrax.core.model.ThemeMode
+import com.example.arrax.domain.model.ThemeMode
 import com.example.arrax.data.mapper.PreferencesKeys
 import com.example.arrax.data.mapper.toUserPreferences
 import com.example.arrax.data.remote.FirestorePreferencesDataSource

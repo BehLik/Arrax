@@ -2,7 +2,7 @@ package com.example.arrax.ui.root.theme
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.arrax.core.model.ThemeMode
+import com.example.arrax.domain.model.ThemeMode
 import com.example.arrax.domain.usecase.user.ObservePreferencesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted

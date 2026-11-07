@@ -1,6 +1,6 @@
 package com.example.arrax.domain.model
 
-import com.example.arrax.core.model.ThemeMode
+import com.example.arrax.domain.model.ThemeMode
 
 enum class WeightUnit { KG, LB }
 

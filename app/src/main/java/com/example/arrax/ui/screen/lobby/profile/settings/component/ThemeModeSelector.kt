@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.arrax.R
 import com.example.arrax.core.designsystem.icons.ArxIcons
-import com.example.arrax.core.model.ThemeMode
+import com.example.arrax.domain.model.ThemeMode
 
 @Composable
 fun ThemeModeSelector(

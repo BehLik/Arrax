@@ -1,14 +1,12 @@
 package com.example.arrax.data.repository
 
 
-import com.example.arrax.core.model.DefaultCuts
+import com.example.arrax.domain.model.DefaultCuts
 import com.example.arrax.data.mapper.toCatalog
-import com.example.arrax.data.mapper.toDomain
 import com.example.arrax.data.remote.CutCatalogDto
 import com.example.arrax.data.remote.FirestoreCatalogDataSource
 import com.example.arrax.domain.model.CutCatalog
 import com.example.arrax.domain.repository.CutCatalogRepository
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton

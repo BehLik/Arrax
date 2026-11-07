@@ -8,7 +8,7 @@ import com.example.arrax.core.common.AppError
 import com.example.arrax.core.common.NetworkMonitor
 import com.example.arrax.core.common.Resource
 import com.example.arrax.core.common.toAppError
-import com.example.arrax.core.model.JoinMethod
+import com.example.arrax.domain.model.JoinMethod
 import com.example.arrax.domain.usecase.tenant.JoinTenantUseCase
 import com.example.arrax.domain.usecase.user.ObserveCurrentUserUseCase
 import com.google.firebase.auth.FirebaseAuth

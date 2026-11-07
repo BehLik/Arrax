@@ -1,6 +1,6 @@
 package com.example.arrax.ui.screen.business.more.subscreen.catalog
 
-import com.example.arrax.core.model.CutState
+import com.example.arrax.domain.model.CutState
 import com.example.arrax.domain.model.CutCatalog
 import com.example.arrax.domain.model.CutOrigin
 

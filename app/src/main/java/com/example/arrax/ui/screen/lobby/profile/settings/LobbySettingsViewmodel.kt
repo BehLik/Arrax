@@ -3,7 +3,7 @@ package com.example.arrax.ui.screen.lobby.profile.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.arrax.core.common.NetworkMonitor
-import com.example.arrax.core.model.ThemeMode
+import com.example.arrax.domain.model.ThemeMode
 import com.example.arrax.domain.model.AlertChannel
 import com.example.arrax.domain.model.WeightUnit
 import com.example.arrax.domain.usecase.user.ObservePreferencesUseCase

@@ -1,6 +1,6 @@
 package com.example.arrax.domain.repository
 
-import com.example.arrax.core.model.ThemeMode
+import com.example.arrax.domain.model.ThemeMode
 import com.example.arrax.domain.model.AlertChannel
 import com.example.arrax.domain.model.UserPreferences
 import com.example.arrax.domain.model.WeightUnit

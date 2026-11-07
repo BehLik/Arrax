@@ -1,6 +1,5 @@
-package com.example.arrax.core.model
+package com.example.arrax.domain.model
 
-import com.example.arrax.R
 import com.example.arrax.core.designsystem.images.ArxImages
 
 /**

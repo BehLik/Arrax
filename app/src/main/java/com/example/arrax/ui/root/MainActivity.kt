@@ -19,7 +19,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.arrax.core.designsystem.theme.ArxTheme
-import com.example.arrax.core.model.ThemeMode
+import com.example.arrax.domain.model.ThemeMode
 import com.example.arrax.ui.root.navigation.ArraxNavHost
 import com.example.arrax.ui.root.theme.AppThemeViewModel
 import dagger.hilt.android.AndroidEntryPoint

@@ -1,7 +1,7 @@
 package com.example.arrax.data.remote
 
 import com.example.arrax.core.common.FirestorePaths
-import com.example.arrax.core.model.DefaultCuts
+import com.example.arrax.domain.model.DefaultCuts
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObjects

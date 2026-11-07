@@ -19,7 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.arrax.core.designsystem.theme.ArxSpacing
-import com.example.arrax.core.model.CutState
+import com.example.arrax.domain.model.CutState
 import com.example.arrax.domain.model.CutOrigin
 import com.example.arrax.ui.screen.business.more.subscreen.catalog.CutEditorState
 

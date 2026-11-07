@@ -20,7 +20,7 @@ import com.example.arrax.core.designsystem.icons.ArxIconShape
 import com.example.arrax.core.designsystem.icons.ArxIconStyle
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
-import com.example.arrax.core.model.CutState
+import com.example.arrax.domain.model.CutState
 import com.example.arrax.domain.model.CutCatalog
 
 

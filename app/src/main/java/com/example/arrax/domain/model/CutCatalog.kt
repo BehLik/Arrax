@@ -1,7 +1,7 @@
 package com.example.arrax.domain.model
 
 import androidx.annotation.DrawableRes
-import com.example.arrax.core.model.CutState
+import com.example.arrax.domain.model.CutState
 
 enum class CutOrigin { DEFAULT, MODIFIED, CUSTOM }
 

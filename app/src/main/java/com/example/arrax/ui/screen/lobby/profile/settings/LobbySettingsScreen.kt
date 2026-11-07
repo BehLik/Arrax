@@ -33,7 +33,7 @@ import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
 import com.example.arrax.core.designsystem.theme.extendedColors
 //import com.example.arrax.core.model.AboutLink
-import com.example.arrax.core.model.ThemeMode
+import com.example.arrax.domain.model.ThemeMode
 import com.example.arrax.domain.model.AlertChannel
 import com.example.arrax.ui.root.notification.rememberNotificationPermission
 import com.example.arrax.ui.screen.lobby.profile.settings.component.AboutLink
