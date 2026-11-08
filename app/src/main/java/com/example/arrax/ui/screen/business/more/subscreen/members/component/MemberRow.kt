@@ -1,5 +1,9 @@
 package com.example.arrax.ui.screen.business.more.subscreen.members.component
 
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -8,37 +12,32 @@ import com.example.arrax.core.designsystem.components.display.ArxAvatar
 import com.example.arrax.core.designsystem.components.display.ArxListItem
 import com.example.arrax.core.designsystem.components.feedback.ArxChipStatus
 import com.example.arrax.core.designsystem.components.feedback.ArxStatusChip
+import com.example.arrax.core.designsystem.icons.ArxIcons.Box
+import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.ui.root.session.CurrentUserAvatar
 import com.example.arrax.ui.screen.business.more.subscreen.members.MemberUi
 
 @Composable
-internal fun MemberRow(
-    member: MemberUi,
-    onClick: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
+internal fun MemberRow(member: MemberUi, onClick: (String) -> Unit, modifier: Modifier = Modifier) {
+    val family = member.role.chipFamily()
     ArxListItem(
-        title = member.name,
+        title = if (member.isCurrentUser) "${member.name} (Tú)" else member.name,
+        subtitle = member.joinedLabel,
         modifier = modifier,
-        showChevron = false,
+        showChevron = member.canEdit,
         leading = {
-            ArxAvatar(
-                initials = member.initials,
-                imageUrl = member.photoUrl,
-                size = 36.dp
-            )
-        },
-        trailing = {
-            if (member.isOwner) {
-                ArxStatusChip(
-                    text = member.roleLabel,
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-            } else {
-                ArxStatusChip(text = member.roleLabel, status = ArxChipStatus.Info)
+            Box(Modifier.border(2.dp, family.color, CircleShape).padding(ArxSpacing.xxs)) {
+                if (member.isCurrentUser) CurrentUserAvatar(size = 36.dp)
+                else ArxAvatar(initials = member.initials, imageUrl = member.photoUrl, size = 36.dp)
             }
         },
-        onClick = { onClick(member.id) }
+        trailing = {
+            ArxStatusChip(
+                text = member.roleLabel,
+                containerColor = family.colorContainer,
+                contentColor = family.onColorContainer
+            )
+        },
+        onClick = { if (member.canEdit) onClick(member.id) }
     )
 }

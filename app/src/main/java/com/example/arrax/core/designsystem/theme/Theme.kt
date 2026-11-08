@@ -31,6 +31,9 @@ data class ColorFamily(
 
 @Immutable
 data class ExtendedColorScheme(
+    val roleOwner: ColorFamily,
+    val roleAdmin: ColorFamily,
+    val roleOperator: ColorFamily,
     val success: ColorFamily,
     val warning: ColorFamily,
     val info: ColorFamily,
@@ -47,6 +50,9 @@ private val unspecifiedFamily = ColorFamily(
 
 private val LocalExtendedColorScheme = staticCompositionLocalOf {
     ExtendedColorScheme(
+        roleOwner = unspecifiedFamily,
+        roleAdmin = unspecifiedFamily,
+        roleOperator = unspecifiedFamily,
         success = unspecifiedFamily,
         warning = unspecifiedFamily,
         info = unspecifiedFamily,
@@ -64,6 +70,9 @@ val MaterialTheme.extendedColors: ExtendedColorScheme
     get() = LocalExtendedColorScheme.current
 
 private val extendedLight = ExtendedColorScheme(
+    roleOwner = ColorFamily(roleOwnerLight, onRoleOwnerLight, roleOwnerContainerLight, onRoleOwnerContainerLight),
+    roleAdmin = ColorFamily(roleAdminLight, onRoleAdminLight, roleAdminContainerLight, onRoleAdminContainerLight),
+    roleOperator = ColorFamily(roleOperatorLight, onRoleOperatorLight, roleOperatorContainerLight, onRoleOperatorContainerLight),
     success = ColorFamily(successLight, onSuccessLight, successContainerLight, onSuccessContainerLight),
     warning = ColorFamily(warningLight, onWarningLight, warningContainerLight, onWarningContainerLight),
     info = ColorFamily(infoLight, onInfoLight, infoContainerLight, onInfoContainerLight),
@@ -75,6 +84,9 @@ private val extendedLight = ExtendedColorScheme(
 )
 
 private val extendedDark = ExtendedColorScheme(
+    roleOwner = ColorFamily(roleOwnerDark, onRoleOwnerDark, roleOwnerContainerDark, onRoleOwnerContainerDark),
+    roleAdmin = ColorFamily(roleAdminDark, onRoleAdminDark, roleAdminContainerDark, onRoleAdminContainerDark),
+    roleOperator = ColorFamily(roleOperatorDark, onRoleOperatorDark, roleOperatorContainerDark, onRoleOperatorContainerDark),
     success = ColorFamily(successDark, onSuccessDark, successContainerDark, onSuccessContainerDark),
     warning = ColorFamily(warningDark, onWarningDark, warningContainerDark, onWarningContainerDark),
     info = ColorFamily(infoDark, onInfoDark, infoContainerDark, onInfoContainerDark),

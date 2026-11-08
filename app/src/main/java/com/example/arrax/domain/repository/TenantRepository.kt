@@ -16,5 +16,7 @@ interface TenantRepository {
     fun observeMyRole(tenantId: String, uid: String): Flow<Role>
     suspend fun createTenant(name: String, ownerUid: String, ownerName: String): Resource<Tenant>
     suspend fun joinTenant(invitationCode: String, uid: String,userName: String): Resource<Tenant>
+    suspend fun updateMemberRole(tenantId: String, memberUid: String, role: Role): Resource<Unit>
+    suspend fun removeMember(tenantId: String, memberUid: String): Resource<Unit>
 
 }

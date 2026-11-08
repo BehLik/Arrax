@@ -118,7 +118,41 @@ val onSurfaceLightHighContrast = Color(0xFF000000)
 val onSurfaceVariantLightHighContrast = Color(0xFF1F2937)
 val outlineLightHighContrast = Color(0xFF3C5A4C)
 val outlineVariantLightHighContrast = Color(0xFF6B8A7C)
+//-----------------------------------------------------------------------------
+//light rol
+//------------------------------------------------------------------------------
+// ── Roles: Owner (verde de marca) ──
+val roleOwnerLight = Color(0xFF00C896)
+val onRoleOwnerLight = Color(0xFF0B1412)
+val roleOwnerContainerLight = Color(0xFFE6FFF4)
+val onRoleOwnerContainerLight = Color(0xFF0E2F2A)
 
+val roleOwnerDark = Color(0xFF00C896)
+val onRoleOwnerDark = Color(0xFF0B1412)
+val roleOwnerContainerDark = Color(0xFF0E2F2A)
+val onRoleOwnerContainerDark = Color(0xFF6EE7B7)
+
+// ── Roles: Admin (morado) ──
+val roleAdminLight = Color(0xFF7C4DFF)
+val onRoleAdminLight = Color(0xFFFFFFFF)
+val roleAdminContainerLight = Color(0xFFEADDFF)
+val onRoleAdminContainerLight = Color(0xFF2A0A6B)
+
+val roleAdminDark = Color(0xFFB69DFF)
+val onRoleAdminDark = Color(0xFF1E0A52)
+val roleAdminContainerDark = Color(0xFF33206B)
+val onRoleAdminContainerDark = Color(0xFFE6DDFF)
+
+// ── Roles: Operador (gris azulado) ──
+val roleOperatorLight = Color(0xFF64748B)
+val onRoleOperatorLight = Color(0xFFFFFFFF)
+val roleOperatorContainerLight = Color(0xFFE2E8F0)
+val onRoleOperatorContainerLight = Color(0xFF1E293B)
+
+val roleOperatorDark = Color(0xFF94A3B8)
+val onRoleOperatorDark = Color(0xFF0F172A)
+val roleOperatorContainerDark = Color(0xFF253041)
+val onRoleOperatorContainerDark = Color(0xFFE2E8F0)
 // -----------------------------------------------------------------------------
 // DARK — Default
 // -----------------------------------------------------------------------------
@@ -218,6 +252,9 @@ val onSurfaceDarkHighContrast = Color(0xFFFFFFFF)
 val onSurfaceVariantDarkHighContrast = Color(0xFFFFFFFF)
 val outlineDarkHighContrast = Color(0xFFB5D1C5)
 val outlineVariantDarkHighContrast = Color(0xFF7FA394)
+//----------------------------------------------------------------------------
+//dark rol
+//-------------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
 // Glass tokens

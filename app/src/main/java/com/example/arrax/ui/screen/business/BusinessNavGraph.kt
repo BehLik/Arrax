@@ -111,8 +111,7 @@ private fun NavGraphBuilder.businessMembers(nav: NavController) {
         BusinessMembersScreen(
             onBack = back,
             onCreateInvitationClick = { nav.safeNavigate(InvitationCreate(args.businessId)) },
-            onInvitationClick = { code -> nav.safeNavigate(InvitationDetail(args.businessId, code)) },
-            onMemberClick = {}
+            onInvitationClick = { code -> nav.safeNavigate(InvitationDetail(args.businessId, code)) }
         )
     }
 

@@ -84,6 +84,12 @@ class FirestoreTenantDataSource @Inject constructor(
     }
     // Atomic (batch) and merge only tenantId/role: writing a whole UserDto with merge
     // would overwrite the existing "name" with "".
+    suspend fun updateMemberRole(tenantId: String, memberUid: String, role: Role) {
+        members(tenantId).document(memberUid).update("role", role.name).await()
+    }
+    suspend fun removeMember(tenantId: String, memberUid: String) {
+        members(tenantId).document(memberUid).delete().await()
+    }
     private fun members(tenantId: String) =
         tenants().document(tenantId).collection(FirestorePaths.MEMBERS)
 

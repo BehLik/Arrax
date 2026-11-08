@@ -36,7 +36,8 @@ fun Member.toMemberUi() = MemberUi(
     name = name,
     initials = name.split(" ").filter { it.isNotBlank() }.take(2)
         .joinToString("") { it.first().uppercase() }.ifEmpty { "?" },
+    role = role,
     roleLabel = role.toLabel(),
-    isOwner = role == Role.OWNER
+    joinedLabel = ""
 )
 sealed interface InvitationDetailEvent { data object Deleted : InvitationDetailEvent }

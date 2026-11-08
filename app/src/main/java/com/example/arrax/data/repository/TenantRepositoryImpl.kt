@@ -47,6 +47,18 @@ class TenantRepositoryImpl @Inject constructor(
     override fun observeMembers(tenantId: String): Flow<List<Member>> =
         tenantDataSource.observeMembers(tenantId).map { list -> list.map { it.toDomain() } }
 
+    override suspend fun updateMemberRole(tenantId: String, memberUid: String, role: Role): Resource<Unit> = try {
+        tenantDataSource.updateMemberRole(tenantId, memberUid, role)
+        Resource.Success(Unit)
+    } catch (e: Exception) {
+        Resource.Error(e.message ?: "Error al actualizar el rol", e)
+    }
+    override suspend fun removeMember(tenantId: String, memberUid: String): Resource<Unit> = try {
+        tenantDataSource.removeMember(tenantId, memberUid)
+        Resource.Success(Unit)
+    } catch (e: Exception) {
+        Resource.Error(e.message ?: "Error al quitar al miembro", e)
+    }
     override fun observeMyRole(tenantId: String, uid: String): Flow<Role> =
         tenantDataSource.observeMyRole(tenantId, uid)
 
