@@ -16,6 +16,5 @@ interface AuthRepository {
     fun currentEmail(): String?
     fun isEmailVerified(): Boolean
     suspend fun changePassword(currentPassword: String, newPassword: String): Resource<Unit>
-
     suspend fun logout()
 }

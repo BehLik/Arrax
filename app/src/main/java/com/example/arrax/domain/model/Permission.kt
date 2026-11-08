@@ -1,10 +1,16 @@
 package com.example.arrax.domain.model
 
 enum class Permission {
+    // Eventos
     EVENT_VIEW, EVENT_CREATE, EVENT_EDIT, EVENT_DELETE,
+    // Operación
     ORDER_CREATE, PAYMENT_REGISTER, WEIGHING_USE,
-    CUSTOMER_CREATE, CUSTOMER_DELETE,
-    CATALOG_EDIT, MEMBERS_MANAGE, BUSINESS_EDIT
+    // Clientes
+    CUSTOMER_VIEW, CUSTOMER_CREATE, CUSTOMER_EDIT, CUSTOMER_DELETE,
+    // Catálogo
+    CATALOG_VIEW, CATALOG_EDIT,
+    // Negocio y equipo
+    BUSINESS_EDIT, BUSINESS_DELETE, MEMBERS_MANAGE, INVITE_CREATE
 }
 
 private val adminPermissions = setOf(
