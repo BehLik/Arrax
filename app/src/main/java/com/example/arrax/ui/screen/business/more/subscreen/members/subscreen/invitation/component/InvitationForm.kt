@@ -65,8 +65,7 @@ internal fun InvitationForm(
         Column(verticalArrangement = Arrangement.spacedBy(ArxSpacing.xs)) {
             Text("Rol de usuario", style = MaterialTheme.typography.titleMedium)
             RoleOption(Role.OPERATOR, "Registra y opera el día a día.", state.role, onRoleSelected)
-            // Descomenta cuando las reglas de "unirse" acepten ADMIN:
-            // RoleOption(Role.ADMIN, "Gestiona eventos, clientes y usuarios.", state.role, onRoleSelected)
+            RoleOption(Role.ADMIN, "Gestiona eventos, clientes y usuarios.", state.role, onRoleSelected)
         }
 
         Column(verticalArrangement = Arrangement.spacedBy(ArxSpacing.xs)) {

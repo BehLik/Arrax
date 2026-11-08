@@ -24,14 +24,8 @@ class SessionLocalDataSource @Inject constructor(
     val tenantId: Flow<String?> = dataStore.data.map { it[tenantIdKey] }
     val role: Flow<String?> = dataStore.data.map { it[roleKey] }
 
-    suspend fun saveSession(tenantId: String, role: String) {
-        dataStore.edit { prefs ->
-            prefs[tenantIdKey] = tenantId
-            prefs[roleKey] = role
-        }
+    suspend fun saveSession(tenantId: String) {
+        dataStore.edit { it[tenantIdKey] = tenantId }
     }
-
-    suspend fun clearSession() {
-        dataStore.edit { it.remove(tenantIdKey); it.remove(roleKey) }
-    }
+    suspend fun clearSession() { dataStore.edit { it.remove(tenantIdKey) } }
 }

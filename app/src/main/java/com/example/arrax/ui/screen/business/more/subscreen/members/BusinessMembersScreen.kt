@@ -34,6 +34,8 @@ import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
 import androidx.compose.foundation.lazy.items
+import com.example.arrax.core.designsystem.access.RequiresPermission
+import com.example.arrax.domain.model.Permission
 import com.example.arrax.ui.screen.business.more.subscreen.members.component.InviteMemberButton
 import com.example.arrax.ui.screen.business.more.subscreen.members.component.MemberRow
 
@@ -92,30 +94,35 @@ internal fun BusinessMembersContent(
                     )
                 }
                 item(key = "create") {
+                    RequiresPermission(Permission.INVITE_CREATE) {
                     InviteMemberButton(
                         onClick = onCreateInvitationClick,
                         modifier = Modifier.padding(vertical = ArxSpacing.sm)
-                    )
+                    )}
                 }
                 item(key = "active") {
-                    InvitationsSection(
-                        title = "Invitaciones activas",
-                        items = state.activeInvitations,
-                        expanded = state.activeExpanded,
-                        emptyText = "No hay invitaciones activas.",
-                        onToggle = onToggleActive,
-                        onClick = onInvitationClick
-                    )
+                    RequiresPermission(Permission.INVITE_CREATE) {
+                        InvitationsSection(
+                            title = "Invitaciones activas",
+                            items = state.activeInvitations,
+                            expanded = state.activeExpanded,
+                            emptyText = "No hay invitaciones activas.",
+                            onToggle = onToggleActive,
+                            onClick = onInvitationClick
+                        )
+                    }
                 }
                 item(key = "expired") {
-                    InvitationsSection(
-                        title = "Invitaciones vencidas",
-                        items = state.expiredInvitations,
-                        expanded = state.expiredExpanded,
-                        emptyText = "No hay invitaciones vencidas.",
-                        onToggle = onToggleExpired,
-                        onClick = onInvitationClick
-                    )
+                    RequiresPermission(Permission.INVITE_CREATE) {
+                        InvitationsSection(
+                            title = "Invitaciones vencidas",
+                            items = state.expiredInvitations,
+                            expanded = state.expiredExpanded,
+                            emptyText = "No hay invitaciones vencidas.",
+                            onToggle = onToggleExpired,
+                            onClick = onInvitationClick
+                        )
+                    }
                 }
                 item(key = "members-header") {
                     Text(
@@ -134,7 +141,7 @@ internal fun BusinessMembersContent(
                         )
                     }
                     else -> items(state.members, key = { it.id }) { member ->
-                        MemberRow(member = member, onClick = onMemberClick)
+                        MemberRow(member = member, onClick = { if (state.canManage && !member.isOwner) onMemberClick(it) })
                     }
                 }
             }

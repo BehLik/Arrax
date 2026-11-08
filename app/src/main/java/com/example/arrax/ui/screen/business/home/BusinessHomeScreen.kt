@@ -50,7 +50,6 @@ fun BusinessHomeScreen(
     onCreateCustomerClick:()-> Unit={},
     onEventsClick:()-> Unit={},
     onTeamClick: () -> Unit = {},
-//    onCutsClick: () -> Unit = {},
     viewModel: BusinessHomeViewModel = hiltViewModel()
 ) {
     BackHandler(onBack = onBack)
@@ -69,7 +68,6 @@ fun BusinessHomeScreen(
         onCreateCustomerClick = onCreateCustomerClick,
         onEventsClick = onEventsClick,
         onTeamClick = onTeamClick,
-//        onCutsClick = onCutsClick,
         modifier = modifier
     )
 }
@@ -86,7 +84,6 @@ internal fun BusinessHomeContent(
     onCreateCustomerClick:()-> Unit,
     onEventsClick:()-> Unit,
     onTeamClick: () -> Unit,
-//    onCutsClick: () -> Unit,
     onBack:()-> Unit,
     modifier: Modifier = Modifier
 ) {

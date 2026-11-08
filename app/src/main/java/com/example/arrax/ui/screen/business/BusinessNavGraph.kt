@@ -1,10 +1,14 @@
 package com.example.arrax.ui.screen.business
 
+import androidx.compose.runtime.Composable
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.example.arrax.core.designsystem.access.ProvideAccess
 import com.example.arrax.core.navigation.*
+import com.example.arrax.domain.model.Permission
 import com.example.arrax.ui.root.navigation.PlaceholderScreen
 import com.example.arrax.ui.root.navigation.backAction
 import com.example.arrax.ui.root.navigation.safeNavigate
@@ -29,11 +33,25 @@ fun NavGraphBuilder.businessGraph(nav: NavController) {
     businessMore(nav)
 }
 
+private inline fun <reified T : Any> NavGraphBuilder.businessComposable(
+    nav: NavController,
+    required: Permission? = null,
+    noinline content: @Composable (NavBackStackEntry) -> Unit
+) {
+    composable<T> { entry ->
+        ProvideAccess(
+            onRevoked = {
+                nav.navigate(LobbyHome) { popUpTo(0) { inclusive = true } }
+            },
+            required = required
+        ) { content(entry) }
+    }
+}
 // ── Inicio y eventos del negocio ──
 private fun NavGraphBuilder.businessCore(nav: NavController) {
     val back = nav.backAction()
 
-    composable<BusinessHome> { entry ->
+    businessComposable<BusinessHome>(nav){ entry ->
         val args = entry.toRoute<BusinessHome>()
         BusinessHomeScreen(
             onBack = back,
@@ -50,13 +68,13 @@ private fun NavGraphBuilder.businessCore(nav: NavController) {
         )
     }
 
-    composable<BusinessEvents> {
+    businessComposable<BusinessEvents>(nav, Permission.EVENT_VIEW) {
         BusinessEventViewScreen(
             onBack = back,
             onEventClick = { eventId -> /* TODO: EventHome(args.businessId, eventId) */ }
         )
     }
-    composable<EventCreate> { entry ->
+    businessComposable<EventCreate>(nav, Permission.EVENT_CREATE) { entry ->
         val args = entry.toRoute<EventCreate>()
         BusinessEventCreateScreen(
             onBack = back,
@@ -88,7 +106,7 @@ private fun NavGraphBuilder.businessAlerts(nav: NavController) {
 private fun NavGraphBuilder.businessMembers(nav: NavController) {
     val back = nav.backAction()
 
-    composable<BusinessMembers> { entry ->
+    businessComposable<BusinessMembers>(nav) { entry ->
         val args = entry.toRoute<BusinessMembers>()
         BusinessMembersScreen(
             onBack = back,
@@ -98,15 +116,17 @@ private fun NavGraphBuilder.businessMembers(nav: NavController) {
         )
     }
 
-    composable<BusinessMemberDetail> { PlaceholderScreen("Detalle del miembro", back) }
+    businessComposable<BusinessMemberDetail>(nav, Permission.MEMBERS_MANAGE) { PlaceholderScreen("Detalle del miembro", back) }
 
-    composable<InvitationCreate> {
+    businessComposable<InvitationCreate>(nav, Permission.INVITE_CREATE) {
         MembersInvitationScreen(
             onBack = back,
             onDone = { nav.popBackStack<BusinessMembers>(inclusive = false) }
         )
     }
-    composable<InvitationDetail> { MembersInvitationDetailScreen(onBack = back) }
+    businessComposable<InvitationDetail>(nav, Permission.INVITE_CREATE) {
+        MembersInvitationDetailScreen(onBack = back)
+    }
 }
 // ── Clientes: lista, crear/editar y detalle ──
 private fun NavGraphBuilder.businessCustomers(nav: NavController) {

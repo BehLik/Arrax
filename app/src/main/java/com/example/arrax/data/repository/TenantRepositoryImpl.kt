@@ -36,7 +36,7 @@ class TenantRepositoryImpl @Inject constructor(
         ownerName: String
     ): Resource<Tenant> = try {
         val dto = tenantDataSource.createTenant(name, ownerUid, ownerName)
-        sessionLocalDataSource.saveSession(dto.id, Role.OWNER.name) // antes ADMIN: el creador es OWNER
+//        sessionLocalDataSource.saveSession(dto.id, Role.OWNER.name)
         Resource.Success(dto.toDomain())
     } catch (e: Exception) {
         Resource.Error(e.message ?: "Error al crear el negocio", e)
@@ -77,7 +77,7 @@ class TenantRepositoryImpl @Inject constructor(
         userName: String
     ): Resource<Tenant> = try {
         val dto = tenantDataSource.joinTenant(invitationCode, uid, userName)
-        sessionLocalDataSource.saveSession(dto.id, Role.OPERATOR.name)
+//        sessionLocalDataSource.saveSession(dto.id, Role.OPERATOR.name)
         Resource.Success(dto.toDomain())
     } catch (e: Exception) {
         Resource.Error(e.message ?: "Código de invitación inválido", e)

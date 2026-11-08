@@ -20,6 +20,7 @@ data class InvitationItemUi(
 
 data class BusinessMembersState(
     val members: List<MemberUi> = emptyList(),
+    val canManage: Boolean = false,
     val isLoadingMembers: Boolean = true,
     val membersError: String? = null,
     val activeInvitations: List<InvitationItemUi> = emptyList(),

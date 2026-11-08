@@ -31,7 +31,7 @@ class BusinessEventViewViewmodel @Inject constructor(
     observeMyRole: ObserveMyRoleUseCase,
     authRepository: AuthRepository,
 ) : ViewModel() {
-    private val tenantId: String = savedStateHandle.toRoute<EventList>().businessId
+    private val tenantId: String = checkNotNull(savedStateHandle["businessId"])
     private val _state = MutableStateFlow(BusinessEventViewState(tenantId = tenantId))
     val state = _state.asStateFlow()
 

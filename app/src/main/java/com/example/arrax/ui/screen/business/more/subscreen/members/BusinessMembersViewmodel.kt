@@ -23,10 +23,13 @@ import javax.inject.Inject
 import com.example.arrax.core.common.NetworkMonitor
 import com.example.arrax.core.common.expiryLabel
 import com.example.arrax.core.common.toLabel
+import com.example.arrax.domain.model.Access
 import com.example.arrax.domain.model.InviteStatus
 import com.example.arrax.domain.model.Member
+import com.example.arrax.domain.model.Permission
 import com.example.arrax.domain.model.Role
 import com.example.arrax.domain.model.status
+import com.example.arrax.domain.usecase.access.ObserveAccessUseCase
 import com.example.arrax.domain.usecase.business.members.observe.ObserveInvitationsUseCase
 import com.example.arrax.domain.usecase.business.members.observe.ObserveMembersUseCase
 import kotlinx.coroutines.delay
@@ -43,10 +46,11 @@ class BusinessMembersViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val observeMembers: ObserveMembersUseCase,
     private val observeInvitations: ObserveInvitationsUseCase,
+    private val observeAccess: ObserveAccessUseCase
 ) : ViewModel() {
 
     private val businessId = savedStateHandle.toRoute<BusinessMembers>().businessId
-
+//    private val code: String = checkNotNull(savedStateHandle["code"])
     private val _uiState = MutableStateFlow(BusinessMembersState())
     val uiState: StateFlow<BusinessMembersState> = _uiState.asStateFlow()
 
@@ -89,22 +93,15 @@ class BusinessMembersViewModel @Inject constructor(
             }
             .catch { /* sin permiso o sin red: se queda la lista vacía */ }
             .launchIn(viewModelScope)
+        observeAccess(businessId)
+            .map { it is Access.Granted && it.can(Permission.MEMBERS_MANAGE) }
+            .onEach { c -> _uiState.update { it.copy(canManage = c) } }
+            .launchIn(viewModelScope)
     }
 
     fun onToggleActive() = _uiState.update { it.copy(activeExpanded = !it.activeExpanded) }
     fun onToggleExpired() = _uiState.update { it.copy(expiredExpanded = !it.expiredExpanded) }
 
-//    private fun Invitation.toItem(now: Long, active: Boolean) = InvitationItemUi(
-//        code = code,
-//        typeLabel = type.toLabel(),
-//        roleLabel = role.toLabel(),
-//        details = buildString {
-//            append("$usedCount de $maxUses ${if (maxUses == 1) "persona" else "personas"}")
-//            append(" · ")
-//            append(if (revoked) "Revocada" else expiryLabel(expiresAt, now))
-//        },
-//        isActive = active
-//    )
 private fun Invitation.toItem(now: Long): InvitationItemUi {
     val s = status(now)
     val people = "$usedCount de $maxUses ${if (maxUses == 1) "persona" else "personas"}"

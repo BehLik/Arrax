@@ -147,13 +147,14 @@ class FirestoreTenantDataSource @Inject constructor(
                 ?: throw AppError.InviteNotFound()
             Log.d("QR_JOIN", "3. tenant OK: ${tenant.id}")
 
+            val role = invite.role
             Log.d("QR_JOIN", "4. preparando escrituras (se envían al hacer commit)")
             tx.update(inviteRef, "usedCount", invite.usedCount + 1)
             tx.set(
                 memberRef,
                 mapOf(
                     "uid" to uid,
-                    "role" to Role.OPERATOR.name,
+                    "role" to role,
                     "name" to userName,
                     "joinedAt" to now,
                     "inviteCode" to invitationCode

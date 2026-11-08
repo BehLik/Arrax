@@ -6,6 +6,7 @@ import com.example.arrax.domain.model.EventStatus
 
 enum class EventFilter(val label: String) { ALL("Todos"), OPEN("Abiertos"), CLOSED("Cerrados") }
 
+
 @Immutable
 data class BusinessEventViewState(
     val isLoading: Boolean = true,
