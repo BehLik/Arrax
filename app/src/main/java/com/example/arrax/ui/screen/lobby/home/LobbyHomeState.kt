@@ -1,12 +1,13 @@
 package com.example.arrax.ui.screen.lobby.home
 
 import androidx.compose.runtime.Immutable
+import com.example.arrax.domain.model.Role
 
 @Immutable
 data class BusinessItem(
     val id: String,
     val name: String,
-    val isAdmin: Boolean,
+    val role: Role,
     val totalEvents: Int
 )
 

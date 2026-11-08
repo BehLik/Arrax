@@ -29,7 +29,7 @@ class ObserveMyBusinessesUseCase @Inject constructor(
                     list.map {
                         BusinessSummary(
                             tenant = it.tenant,
-                            isAdmin = it.role == Role.OWNER || it.role == Role.ADMIN,
+                            role = it.role,
                             totalEvents = it.eventCount
                         )
                     }

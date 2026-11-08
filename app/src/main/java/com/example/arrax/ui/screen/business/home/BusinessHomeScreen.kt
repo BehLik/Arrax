@@ -47,8 +47,8 @@ fun BusinessHomeScreen(
     onMoreClick: () -> Unit = {},
     onAlertsClick: () -> Unit = {},
     onCustomersClick: () -> Unit = {},
-    onCreateCustomerClick:()-> Unit={},
-    onEventsClick:()-> Unit={},
+    onCreateCustomerClick: () -> Unit = {},
+    onEventsClick: () -> Unit = {},
     onTeamClick: () -> Unit = {},
     viewModel: BusinessHomeViewModel = hiltViewModel()
 ) {
@@ -58,7 +58,7 @@ fun BusinessHomeScreen(
 
     BusinessHomeContent(
         state = state,
-        onBack =onBack,
+        onBack = onBack,
         onBusinessClick = onBusinessClick,
         onMoreClick = onMoreClick,
         onEventClick = onEventClick,
@@ -81,10 +81,10 @@ internal fun BusinessHomeContent(
     onAlertsClick: () -> Unit,
     onCreateEventClick: () -> Unit,
     onCustomersClick: () -> Unit,
-    onCreateCustomerClick:()-> Unit,
-    onEventsClick:()-> Unit,
+    onCreateCustomerClick: () -> Unit,
+    onEventsClick: () -> Unit,
     onTeamClick: () -> Unit,
-    onBack:()-> Unit,
+    onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var fabExpanded by rememberSaveable { mutableStateOf(false) }
@@ -99,58 +99,63 @@ internal fun BusinessHomeContent(
             contentWindowInsets = WindowInsets(0, 0, 0, 0),
             topBar = { HomeHeader(onMoreClick = onMoreClick, onBackClik = onBack) },
             floatingActionButton = {
-                ArxFabMenu(
-                    expanded = fabExpanded,
-                    onExpandedChange = { fabExpanded = it },
-                    items = listOf(
-                        ArxFabMenuItem("Nuevo evento", ArxIcons.Event, { showEventIntro = true }),
-                        ArxFabMenuItem("Nuevo cliente", ArxIcons.PersonAdd, onCreateCustomerClick)
-                    )
-                )
-            }
-        ) { innerPadding ->
-        Box (Modifier.fillMaxSize()){
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .verticalScroll(rememberScrollState())
-                    .padding(
-                        horizontal = ArxSpacing.sm,
-                        vertical = ArxSpacing.md
-                    )
-                    .padding(bottom = ArxSpacing.xl),
-                verticalArrangement = Arrangement.spacedBy(ArxSpacing.md)
-            ) {
-                ActiveBusinessCard(
-                    businessName = state.businessName,
-                    roleLabel = state.roleLabel,
-                    memberCount = state.memberCount,
-                    onClick = onTeamClick
-                )
-
-                HomeStatsRow(
-                    upcomingEvents = state.upcomingEventsCount,
-                    customers = state.customersCount,
-                    onEventsClick = onEventsClick,
-                    onCustomersClick = onCustomersClick
-                )
-
-
-                state.nextEvent?.let { NextEventBanner(event = it, onClick = onEventClick) }
-
-
-                HomeAlertsSection(
-                    alerts = state.alerts,
-                    onAlertsClick = onAlertsClick
-                )
-
-                SalesSummaryCard(
-                    total = state.salesTotal,
-                    slices = state.salesBreakdown
-                )
+                val items = buildList {
+                    if (state.canCreateEvent)
+                        add(ArxFabMenuItem("Nuevo evento", ArxIcons.Event, { showEventIntro = true }))
+                    if (state.canCreateCustomer)
+                        add(ArxFabMenuItem("Nuevo cliente", ArxIcons.PersonAdd, onCreateCustomerClick))
                 }
-            ArxFabMenuScrim(visible = fabExpanded, onDismiss = { fabExpanded = false })
+                if (items.isNotEmpty()) {
+                    ArxFabMenu(
+                        expanded = fabExpanded,
+                        onExpandedChange = { fabExpanded = it },
+                        items = items
+                    )
+                }
+            },
+        ) { innerPadding ->
+            Box(Modifier.fillMaxSize()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                        .verticalScroll(rememberScrollState())
+                        .padding(
+                            horizontal = ArxSpacing.sm,
+                            vertical = ArxSpacing.md
+                        )
+                        .padding(bottom = ArxSpacing.xl),
+                    verticalArrangement = Arrangement.spacedBy(ArxSpacing.md)
+                ) {
+                    ActiveBusinessCard(
+                        businessName = state.businessName,
+                        roleLabel = state.roleLabel,
+                        memberCount = state.memberCount,
+                        onClick = onTeamClick
+                    )
+
+                    HomeStatsRow(
+                        upcomingEvents = state.upcomingEventsCount,
+                        customers = state.customersCount,
+                        onEventsClick = onEventsClick,
+                        onCustomersClick = onCustomersClick
+                    )
+
+
+                    state.nextEvent?.let { NextEventBanner(event = it, onClick = onEventClick) }
+
+
+                    HomeAlertsSection(
+                        alerts = state.alerts,
+                        onAlertsClick = onAlertsClick
+                    )
+
+                    SalesSummaryCard(
+                        total = state.salesTotal,
+                        slices = state.salesBreakdown
+                    )
+                }
+                ArxFabMenuScrim(visible = fabExpanded, onDismiss = { fabExpanded = false })
             }
         }
         if (showEventIntro) {
@@ -164,6 +169,7 @@ internal fun BusinessHomeContent(
         }
     }
 }
+
 @Preview(
     showBackground = true,
     widthDp = 360,

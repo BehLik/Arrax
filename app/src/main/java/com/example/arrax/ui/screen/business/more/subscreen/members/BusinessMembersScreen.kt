@@ -205,23 +205,23 @@ internal fun InvitationRow(
         onClick = { onClick(item.code) }
     )
 }
-//@Preview(showBackground = true, widthDp = 360, heightDp = 780)
-//@Composable
-//private fun BusinessMembersPreview() {
-//    ArxTheme(darkTheme = true) {
-//        BusinessMembersContent(
-//            state = BusinessMembersState(
-//                isLoadingMembers = false,
-//                activeInvitations = listOf(
-//                    InvitationItemUi("A1", "Código + QR", "Operador", "2 de 5 personas · Expira en 3 días", isActive = false)
-//                ),
-//                members = listOf(
-//                    MemberUi("1", "Alex Caamal", "AC", "Propietario", isOwner = true),
-//                    MemberUi("2", "Carlos Ramírez", "CR", "Operador")
-//                )
-//            ),
-//            onBack = {}, onCreateInvitationClick = {}, onMemberClick = {},
-//            onInvitationClick = {}, onToggleActive = {}, onToggleExpired = {}
-//        )
-//    }
-//}
+@Preview(showBackground = true, widthDp = 360, heightDp = 780)
+@Composable
+private fun BusinessMembersPreview() {
+    ArxTheme(darkTheme = true) {
+        BusinessMembersContent(
+            state = BusinessMembersState(
+                isLoadingMembers = false,
+                activeInvitations = listOf(
+                    InvitationItemUi("A1", "Código + QR", "Operador", "2 de 5 personas · Expira en 3 días", isActive = true, statusLabel = "dd")
+                ),
+                members = listOf(
+                    MemberUi("1", "Alex Caamal", "AC", "Propietario", isOwner = true),
+                    MemberUi("2", "Carlos Ramírez", "CR", "Operador")
+                )
+            ),
+            onBack = {}, onCreateInvitationClick = {}, onMemberClick = {},
+            onInvitationClick = {}, onToggleActive = {}, onToggleExpired = {}
+        )
+    }
+}

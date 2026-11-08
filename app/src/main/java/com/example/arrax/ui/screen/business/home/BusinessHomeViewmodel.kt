@@ -5,7 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.example.arrax.core.navigation.BusinessHome
+import com.example.arrax.domain.model.Access
+import com.example.arrax.domain.model.Permission
 import com.example.arrax.domain.model.Role
+import com.example.arrax.domain.usecase.access.ObserveAccessUseCase
 import com.example.arrax.domain.usecase.business.members.observe.ObserveMembersUseCase
 import com.example.arrax.domain.usecase.tenant.observe.ObserveTenantUseCase
 import com.example.arrax.domain.usecase.user.ObserveCurrentUserUseCase
@@ -26,6 +29,7 @@ class BusinessHomeViewModel @Inject constructor(
     observeTenant: ObserveTenantUseCase,
     observeMembers: ObserveMembersUseCase,
     observeCurrentUser: ObserveCurrentUserUseCase,
+    observeAccess: ObserveAccessUseCase
 ) : ViewModel() {
 
     private val businessId = savedStateHandle.toRoute<BusinessHome>().businessId
@@ -53,6 +57,17 @@ class BusinessHomeViewModel @Inject constructor(
                 }
             }
             .catch { _uiState.update { it.copy(isLoading = false) } }
+            .launchIn(viewModelScope)
+        observeAccess(businessId)
+            .onEach { a ->
+                val granted = a as? Access.Granted
+                _uiState.update {
+                    it.copy(
+                        canCreateEvent = granted?.can(Permission.EVENT_CREATE) == true,
+                        canCreateCustomer = granted?.can(Permission.CUSTOMER_CREATE) == true
+                    )
+                }
+            }
             .launchIn(viewModelScope)
     }
 }

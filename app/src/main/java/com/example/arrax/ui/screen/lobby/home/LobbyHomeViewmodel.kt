@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.arrax.core.common.NetworkMonitor
 import com.example.arrax.data.local.NotificationPromptLocalDataSource
+import com.example.arrax.domain.model.BusinessSummary
+import com.example.arrax.domain.model.Role
 import com.example.arrax.domain.usecase.business.ObserveMyBusinessesUseCase
 import com.example.arrax.domain.usecase.user.ObserveCurrentUserUseCase
 import com.example.arrax.domain.usecase.user.ObservePreferencesUseCase
@@ -64,7 +66,7 @@ class LobbyHomeViewModel @Inject constructor(
                         BusinessItem(
                             id = b.tenant.id,
                             name = b.tenant.name,
-                            isAdmin = b.isAdmin,
+                            role = b.role,
                             totalEvents = b.totalEvents
                         )
                     }

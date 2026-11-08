@@ -31,5 +31,7 @@ data class BusinessHomeState(
     val nextEvent: HomeNextEventUi? = null,
     val alerts: List<HomeAlertUi> = emptyList(),
     val salesTotal: String = "",
+    val canCreateEvent: Boolean = false,
+    val canCreateCustomer: Boolean = false,
     val salesBreakdown: List<HomeSalesSliceUi> = emptyList()
 )

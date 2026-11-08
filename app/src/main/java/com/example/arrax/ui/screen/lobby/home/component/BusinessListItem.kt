@@ -16,6 +16,7 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.arrax.R
+import com.example.arrax.core.common.toLabel
 import com.example.arrax.core.designsystem.components.cards.ArxCard
 import com.example.arrax.core.designsystem.components.cards.ArxCardVariant
 import com.example.arrax.core.designsystem.components.display.ArxAvatar
@@ -30,9 +31,7 @@ fun BusinessListItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val role = stringResource(
-        if (business.isAdmin) R.string.business_role_admin else R.string.business_role_member
-    )
+    val role = business.role.toLabel()
     val events = pluralStringResource(
         R.plurals.business_events_count, business.totalEvents, business.totalEvents
     )
