@@ -42,11 +42,9 @@ import com.example.arrax.ui.screen.business.customers.subscreen.view.component.C
 import com.example.arrax.ui.screen.business.customers.subscreen.view.component.CustomerHeader
 import com.example.arrax.ui.screen.business.customers.subscreen.view.component.CustomerOrdersSection
 import androidx.compose.ui.res.painterResource
-import androidx.compose.material3.Icon
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import com.example.arrax.core.common.fullAddress
+import com.example.arrax.core.common.fullPhone
+
 
 @Composable
 fun CustomerViewScreen(
@@ -64,8 +62,9 @@ fun CustomerViewScreen(
         CustomerViewActions(
             onBack = onBack,
             onEditClick = { customer?.let { onEditClick(it.id) } },
-            onCallClick = { customer?.let { context.dial(it.phone) } },
-            onMapsClick = { customer?.let { context.openMaps(it.address) } },
+            onCallClick = { customer?.fullPhone()?.let(context::dial) },
+            onWhatsAppClick = { customer?.fullPhone()?.let(context::openWhatsApp) },
+            onMapsClick = { customer?.let { context.openMaps(it.fullAddress()) } },
             onDeleteRequest = viewModel::onDeleteRequest,
             onDeleteConfirm = viewModel::onDeleteConfirm,
             onDeleteDismiss = viewModel::onDeleteDismiss,
@@ -122,7 +121,13 @@ internal fun CustomerViewContent(
                         verticalArrangement = Arrangement.spacedBy(ArxSpacing.md),
                     ) {
                         CustomerHeader(customer)
-                        CustomerContactSection(customer, actions.onCallClick, actions.onMapsClick)
+
+                        CustomerContactSection(
+                            customer = customer,
+                            onCallClick = actions.onCallClick,
+                            onWhatsAppClick = actions.onWhatsAppClick,
+                            onMapsClick = actions.onMapsClick,
+                        )
                         CustomerOrdersSection()
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -174,10 +179,15 @@ internal fun CustomerViewContent(
     }
 }
 
-private fun Context.dial(phone: String) {
-    try {
-        startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:${Uri.encode(phone)}")))
-    } catch (_: ActivityNotFoundException) { }
+private fun Context.dial(number: String) {
+    try { startActivity(Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", number, null))) }
+    catch (_: ActivityNotFoundException) { }
+}
+
+private fun Context.openWhatsApp(number: String) {
+    val digits = number.filter(Char::isDigit)
+    try { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://wa.me/$digits"))) }
+    catch (_: ActivityNotFoundException) { }
 }
 
 private fun Context.openMaps(address: String) {

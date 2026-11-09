@@ -12,6 +12,8 @@ data class CustomerAddState(
     val isSaving: Boolean = false,
     val message: String? = null,
     val finished: Boolean = false,
+    val municipality: String = "Peto",
+    val state: String = "Yucatán",
 ) {
     val isEditing get() = customerId != null
 }
@@ -25,4 +27,6 @@ data class CustomerAddActions(
     val onPhotoPicked: (String) -> Unit = {},
     val onSave: () -> Unit = {},
     val onMessageShown: () -> Unit = {},
+    val onMunicipalityChange: (String) -> Unit = {},
+    val onStateChange: (String) -> Unit = {},
 )

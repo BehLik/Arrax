@@ -45,6 +45,8 @@ fun CustomerAddScreen(
             onPhotoPicked = viewModel::onPhotoPicked,
             onSave = viewModel::onSave,
             onMessageShown = viewModel::onMessageShown,
+            onMunicipalityChange = viewModel::onMunicipalityChange,
+            onStateChange = viewModel::onStateChange,
         )
     }
 

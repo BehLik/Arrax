@@ -17,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import com.example.arrax.core.designsystem.components.buttons.ArxPrimaryButton
 import com.example.arrax.core.designsystem.components.buttons.ArxSecondaryButton
 import com.example.arrax.core.designsystem.components.buttons.ArxTextButton
+import com.example.arrax.core.designsystem.icons.ArxBrandIcon
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 
@@ -49,13 +50,7 @@ fun LoginActions(
             onClick = onGoogleClick,
             enabled = !isLoading,
             loading = isGoogleLoading,
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(id = ArxIcons.Google),
-                    contentDescription = null,
-                    tint = Color.Unspecified
-                )
-            }
+            leadingIcon = { ArxBrandIcon(icon = ArxIcons.Google) }
         )
 
         ArxTextButton(text = "¿Olvidaste tu contraseña?", onClick = onForgotClick)

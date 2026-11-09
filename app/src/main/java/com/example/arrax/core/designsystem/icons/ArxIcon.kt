@@ -40,7 +40,21 @@ fun ArxIcon(
         tint = tint
     )
 }
-
+/** Icono de marca multicolor: conserva los colores originales del drawable. */
+@Composable
+fun ArxBrandIcon(
+    @DrawableRes icon: Int,
+    modifier: Modifier = Modifier,
+    contentDescription: String? = null,
+    size: Dp = 24.dp
+) {
+    Icon(
+        painter = painterResource(icon),
+        contentDescription = contentDescription,
+        modifier = modifier.size(size),
+        tint = Color.Unspecified
+    )
+}
 
 /**
  * Icono dentro de un contenedor del Design System.

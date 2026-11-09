@@ -3,15 +3,17 @@ package com.example.arrax.ui.screen.business.customers.subscreen.view.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import com.example.arrax.core.common.fullAddress
+import com.example.arrax.core.common.fullPhone
 import com.example.arrax.core.designsystem.components.buttons.ArxSecondaryButton
+import com.example.arrax.core.designsystem.icons.ArxBrandIcon
+import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.domain.model.Customer
 
@@ -21,6 +23,7 @@ internal fun CustomerContactSection(
     customer: Customer,
     onCallClick: () -> Unit,
     onMapsClick: () -> Unit,
+    onWhatsAppClick:()-> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -29,14 +32,19 @@ internal fun CustomerContactSection(
     ) {
         if (customer.phone.isNotBlank()) {
             ArxSecondaryButton(
-                text = "Llamar • ${customer.phone}",
+                text = "Llamar • ${customer.fullPhone()}",
                 onClick = onCallClick,
-                leadingIcon = { Icon(Icons.Filled.Call, contentDescription = null) },
+                leadingIcon = { Icon(painterResource(ArxIcons.Call), contentDescription = null) },
+            )
+            ArxSecondaryButton(
+                text = "WhatsApp",
+                onClick = onWhatsAppClick,
+                leadingIcon = { ArxBrandIcon(icon = ArxIcons.Whatsapp) },
             )
         }
         if (customer.address.isNotBlank()) {
             Text(
-                text = customer.address,
+                text = customer.fullAddress(),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface,
             )
@@ -50,7 +58,7 @@ internal fun CustomerContactSection(
             ArxSecondaryButton(
                 text = "Abrir en Maps",
                 onClick = onMapsClick,
-                leadingIcon = { Icon(Icons.Filled.Place, contentDescription = null) },
+                leadingIcon = { ArxBrandIcon(icon = ArxIcons.Maps) },
             )
         } else if (customer.reference.isNotBlank()) {
             Text(

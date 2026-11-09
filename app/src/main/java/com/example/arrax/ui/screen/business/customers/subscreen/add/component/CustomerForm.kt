@@ -5,6 +5,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -58,21 +59,49 @@ internal fun CustomerForm(
                 imeAction = ImeAction.Next,
             ),
         )
-        ArxTextField(
-            value = state.phone,
-            onValueChange = actions.onPhoneChange,
-            label = "Teléfono (opcional)",
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone, imeAction = ImeAction.Next),
-        )
+        Row(horizontalArrangement = Arrangement.spacedBy(ArxSpacing.sm)) {
+            ArxTextField(
+                value = state.phone,
+                onValueChange = actions.onPhoneChange,
+                label = "Teléfono (opcional)",
+                modifier = Modifier.weight(0.65f),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone, imeAction = ImeAction.Next),
+            )
+        }
         ArxTextField(
             value = state.address,
             onValueChange = actions.onAddressChange,
-            label = "Dirección (opcional)",
+            label = "Calle y número (opcional)",
             keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.Sentences,
-                imeAction = ImeAction.Next,
+                capitalization = KeyboardCapitalization.Words,
+                imeAction = ImeAction.Next
             ),
         )
+        Row(horizontalArrangement = Arrangement.spacedBy(ArxSpacing.sm)) {
+            ArxTextField(
+                value = state.municipality,
+                onValueChange = actions.onMunicipalityChange,
+                label = "Municipio",
+                modifier = Modifier.weight(1f),
+                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words, imeAction = ImeAction.Next),
+            )
+            ArxTextField(
+                value = state.state,
+                onValueChange = actions.onStateChange,
+                label = "Estado",
+                modifier = Modifier.weight(1f),
+                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words, imeAction = ImeAction.Next),
+            )
+        }
+//        ArxTextField(
+//            value = state.address,
+//            onValueChange = actions.onAddressChange,
+//            label = "Dirección (opcional)",
+//            keyboardOptions = KeyboardOptions(
+//                capitalization = KeyboardCapitalization.Sentences,
+//                imeAction = ImeAction.Next,
+//            ),
+//        )
         ArxTextField(
             value = state.reference,
             onValueChange = actions.onReferenceChange,

@@ -8,4 +8,7 @@ data class Customer(
     val reference: String = "",
     val photoUrl: String? = null,
     val createdAt: Long = 0L,
+    val countryCode: String = "+52",
+    val municipality: String = "Peto",
+    val state: String = "Yucatán",
 )

@@ -16,6 +16,7 @@ data class CustomerViewActions(
     val onEditClick: () -> Unit = {},
     val onCallClick: () -> Unit = {},
     val onMapsClick: () -> Unit = {},
+    val onWhatsAppClick: () -> Unit = {},
     val onDeleteRequest: () -> Unit = {},
     val onDeleteConfirm: () -> Unit = {},
     val onDeleteDismiss: () -> Unit = {},

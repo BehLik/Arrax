@@ -47,7 +47,10 @@ class CustomerAddViewmodel @Inject constructor(
     }
 
     fun onNameChange(v: String) = _state.update { it.copy(name = v, nameError = null) }
-    fun onPhoneChange(v: String) = _state.update { it.copy(phone = v) }
+    fun onPhoneChange(v: String) =
+        _state.update { it.copy(phone = v.filter(Char::isDigit).take(10)) }
+    fun onMunicipalityChange(v: String) = _state.update { it.copy(municipality = v) }
+    fun onStateChange(v: String) = _state.update { it.copy(state = v) }
     fun onAddressChange(v: String) = _state.update { it.copy(address = v) }
     fun onReferenceChange(v: String) = _state.update { it.copy(reference = v) }
     fun onPhotoPicked(uri: String) = _state.update { it.copy(photo = uri) }

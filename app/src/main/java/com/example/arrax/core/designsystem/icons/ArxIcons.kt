@@ -26,6 +26,8 @@ object ArxIcons {
 
     /** Logo de Google para inicio de sesión con cuenta Google. */
     val Google = R.drawable.ic_google
+    val Whatsapp=R.drawable.ic_whatsapp
+    val Maps=R.drawable.ic_maps
 
     // ============================================================
     // NAVEGACIÓN
@@ -422,7 +424,9 @@ object ArxIcons {
 
     /** Agrega o selecciona una fotografía. */
     val Photo = R.drawable.ic_add_photo_alternate
-
+    /**llamar a un contacto */
+    val Call =R.drawable.ic_call
+    val Message=R.drawable.ic_message
     // ============================================================
     // TIEMPO
     // ============================================================
