@@ -113,24 +113,25 @@ internal fun CustomerViewContent(
                         )
                     }
 
-                    else -> Column(
-                        modifier = Modifier
-                            .weight(1f)
-                            .verticalScroll(rememberScrollState())
-                            .padding(horizontal = ArxSpacing.md, vertical = ArxSpacing.sm),
-                        verticalArrangement = Arrangement.spacedBy(ArxSpacing.md),
-                    ) {
-                        CustomerHeader(customer)
-
-                        CustomerContactSection(
-                            customer = customer,
-                            onCallClick = actions.onCallClick,
-                            onWhatsAppClick = actions.onWhatsAppClick,
-                            onMapsClick = actions.onMapsClick,
-                        )
-                        CustomerOrdersSection()
+                    else -> Column(Modifier.weight(1f)) {
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .verticalScroll(rememberScrollState())
+                                .padding(horizontal = ArxSpacing.md, vertical = ArxSpacing.sm),
+                            verticalArrangement = Arrangement.spacedBy(ArxSpacing.md),
+                        ) {
+                            CustomerHeader(customer)
+                            CustomerContactSection(
+                                customer = customer,
+                                onCallClick = actions.onCallClick,
+                                onWhatsAppClick = actions.onWhatsAppClick,
+                                onMapsClick = actions.onMapsClick,
+                            )
+                            CustomerOrdersSection()
+                        }
                         Row(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth().padding(ArxSpacing.md),
                             horizontalArrangement = Arrangement.spacedBy(ArxSpacing.sm),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {

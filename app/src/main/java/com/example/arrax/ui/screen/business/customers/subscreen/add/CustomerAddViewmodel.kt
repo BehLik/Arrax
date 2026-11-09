@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.example.arrax.core.common.MxCatalog
 import com.example.arrax.core.navigation.BusinessCustomerAdd
 import com.example.arrax.domain.model.Customer
 import com.example.arrax.domain.usecase.customer.Observe.ObserveCustomerUseCase
@@ -40,6 +41,7 @@ class CustomerAddViewmodel @Inject constructor(
                         isLoading = false,
                         name = c.name, phone = c.phone, address = c.address,
                         reference = c.reference, photo = c.photoUrl,
+                        municipality = c.municipality, state = c.state,
                     )
                 }
             }
@@ -50,9 +52,12 @@ class CustomerAddViewmodel @Inject constructor(
     fun onPhoneChange(v: String) =
         _state.update { it.copy(phone = v.filter(Char::isDigit).take(10)) }
     fun onMunicipalityChange(v: String) = _state.update { it.copy(municipality = v) }
-    fun onStateChange(v: String) = _state.update { it.copy(state = v) }
+    fun onStateChange(v: String) = _state.update {
+        if (v == it.state) it
+        else it.copy(state = v, municipality = MxCatalog.municipalities[v]?.firstOrNull().orEmpty())
+    }
     fun onAddressChange(v: String) = _state.update { it.copy(address = v) }
-    fun onReferenceChange(v: String) = _state.update { it.copy(reference = v) }
+    fun onReferenceChange(v: String) = _state.update { it.copy(reference = v.take(100)) }
     fun onPhotoPicked(uri: String) = _state.update { it.copy(photo = uri) }
     fun onMessageShown() = _state.update { it.copy(message = null) }
 
