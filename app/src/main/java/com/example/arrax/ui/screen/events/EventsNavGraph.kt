@@ -9,7 +9,7 @@ import com.example.arrax.ui.root.navigation.PlaceholderAction
 import com.example.arrax.ui.root.navigation.PlaceholderScreen
 import com.example.arrax.ui.root.navigation.backAction
 import com.example.arrax.ui.root.navigation.safeNavigate
-import com.example.arrax.ui.screen.events.detail.EventDetailScreen
+import com.example.arrax.ui.screen.events.home.EventHomeScreen
 
 fun NavGraphBuilder.eventGraph(nav: NavController) {
     eventCore(nav)
@@ -24,7 +24,7 @@ private fun NavGraphBuilder.eventCore(nav: NavController) {
     val back = nav.backAction()
 
     composable<EventHome> {
-        EventDetailScreen(onBack = back)
+//        EventHomeScreen(onBack = back)
         // TODO: cuando EventDetailScreen exponga estos callbacks, conéctalos con:
         //   val args = entry.toRoute<EventHome>()
         //   onOrdersClick     = { nav.safeNavigate(EventOrders(args.businessId, args.eventId)) }

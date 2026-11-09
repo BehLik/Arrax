@@ -42,6 +42,7 @@ object ArxImages {
     // CORTES DE CARNE
     // ============================================================
 
+    val Cuts =R.drawable.img_cuts
     /** Carne en general / corte de carne. */
     val CutMeat = R.drawable.img_cut_meat
 

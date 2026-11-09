@@ -77,7 +77,7 @@ import com.example.arrax.ui.screen.events.home.component.RecentOrderRowCard
 
 @Composable
 fun EventHomeScreen(
-    onBack: () -> Unit,
+    onBack: () -> Unit={},
     onEditEventClick: () -> Unit,
     onEditEventNameClick: () -> Unit,
     onMakeOrdersClick: () -> Unit,

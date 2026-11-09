@@ -51,7 +51,7 @@ internal fun EventHeroCard(
         Box(modifier = Modifier.fillMaxWidth()) {
             // Capa decorativa derecha con fundido hacia la izquierda
             Image(
-                painter = painterResource(id = ArxImages.CutMeat),
+                painter = painterResource(id = ArxImages.Cuts),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -60,16 +60,27 @@ internal fun EventHeroCard(
                     .height(170.dp)
                     .alpha(0.85f)
             )
+            // Imagen panorámica de cortes
+            Image(
+                painter = painterResource(id = ArxImages.Cuts),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                alignment = Alignment.CenterEnd,
+                modifier = Modifier
+                    .matchParentSize()
+                    .alpha(0.72f)
+            )
+            
             Box(
                 modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .fillMaxWidth(0.55f)
-                    .height(170.dp)
+                    .matchParentSize()
                     .background(
                         Brush.horizontalGradient(
-                            colors = listOf(
-                                MaterialTheme.colorScheme.surface,
-                                Color.Transparent
+                            colorStops = arrayOf(
+                                0.0f to MaterialTheme.colorScheme.surface,
+                                0.35f to MaterialTheme.colorScheme.surface,
+                                0.65f to MaterialTheme.colorScheme.surface.copy(alpha = 0.80f),
+                                1.0f to Color.Transparent
                             )
                         )
                     )
