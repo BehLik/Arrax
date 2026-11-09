@@ -13,7 +13,7 @@ import com.example.arrax.core.designsystem.components.buttons.ArxPrimaryButton
 import com.example.arrax.core.designsystem.components.buttons.ArxTextButton
 
 @Composable
-fun RegisterActions(
+internal fun RegisterActions(
     isLoading: Boolean,
     isButtonEnabled: Boolean,
     onRegisterClick: () -> Unit,

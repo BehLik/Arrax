@@ -12,7 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 
 @Composable
-fun ForGotPasswordHeader() {
+internal fun ForGotPasswordHeader() {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = "Recuperar contraseña",

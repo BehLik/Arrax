@@ -28,7 +28,7 @@ import com.example.arrax.ui.screen.lobby.notification.NotificationUi
 
 
 @Composable
-fun NotificationItem(
+internal fun NotificationItem(
     notification: NotificationUi,
     onClick: () -> Unit,
     modifier: Modifier = Modifier

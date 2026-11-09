@@ -43,7 +43,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DataStep(
+internal fun DataStep(
     name: String,
     dateMillis: Long?,
     animalCount: Int,

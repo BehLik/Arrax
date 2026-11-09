@@ -19,7 +19,7 @@ private val StepLabels = listOf("Datos", "Cortes", "Precios", "Resumen", "Listo"
 
 
 @Composable
-fun StepIndicator(current: Int) {
+internal fun StepIndicator(current: Int) {
     val colors = MaterialTheme.colorScheme
     Row(
         modifier = Modifier.fillMaxWidth().padding(horizontal = ArxSpacing.md, vertical = ArxSpacing.sm),

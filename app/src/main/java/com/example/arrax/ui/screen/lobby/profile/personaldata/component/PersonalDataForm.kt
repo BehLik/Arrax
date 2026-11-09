@@ -16,7 +16,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import com.example.arrax.core.designsystem.components.inputs.ArxTextField
 @Composable
-fun PersonalDataForm(
+internal fun PersonalDataForm(
     name: String,
     nameError: String?,
     email: String,

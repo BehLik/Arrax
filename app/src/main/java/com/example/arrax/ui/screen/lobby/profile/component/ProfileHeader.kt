@@ -13,7 +13,7 @@ import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.ui.root.session.CurrentUserAvatar
 
 @Composable
-fun ProfileHeader(
+internal fun ProfileHeader(
     name: String,
     email: String,
     modifier: Modifier = Modifier

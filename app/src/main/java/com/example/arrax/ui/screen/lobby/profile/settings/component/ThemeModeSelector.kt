@@ -14,7 +14,7 @@ import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.domain.model.ThemeMode
 
 @Composable
-fun ThemeModeSelector(
+internal fun ThemeModeSelector(
     currentMode: ThemeMode,
     onModeSelected: (ThemeMode) -> Unit,
     modifier: Modifier = Modifier

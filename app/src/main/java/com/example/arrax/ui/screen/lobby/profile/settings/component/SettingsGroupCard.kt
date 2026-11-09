@@ -13,7 +13,7 @@ import com.example.arrax.core.designsystem.theme.extendedColors
 
 /** Contenedor glass sutil. Reemplazar por ArxCard(variant = Glass) cuando se confirme su API. */
 @Composable
-fun SettingsGroupCard(
+internal fun SettingsGroupCard(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {

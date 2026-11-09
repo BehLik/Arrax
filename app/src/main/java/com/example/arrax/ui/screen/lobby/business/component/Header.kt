@@ -16,7 +16,7 @@ import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 
 @Composable
-fun CreateHeaderBusiness() {
+internal fun CreateHeaderBusiness() {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,

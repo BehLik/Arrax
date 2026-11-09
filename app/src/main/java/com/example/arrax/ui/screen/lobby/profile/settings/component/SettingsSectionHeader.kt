@@ -10,7 +10,7 @@ import androidx.compose.ui.semantics.semantics
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 
 @Composable
-fun SettingsSectionHeader(
+internal fun SettingsSectionHeader(
     title: String,
     modifier: Modifier = Modifier
 ) {

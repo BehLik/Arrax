@@ -13,7 +13,7 @@ import com.example.arrax.R
 import com.example.arrax.core.designsystem.components.buttons.ArxTextButton
 
 @Composable
-fun RecentHeader(
+internal fun RecentHeader(
     onViewAllClick: () -> Unit,
     modifier: Modifier = Modifier,
     showViewAll: Boolean = true

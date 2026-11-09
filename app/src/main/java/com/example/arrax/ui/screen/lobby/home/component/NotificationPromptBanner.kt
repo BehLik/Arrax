@@ -19,7 +19,7 @@ import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.extendedColors
 
 @Composable
-fun NotificationPromptBanner(
+internal fun NotificationPromptBanner(
     onEnable: () -> Unit,
     onLater: () -> Unit,
     modifier: Modifier = Modifier

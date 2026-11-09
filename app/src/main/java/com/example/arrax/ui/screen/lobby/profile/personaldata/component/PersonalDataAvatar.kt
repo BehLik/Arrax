@@ -17,7 +17,7 @@ import com.example.arrax.ui.root.session.CurrentUserAvatar
 private val AvatarSize = 96.dp
 
 @Composable
-fun PersonalDataAvatar(isGoogleAccount: Boolean, modifier: Modifier = Modifier) {
+internal fun PersonalDataAvatar(isGoogleAccount: Boolean, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally

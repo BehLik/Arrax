@@ -8,7 +8,7 @@ import com.example.arrax.core.designsystem.components.display.ArxEmptyState
 import com.example.arrax.core.designsystem.icons.ArxIcons
 
 @Composable
-fun LobbyEmptyBusinesses(onCreateBusinessClick: () -> Unit, modifier: Modifier = Modifier) {
+internal fun LobbyEmptyBusinesses(onCreateBusinessClick: () -> Unit, modifier: Modifier = Modifier) {
     ArxEmptyState(
         title = stringResource(R.string.lobby_empty_title),
         description = stringResource(R.string.lobby_empty_description),

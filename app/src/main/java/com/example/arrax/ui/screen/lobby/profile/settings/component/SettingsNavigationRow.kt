@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 
 @Composable
-fun SettingsNavigationRow(
+internal fun SettingsNavigationRow(
     title: String,
     subtitle: String,
     modifier: Modifier = Modifier,

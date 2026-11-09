@@ -3,12 +3,9 @@ package com.example.arrax.ui.screen.lobby.join.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -18,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.unit.dp
 import com.example.arrax.core.designsystem.components.buttons.ArxPrimaryButton
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.extendedColors
@@ -28,7 +24,7 @@ import com.example.arrax.core.designsystem.theme.extendedColors
  * TODO: sustituir OutlinedTextField/Button por ArxTextField/ArxPrimaryButton al confirmar sus firmas.
  */
 @Composable
-fun JoinCodeForm(
+internal fun JoinCodeForm(
     code: String,
     isLoading: Boolean,
     isSuccess: Boolean,
@@ -37,7 +33,6 @@ fun JoinCodeForm(
     onJoin: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-//    val canJoin = code.isNotBlank() && !isLoading
 
     Column(
         modifier = modifier.fillMaxWidth(),

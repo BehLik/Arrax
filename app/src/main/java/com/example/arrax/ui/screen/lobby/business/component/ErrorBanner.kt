@@ -15,7 +15,7 @@ import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 
 @Composable
- fun ErrorBanner(message: String) {
+ internal fun ErrorBanner(message: String) {
     Surface(
         shape = MaterialTheme.shapes.small,
         color = MaterialTheme.colorScheme.errorContainer,

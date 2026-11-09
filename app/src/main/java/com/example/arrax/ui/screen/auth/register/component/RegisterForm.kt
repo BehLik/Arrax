@@ -24,7 +24,7 @@ import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 
 @Composable
-fun RegisterForm(
+internal fun RegisterForm(
     name: String,
     email: String,
     password: String,

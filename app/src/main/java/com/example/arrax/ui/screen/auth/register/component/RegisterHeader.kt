@@ -12,7 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 
 @Composable
-fun RegisterHeader() {
+internal fun RegisterHeader() {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = "Crear cuenta",

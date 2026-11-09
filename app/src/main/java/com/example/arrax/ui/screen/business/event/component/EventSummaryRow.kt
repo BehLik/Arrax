@@ -12,7 +12,7 @@ import com.example.arrax.core.designsystem.icons.ArxIcon
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 
 @Composable
-fun SummaryRow(icon: Int, label: String, value: String) {
+internal fun SummaryRow(icon: Int, label: String, value: String) {
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(ArxSpacing.md)) {
         ArxIcon(icon, tint = MaterialTheme.colorScheme.primary, size = 20.dp)
         Column {

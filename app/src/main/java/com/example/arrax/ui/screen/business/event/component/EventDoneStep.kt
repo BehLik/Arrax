@@ -22,7 +22,7 @@ import com.example.arrax.ui.screen.business.event.BusinessEventCreateState
 
 
 @Composable
-fun DoneStep(state: BusinessEventCreateState) {
+internal fun DoneStep(state: BusinessEventCreateState) {
     Column(
         modifier = Modifier.fillMaxSize().padding(ArxSpacing.md),
         horizontalAlignment = Alignment.CenterHorizontally,

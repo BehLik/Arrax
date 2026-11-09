@@ -29,7 +29,7 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.text.input.ImeAction
 
 @Composable
-fun PricesStep(
+internal fun PricesStep(
     cuts: List<CutCatalog>,
     prices: Map<String, PriceInput>,
     onPriceChange: (String, String) -> Unit

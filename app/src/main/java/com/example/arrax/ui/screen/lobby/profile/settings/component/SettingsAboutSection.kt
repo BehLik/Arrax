@@ -24,7 +24,7 @@ import com.example.arrax.ui.screen.lobby.profile.settings.component.AboutLink
 import com.example.arrax.ui.screen.lobby.profile.settings.component.SettingsGroupCard
 
 @Composable
-fun SettingsAboutSection(
+internal fun SettingsAboutSection(
     version: String,
     onLinkClick: (AboutLink) -> Unit,
     modifier: Modifier = Modifier

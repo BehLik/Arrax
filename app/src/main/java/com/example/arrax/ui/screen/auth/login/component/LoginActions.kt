@@ -22,7 +22,7 @@ import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 
 @Composable
-fun LoginActions(
+internal fun LoginActions(
     isLoading: Boolean,
     isGoogleLoading: Boolean,
     isButtonEnabled: Boolean,

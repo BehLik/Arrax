@@ -24,7 +24,7 @@ import com.example.arrax.core.designsystem.theme.extendedColors
 
 /** Atajo glass hacia el modo QR. Sustituir por ArxCard(variant = Glass) cuando se confirme su API. */
 @Composable
-fun JoinQrShortcutCard(
+internal fun JoinQrShortcutCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {

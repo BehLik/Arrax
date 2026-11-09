@@ -29,7 +29,7 @@ import com.example.arrax.core.designsystem.theme.ArxSpacing
  * El preview de CameraX y el análisis del QR se conectan en [cameraContent] desde el ViewModel/host.
  */
 @Composable
-fun JoinQrScannerView(
+internal fun JoinQrScannerView(
     torchOn: Boolean,
     errorMessage: String?,
     onTorchToggle: () -> Unit,

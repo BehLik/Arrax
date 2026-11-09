@@ -26,7 +26,7 @@ enum class ProfileOption(val title: String) {
 }
 
 @Composable
-fun ProfileOptionRow(
+internal fun ProfileOptionRow(
     title: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,

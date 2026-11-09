@@ -14,7 +14,7 @@ import com.example.arrax.core.designsystem.components.buttons.ArxPrimaryButton
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 
 @Composable
-fun ChangePasswordSuccess(onDone: () -> Unit, modifier: Modifier = Modifier) {
+internal fun ChangePasswordSuccess(onDone: () -> Unit, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally

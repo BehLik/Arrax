@@ -18,7 +18,7 @@ import com.example.arrax.core.designsystem.components.cards.ArxCardVariant
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 
 @Composable
-fun WorkspaceCard(
+internal fun WorkspaceCard(
     onCreateBusinessClick: () -> Unit,
     onJoinClick: () -> Unit,
     modifier: Modifier = Modifier

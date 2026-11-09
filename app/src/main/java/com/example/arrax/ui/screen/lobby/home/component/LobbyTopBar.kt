@@ -26,10 +26,9 @@ import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.ui.root.session.CurrentUserAvatar
 
 @Composable
-fun LobbyTopBar(
+internal fun LobbyTopBar(
     unreadNotifications: Int,
     onNotificationsClick: () -> Unit,
-//    onSettingsClick: () -> Unit,
     onProfileClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {

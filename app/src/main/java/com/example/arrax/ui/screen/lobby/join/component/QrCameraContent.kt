@@ -46,7 +46,7 @@ import android.util.Log
 
 @androidx.annotation.OptIn(ExperimentalGetImage::class)
 @Composable
-fun QrCameraContent(
+internal fun QrCameraContent(
     torchOn: Boolean,
     onQrScanned: (String) -> Unit,
     modifier: Modifier = Modifier

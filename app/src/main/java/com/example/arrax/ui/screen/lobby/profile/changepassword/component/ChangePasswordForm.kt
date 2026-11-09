@@ -11,7 +11,7 @@ import com.example.arrax.core.designsystem.components.inputs.ArxPasswordField
 
 
 @Composable
-fun ChangePasswordForm(
+internal fun ChangePasswordForm(
     currentPassword: String,
     newPassword: String,
     confirmPassword: String,

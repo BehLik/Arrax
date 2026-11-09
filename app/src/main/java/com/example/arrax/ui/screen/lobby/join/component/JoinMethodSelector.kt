@@ -11,7 +11,7 @@ import com.example.arrax.domain.model.JoinMethod
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun JoinMethodSelector(
+internal fun JoinMethodSelector(
     selected: JoinMethod,
     onSelected: (JoinMethod) -> Unit,
     modifier: Modifier = Modifier

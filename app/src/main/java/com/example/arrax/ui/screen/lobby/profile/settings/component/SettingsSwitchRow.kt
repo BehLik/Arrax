@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 
 @Composable
-fun SettingsSwitchRow(
+internal fun SettingsSwitchRow(
     title: String,
     subtitle: String,
     checked: Boolean,

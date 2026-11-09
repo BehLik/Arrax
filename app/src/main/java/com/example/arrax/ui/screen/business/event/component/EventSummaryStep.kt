@@ -19,7 +19,7 @@ import com.example.arrax.ui.screen.business.event.BusinessEventCreateState
 
 
 @Composable
-fun SummaryStep(state: BusinessEventCreateState) {
+internal fun SummaryStep(state: BusinessEventCreateState) {
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(ArxSpacing.md),
         verticalArrangement = Arrangement.spacedBy(ArxSpacing.md)

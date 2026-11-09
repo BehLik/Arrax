@@ -17,7 +17,7 @@ import com.example.arrax.core.designsystem.theme.extendedColors
 import com.example.arrax.domain.model.AlertChannel
 
 @Composable
-fun AlertsSection(
+internal fun AlertsSection(
     masterEnabled: Boolean,
     alerts: Map<AlertChannel, Boolean>,
     onMasterToggle: (Boolean) -> Unit,

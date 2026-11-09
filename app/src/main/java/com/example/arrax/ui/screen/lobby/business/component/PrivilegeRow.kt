@@ -11,7 +11,7 @@ import com.example.arrax.core.designsystem.icons.ArxIconStyle
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 
 @Composable
- fun PrivilegeRow(icon: Int, text: String) {
+ internal fun PrivilegeRow(icon: Int, text: String) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(ArxSpacing.md)

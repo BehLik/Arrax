@@ -15,7 +15,7 @@ import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.extendedColors
 
 @Composable
- fun OwnerPrivilegesCard() {
+ internal fun OwnerPrivilegesCard() {
     Surface(
         shape = MaterialTheme.shapes.medium,
         color = MaterialTheme.extendedColors.glass,

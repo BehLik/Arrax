@@ -22,7 +22,7 @@ import com.example.arrax.domain.model.CutCatalog
 
 
 @Composable
-fun CutsStep(
+internal fun CutsStep(
     cuts: List<CutCatalog>,
     catalogIsEmpty: Boolean,
     selectedIds: Set<String>,

@@ -26,7 +26,7 @@ import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.ui.screen.lobby.home.BusinessItem
 
 @Composable
-fun BusinessListItem(
+internal fun BusinessListItem(
     business: BusinessItem,
     onClick: () -> Unit,
     modifier: Modifier = Modifier

@@ -17,7 +17,7 @@ import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.domain.model.CutCatalog
 
 @Composable
-fun CutImage(cut: CutCatalog, modifier: Modifier = Modifier) {
+internal fun CutImage(cut: CutCatalog, modifier: Modifier = Modifier) {
     val url = cut.imageUrl
     val res = cut.imageRes
     val fallback = res?.let { painterResource(it) }

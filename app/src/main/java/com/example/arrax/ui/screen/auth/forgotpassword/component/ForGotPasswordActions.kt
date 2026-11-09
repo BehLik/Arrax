@@ -12,7 +12,7 @@ import com.example.arrax.core.designsystem.components.buttons.ArxTextButton
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 
 @Composable
-fun ForGotPasswordActions(
+internal fun ForGotPasswordActions(
     isLoading: Boolean,
     isSent: Boolean,
     isButtonEnabled: Boolean,

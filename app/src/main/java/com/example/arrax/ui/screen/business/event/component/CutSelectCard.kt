@@ -26,7 +26,7 @@ import com.example.arrax.domain.model.CutCatalog
 
 
 @Composable
-fun CutSelectCard(cut: CutCatalog, selected: Boolean, onClick: () -> Unit) {
+internal fun CutSelectCard(cut: CutCatalog, selected: Boolean, onClick: () -> Unit) {
     val colors = MaterialTheme.colorScheme
     val shape = MaterialTheme.shapes.medium
     Box(

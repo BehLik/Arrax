@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 
 @Composable
-fun NotificationEmptyContent(modifier: Modifier = Modifier) {
+internal fun NotificationEmptyContent(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()

@@ -15,7 +15,7 @@ import com.example.arrax.core.designsystem.components.inputs.ArxTextField
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 
 @Composable
-fun ForGotPasswordForm(
+internal fun ForGotPasswordForm(
     email: String,
     emailError: String?,
     errorGeneral: String?,

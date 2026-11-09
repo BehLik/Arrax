@@ -21,7 +21,7 @@ import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing
 
 @Composable
-fun ProfileLogoutRow(
+internal fun ProfileLogoutRow(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true

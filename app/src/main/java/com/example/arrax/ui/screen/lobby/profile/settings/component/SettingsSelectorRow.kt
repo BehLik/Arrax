@@ -16,7 +16,7 @@ import com.example.arrax.core.designsystem.theme.ArxSpacing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun <T> SettingsSelectorRow(
+internal fun <T> SettingsSelectorRow(
     title: String,
     options: List<T>,
     selected: T,
