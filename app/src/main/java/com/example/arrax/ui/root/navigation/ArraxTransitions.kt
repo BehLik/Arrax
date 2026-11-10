@@ -28,4 +28,7 @@ object ArraxTransitions {
                 slideInHorizontally(tween(300)) { -it / 10 }
     }
     val popExit: ExitSpec = { fadeOut(tween(90)) }
+
+    val tabEnter: EnterSpec = { fadeIn(tween(200)) }
+    val tabExit: ExitSpec = { fadeOut(tween(100)) }
 }

@@ -1,4 +1,7 @@
 package com.example.arrax.ui.screen.events.deliveries
 
-class EventDeliveriesScreen {
+import androidx.compose.runtime.Composable
+
+@Composable
+fun EventDeliveriesScreen() {
 }

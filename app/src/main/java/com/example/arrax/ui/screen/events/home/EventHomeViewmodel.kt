@@ -103,10 +103,10 @@ class EventHomeViewModel @Inject constructor(
     fun onSeeAllOrdersClick() = send(EventHomeEvent.SeeAllOrders)
     fun onOrderClick(orderId: String) = send(EventHomeEvent.OpenOrder(orderId))
 
-    fun onBottomBarClick(route: String) {
-        if (route == _state.value.currentRoute) return
-        send(EventHomeEvent.NavigateToRoute(route))
-    }
+//    fun onBottomBarClick(route: String) {
+//        if (route == _state.value.currentRoute) return
+//        send(EventHomeEvent.NavigateToRoute(route))
+//    }
 
     private fun send(event: EventHomeEvent) {
         viewModelScope.launch { _events.send(event) }

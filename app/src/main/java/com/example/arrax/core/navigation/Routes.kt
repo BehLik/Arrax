@@ -43,6 +43,7 @@ import kotlinx.serialization.Serializable
 @Serializable data class BusinessHistory(val businessId: String)   // eventos cerrados e histórico
 
 // ── Event (alcance evento) ───────────────────────────────────────────────────────────────────────
+@Serializable data class EventShell(val businessId: String, val eventId: String)
 @Serializable data class EventCreate(val businessId: String)
 @Serializable data class EventList(val businessId: String)
 @Serializable data class EventHome(val businessId: String, val eventId: String)

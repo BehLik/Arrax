@@ -1,3 +1,4 @@
+
 package com.example.arrax.ui.screen.events.home
 
 import android.content.res.Configuration
@@ -16,7 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,8 +26,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.arrax.core.designsystem.components.backgrounds.ArxBackground
 import com.example.arrax.core.designsystem.components.display.ArxSectionHeader
-import com.example.arrax.core.designsystem.components.navigation.ArxBottomBar
-import com.example.arrax.core.designsystem.components.navigation.ArxBottomBarItem
 import com.example.arrax.core.designsystem.components.navigation.ArxTopBar
 import com.example.arrax.core.designsystem.components.navigation.ArxTopBarNavigationType
 import com.example.arrax.core.designsystem.icons.ArxIcon
@@ -42,7 +40,7 @@ import com.example.arrax.ui.screen.events.home.component.RecentOrderRowCard
 
 @Composable
 fun EventHomeScreen(
-    onBack: () -> Unit={},
+    onBack: () -> Unit = {},
     onEditEventClick: () -> Unit,
     onEditEventNameClick: () -> Unit,
     onMakeOrdersClick: () -> Unit,
@@ -51,7 +49,6 @@ fun EventHomeScreen(
     onSeeDetailClick: () -> Unit,
     onSeeAllOrdersClick: () -> Unit,
     onOrderClick: (String) -> Unit,
-    onBottomBarNavigate: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: EventHomeViewModel = hiltViewModel()
 ) {
@@ -68,12 +65,16 @@ fun EventHomeScreen(
             EventHomeEvent.SeeDetail -> onSeeDetailClick()
             EventHomeEvent.SeeAllOrders -> onSeeAllOrdersClick()
             is EventHomeEvent.OpenOrder -> onOrderClick(event.orderId)
-            is EventHomeEvent.NavigateToRoute -> onBottomBarNavigate(event.route)
+
+            // La navegación entre pestañas pertenece a EventShellScreen.
+            is EventHomeEvent.NavigateToRoute -> Unit
         }
     }
 
     LaunchedEffect(viewModel) {
-        viewModel.events.collect { handleEvent(it) }
+        viewModel.events.collect { event ->
+            handleEvent(event)
+        }
     }
 
     EventHomeContent(
@@ -87,11 +88,9 @@ fun EventHomeScreen(
         onSeeDetailClick = viewModel::onSeeDetailClick,
         onSeeAllOrdersClick = viewModel::onSeeAllOrdersClick,
         onOrderClick = viewModel::onOrderClick,
-        onBottomBarClick = viewModel::onBottomBarClick,
         modifier = modifier
     )
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -106,37 +105,14 @@ fun EventHomeContent(
     onSeeDetailClick: () -> Unit,
     onSeeAllOrdersClick: () -> Unit,
     onOrderClick: (String) -> Unit,
-    onBottomBarClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val bottomItems = remember {
-        listOf(
-            ArxBottomBarItem(
-                label = "Inicio",
-                iconRes = ArxIcons.HomeOutline,
-                selectedIconRes = ArxIcons.HomeFilled,
-                route = EventHomeState.ROUTE_HOME
-            ),
-            ArxBottomBarItem(
-                label = "Pedidos",
-                iconRes = ArxIcons.Order,
-                route = EventHomeState.ROUTE_ORDERS
-            ),
-            ArxBottomBarItem(
-                label = "Entregas",
-                iconRes = ArxIcons.Delivery,
-                route = EventHomeState.ROUTE_DELIVERIES
-            ),
-            ArxBottomBarItem(
-                label = "Más",
-                iconRes = ArxIcons.More,
-                route = EventHomeState.ROUTE_MORE
-            )
-        )
-    }
-
-    ArxBackground(modifier = modifier.fillMaxSize()) {
-        Column(modifier = Modifier.fillMaxSize()) {
+    ArxBackground(
+        modifier = modifier.fillMaxSize()
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
             ArxTopBar(
                 title = "Evento",
                 centeredTitle = false,
@@ -156,12 +132,15 @@ fun EventHomeContent(
                     start = ArxSpacing.md,
                     end = ArxSpacing.md,
                     top = ArxSpacing.sm,
-                    bottom = 104.dp
+                    bottom = ArxSpacing.md
                 ),
                 verticalArrangement = Arrangement.spacedBy(ArxSpacing.md)
             ) {
                 item(key = "hero") {
-                    EventHeroCard(state = state, onEditNameClick = onEditEventNameClick)
+                    EventHeroCard(
+                        state = state,
+                        onEditNameClick = onEditEventNameClick
+                    )
                 }
 
                 item(key = "quick_actions") {
@@ -173,17 +152,26 @@ fun EventHomeContent(
                 }
 
                 item(key = "summary") {
-                    EventSummaryCard(state = state, onSeeDetailClick = onSeeDetailClick)
+                    EventSummaryCard(
+                        state = state,
+                        onSeeDetailClick = onSeeDetailClick
+                    )
                 }
 
                 item(key = "recent_header") {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         ArxIcon(
                             icon = ArxIcons.List,
                             tint = MaterialTheme.colorScheme.primary,
                             size = 20.dp
                         )
-                        Spacer(Modifier.width(ArxSpacing.xs))
+
+                        Spacer(
+                            modifier = Modifier.width(ArxSpacing.xs)
+                        )
+
                         ArxSectionHeader(
                             title = "Pedidos recientes",
                             actionLabel = "Ver todos",
@@ -193,22 +181,21 @@ fun EventHomeContent(
                     }
                 }
 
-                items(state.recentOrders, key = { it.id }) { order ->
-                    RecentOrderRowCard(order = order, onClick = { onOrderClick(order.id) })
+                items(
+                    items = state.recentOrders,
+                    key = { it.id }
+                ) { order ->
+                    RecentOrderRowCard(
+                        order = order,
+                        onClick = {
+                            onOrderClick(order.id)
+                        }
+                    )
                 }
             }
         }
-
-        ArxBottomBar(
-            items = bottomItems,
-            currentRoute = state.currentRoute,
-            onItemClick = onBottomBarClick,
-            modifier = Modifier.align(Alignment.BottomCenter)
-        )
     }
 }
-
-
 
 @Composable
 private fun EventHomePreviewContent() {
@@ -222,15 +209,21 @@ private fun EventHomePreviewContent() {
         onMakeDeliveriesClick = {},
         onSeeDetailClick = {},
         onSeeAllOrdersClick = {},
-        onOrderClick = {},
-        onBottomBarClick = {}
+        onOrderClick = {}
     )
 }
 
-@Preview(name = "EventHome Light", showBackground = true, widthDp = 390, heightDp = 900)
+@Preview(
+    name = "EventHome Light",
+    showBackground = true,
+    widthDp = 390,
+    heightDp = 900
+)
 @Composable
 private fun EventHomeScreenLightPreview() {
-    ArxTheme(darkTheme = false) { EventHomePreviewContent() }
+    ArxTheme(darkTheme = false) {
+        EventHomePreviewContent()
+    }
 }
 
 @Preview(
@@ -242,5 +235,7 @@ private fun EventHomeScreenLightPreview() {
 )
 @Composable
 private fun EventHomeScreenDarkPreview() {
-    ArxTheme(darkTheme = true) { EventHomePreviewContent() }
+    ArxTheme(darkTheme = true) {
+        EventHomePreviewContent()
+    }
 }
