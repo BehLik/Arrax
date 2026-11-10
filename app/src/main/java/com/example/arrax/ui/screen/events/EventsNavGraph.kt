@@ -53,9 +53,10 @@ private fun NavGraphBuilder.eventOrders(nav: NavController) {
 }
 
 // ── Pesaje ── (sin cambios)
-private fun NavGraphBuilder.eventWeighing(nav: NavController) { /* igual que ahora */ }
+private fun NavGraphBuilder.eventWeighing(nav: NavController) {
+/* igual que ahora */
+}
 
-// ── Cobros ── (quita el composable<EventDeliveries>, ahora vive en el shell)
 private fun NavGraphBuilder.eventSettlement(nav: NavController) {
     val back = nav.backAction()
     composable<EventSettlement> { PlaceholderScreen("Entregas y cobros", back) }
@@ -63,4 +64,6 @@ private fun NavGraphBuilder.eventSettlement(nav: NavController) {
 }
 
 // ── Gastos y resultados ── (sin cambios)
-private fun NavGraphBuilder.eventFinance(nav: NavController) { /* igual que ahora */ }
+private fun NavGraphBuilder.eventFinance(nav: NavController) {
+/* igual que ahora */
+}

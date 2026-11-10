@@ -1,13 +1,17 @@
 package com.example.arrax.ui.screen.events.shell
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -44,7 +48,9 @@ fun EventShellScreen(args: EventShell, outerNav: NavController) {
     val innerNav = rememberNavController()
     val backStack by innerNav.currentBackStackEntryAsState()
     val dest = backStack?.destination
-
+    LaunchedEffect(backStack) {
+        Log.d("EventShell", "dest=${dest?.route}")
+    }
     val currentTab = when {
         dest?.hasRoute<EventOrders>() == true -> EventTab.ORDERS
         dest?.hasRoute<EventDeliveries>() == true -> EventTab.DELIVERIES
@@ -67,15 +73,33 @@ fun EventShellScreen(args: EventShell, outerNav: NavController) {
     }
 
     fun goTo(tab: EventTab) {
-        if (tab == currentTab) return
+        val current = innerNav.currentDestination
+        val alreadyThere = when (tab) {
+            EventTab.HOME -> current?.hasRoute<EventHome>() == true
+            EventTab.ORDERS -> current?.hasRoute<EventOrders>() == true
+            EventTab.DELIVERIES -> current?.hasRoute<EventDeliveries>() == true
+            EventTab.MORE -> current?.hasRoute<EventMore>() == true
+        }
+        Log.d("EventShell", "goTo($tab) alreadyThere=$alreadyThere dest=${current?.route}")
+        if (alreadyThere) return
+
+        if (tab == EventTab.HOME) {
+            val popped = innerNav.popBackStack(
+                innerNav.graph.findStartDestination().id,
+                inclusive = false
+            )
+            Log.d("EventShell", "popBackStack HOME -> $popped")
+            return
+        }
+
         val route: Any = when (tab) {
-            EventTab.HOME -> EventHome(args.businessId, args.eventId)
             EventTab.ORDERS -> EventOrders(args.businessId, args.eventId)
             EventTab.DELIVERIES -> EventDeliveries(args.businessId, args.eventId)
             EventTab.MORE -> EventMore(args.businessId, args.eventId)
+            EventTab.HOME -> return
         }
         innerNav.navigate(route) {
-            popUpTo<EventHome> { saveState = true }
+            popUpTo(innerNav.graph.findStartDestination().id) { saveState = true }
             launchSingleTop = true
             restoreState = true
         }
@@ -113,11 +137,11 @@ fun EventShellScreen(args: EventShell, outerNav: NavController) {
             composable<EventDeliveries> { EventDeliveriesScreen() }
             composable<EventMore> { EventMoreScreen() }
         }
-
+        val currentGoTo by rememberUpdatedState(::goTo)
         ArxBottomBar(
             items = items,
             currentRoute = currentTab.key,
-            onItemClick = { key -> EventTab.entries.first { it.key == key }.let(::goTo) },
+            onItemClick = { key -> EventTab.entries.first { it.key == key }.let(currentGoTo) },
             modifier = Modifier.align(Alignment.BottomCenter)
         )
     }

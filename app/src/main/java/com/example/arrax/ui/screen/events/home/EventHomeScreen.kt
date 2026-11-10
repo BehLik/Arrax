@@ -65,8 +65,6 @@ fun EventHomeScreen(
             EventHomeEvent.SeeDetail -> onSeeDetailClick()
             EventHomeEvent.SeeAllOrders -> onSeeAllOrdersClick()
             is EventHomeEvent.OpenOrder -> onOrderClick(event.orderId)
-
-            // La navegación entre pestañas pertenece a EventShellScreen.
             is EventHomeEvent.NavigateToRoute -> Unit
         }
     }

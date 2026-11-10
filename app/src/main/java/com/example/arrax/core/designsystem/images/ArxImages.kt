@@ -38,6 +38,9 @@ object ArxImages {
     /** Montañas decorativas del fondo (ver ArxBackground). */
     val BackgroundMountains = R.drawable.bg_mountains
 
+    val Farm=R.drawable.img_farms
+    val Meadow=R.drawable.img_meadow
+
     // ============================================================
     // CORTES DE CARNE
     // ============================================================
