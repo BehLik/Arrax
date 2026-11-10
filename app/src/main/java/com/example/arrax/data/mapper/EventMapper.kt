@@ -13,7 +13,7 @@ fun DocumentSnapshot.toEvent(): Event? {
         id = getString("id") ?: id,
         name = getString("name") ?: "",
         date = getLong("date") ?: 0L,
-        animalCount = (getLong("pigCount") ?: 0L).toInt(),
+        animalCount = (getLong("animalCount") ?: 0L).toInt(),
         status = runCatching { EventStatus.valueOf(statusName) }.getOrDefault(EventStatus.OPEN),
         createdBy = getString("createdBy") ?: ""
     )

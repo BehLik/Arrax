@@ -26,7 +26,7 @@ data class EventHomeState(
     val eventName: String = "Neos",
     val statusText: String = "Activo",
     val dateFormatted: String = "26 oct. 2026",
-    val pigsCount: Int = 2,
+    val animalCount: Int = 2,
     val configuredCutsCount: Int = 5,
     val createdBy: String = "Tú",
     val ordersCount: Int = 18,
@@ -39,6 +39,18 @@ data class EventHomeState(
         const val ROUTE_ORDERS = "event_orders"
         const val ROUTE_DELIVERIES = "event_deliveries"
         const val ROUTE_MORE = "event_more"
+
+        fun empty() = EventHomeState(
+            eventName = "",
+            statusText = "",
+            dateFormatted = "",
+            animalCount = 0,
+            configuredCutsCount = 0,
+            createdBy = "",
+            ordersCount = 0,
+            totalSalesCents = 0L,
+            recentOrders = emptyList()
+        )
     }
 }
 

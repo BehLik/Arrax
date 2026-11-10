@@ -68,10 +68,11 @@ private fun NavGraphBuilder.businessCore(nav: NavController) {
         )
     }
 
-    businessComposable<BusinessEvents>(nav, Permission.EVENT_VIEW) {
+    businessComposable<BusinessEvents>(nav, Permission.EVENT_VIEW) { entry ->
+        val args = entry.toRoute<BusinessEvents>()
         BusinessEventViewScreen(
             onBack = back,
-            onEventClick = { eventId -> /* TODO: EventHome(args.businessId, eventId) */ }
+            onEventClick = { eventId -> nav.safeNavigate(EventHome(args.businessId, eventId)) }
         )
     }
     businessComposable<EventCreate>(nav, Permission.EVENT_CREATE) { entry ->

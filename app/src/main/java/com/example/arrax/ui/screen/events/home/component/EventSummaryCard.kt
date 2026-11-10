@@ -92,7 +92,7 @@ internal fun EventSummaryCard(
             ) {
                 SummaryMetric(
                     iconRes = ArxIcons.Piggy,
-                    value = "${state.pigsCount}",
+                    value = "${state.animalCount}",
                     label = "Cerdos",
                     modifier = Modifier.weight(1f)
                 )

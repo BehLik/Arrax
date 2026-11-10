@@ -145,7 +145,7 @@ internal fun EventHeroCard(
                     )
                     Spacer(Modifier.width(ArxSpacing.xxs))
                     Text(
-                        text = "${state.pigsCount} cerdos",
+                        text = "${state.animalCount} cerdos",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

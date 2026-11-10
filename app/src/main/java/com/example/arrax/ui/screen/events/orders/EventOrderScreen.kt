@@ -1,4 +1,7 @@
 package com.example.arrax.ui.screen.events.orders
 
-class EventOrderScreen {
+import androidx.compose.runtime.Composable
+
+@Composable
+fun EventOrderScreen() {
 }

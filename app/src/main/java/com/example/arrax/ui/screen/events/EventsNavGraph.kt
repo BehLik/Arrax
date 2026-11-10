@@ -10,6 +10,8 @@ import com.example.arrax.ui.root.navigation.PlaceholderScreen
 import com.example.arrax.ui.root.navigation.backAction
 import com.example.arrax.ui.root.navigation.safeNavigate
 import com.example.arrax.ui.screen.events.home.EventHomeScreen
+import com.example.arrax.ui.screen.events.more.EventMoreScreen
+import com.example.arrax.ui.screen.events.orders.EventOrderScreen
 
 fun NavGraphBuilder.eventGraph(nav: NavController) {
     eventCore(nav)
@@ -17,21 +19,31 @@ fun NavGraphBuilder.eventGraph(nav: NavController) {
     eventWeighing(nav)
     eventSettlement(nav)
     eventFinance(nav)
+    eventMore(nav)
 }
 
 // ── Crear evento y pantalla principal del evento ──
 private fun NavGraphBuilder.eventCore(nav: NavController) {
     val back = nav.backAction()
 
-    composable<EventHome> {
-//        EventHomeScreen(onBack = back)
-        // TODO: cuando EventDetailScreen exponga estos callbacks, conéctalos con:
-        //   val args = entry.toRoute<EventHome>()
-        //   onOrdersClick     = { nav.safeNavigate(EventOrders(args.businessId, args.eventId)) }
-        //   onWeighingClick   = { nav.safeNavigate(EventWeighingSetup(args.businessId, args.eventId)) }
-        //   onSettlementClick = { nav.safeNavigate(EventSettlement(args.businessId, args.eventId)) }
-        //   onExpensesClick   = { nav.safeNavigate(EventExpenses(args.businessId, args.eventId)) }
-        //   onResultsClick    = { nav.safeNavigate(EventResults(args.businessId, args.eventId)) }
+    composable<EventHome> { entry ->
+        val args = entry.toRoute<EventHome>()
+        EventHomeScreen(
+            onBack = back,
+            onEditEventClick = {},
+            onEditEventNameClick = {},
+            onSeeDetailClick = {},
+            onMakeDeliveriesClick = {},
+            onBottomBarNavigate = {},
+            onMakeOrdersClick = { nav.safeNavigate(EventOrders(args.businessId, args.eventId)) },
+            onSeeAllOrdersClick = { nav.safeNavigate(EventOrders(args.businessId, args.eventId)) },
+            onOrderClick = { id -> nav.safeNavigate(EventOrderDetail(args.businessId, args.eventId, id)) },
+            onHandsFreeWeighingClick = {
+                nav.safeNavigate(
+                    EventWeighing(args.businessId, args.eventId, WeighingMode.BY_CUT, handsFree = true)
+                )
+            }
+        )
     }
 }
 
@@ -41,16 +53,7 @@ private fun NavGraphBuilder.eventOrders(nav: NavController) {
 
     composable<EventOrders> { entry ->
         val args = entry.toRoute<EventOrders>()
-        // TODO: onOrderClick = { id -> nav.safeNavigate(EventOrderDetail(args.businessId, args.eventId, id)) }
-        PlaceholderScreen(
-            title = "Pedidos",
-            onBack = back,
-            actions = listOf(
-                PlaceholderAction("Nuevo pedido") {
-                    nav.safeNavigate(EventOrderEdit(args.businessId, args.eventId))
-                }
-            )
-        )
+        EventOrderScreen()
     }
 
     composable<EventOrderEdit> { entry ->
@@ -129,4 +132,10 @@ private fun NavGraphBuilder.eventFinance(nav: NavController) {
 
     composable<EventExpenses> { PlaceholderScreen("Gastos del evento", back) }
     composable<EventResults> { PlaceholderScreen("Resultados del evento", back) }
+}
+private fun NavGraphBuilder.eventMore(nav: NavController){
+    val back=nav.backAction()
+    composable<EventMore>{
+        EventMoreScreen()
+    }
 }

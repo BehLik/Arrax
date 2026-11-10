@@ -46,6 +46,8 @@ import kotlinx.serialization.Serializable
 @Serializable data class EventCreate(val businessId: String)
 @Serializable data class EventList(val businessId: String)
 @Serializable data class EventHome(val businessId: String, val eventId: String)
+@Serializable data class EventDeliveries(val businessId: String,val eventId: String)
+@Serializable data class EventMore(val businessId: String,val eventId: String)
 
 // Pedidos
 @Serializable data class EventOrders(val businessId: String, val eventId: String)          // lista (por cliente / por corte)
@@ -58,12 +60,7 @@ import kotlinx.serialization.Serializable
 
 // Pesaje
 @Serializable data class EventWeighingSetup(val businessId: String, val eventId: String)   // elegir modo
-@Serializable data class EventWeighing(
-    val businessId: String,
-    val eventId: String,
-    val mode: WeighingMode,
-    val handsFree: Boolean = false
-)
+@Serializable data class EventWeighing(val businessId: String, val eventId: String,val mode: WeighingMode,val handsFree: Boolean = false)
 
 // Entregas y cobros
 @Serializable data class EventSettlement(val businessId: String, val eventId: String)      // lista por cliente
