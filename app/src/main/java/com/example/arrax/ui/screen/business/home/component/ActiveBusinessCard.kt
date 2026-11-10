@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,8 +24,8 @@ import com.example.arrax.core.designsystem.components.cards.ArxCard
 import com.example.arrax.core.designsystem.components.cards.ArxCardVariant
 import com.example.arrax.core.designsystem.icons.ArxIcon
 import com.example.arrax.core.designsystem.icons.ArxIcons
-import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.images.ArxImages
+import com.example.arrax.core.designsystem.theme.ArxSpacing
 
 @Composable
 internal fun ActiveBusinessCard(
@@ -43,20 +42,18 @@ internal fun ActiveBusinessCard(
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
 
-            // Imagen decorativa de la granja
+            // Imagen panorámica de la granja
             Image(
                 painter = painterResource(id = ArxImages.Farm),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 alignment = Alignment.CenterEnd,
                 modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .fillMaxWidth(0.52f)
-                    .height(120.dp)
+                    .matchParentSize()
                     .alpha(0.78f)
             )
 
-            // Degradado para proteger la información
+            // Degradado progresivo para proteger la información
             Box(
                 modifier = Modifier
                     .matchParentSize()
@@ -64,9 +61,8 @@ internal fun ActiveBusinessCard(
                         Brush.horizontalGradient(
                             colorStops = arrayOf(
                                 0.0f to MaterialTheme.colorScheme.surface,
-                                0.30f to MaterialTheme.colorScheme.surface,
-                                0.55f to MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
-                                0.80f to MaterialTheme.colorScheme.surface.copy(alpha = 0.35f),
+                                0.35f to MaterialTheme.colorScheme.surface,
+                                0.65f to MaterialTheme.colorScheme.surface.copy(alpha = 0.80f),
                                 1.0f to Color.Transparent
                             )
                         )

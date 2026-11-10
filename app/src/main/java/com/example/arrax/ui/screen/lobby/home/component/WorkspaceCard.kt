@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.example.arrax.R
 import com.example.arrax.core.designsystem.components.buttons.ArxPrimaryButton
 import com.example.arrax.core.designsystem.components.buttons.ArxSecondaryButton
@@ -40,22 +38,22 @@ internal fun WorkspaceCard(
         variant = ArxCardVariant.Glass,
         modifier = modifier.fillMaxWidth()
     ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
-
-            // Imagen panorámica decorativa del paisaje
+        Box(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            // Imagen de fondo
             Image(
                 painter = painterResource(ArxImages.Meadow),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 alignment = Alignment.CenterEnd,
                 modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .fillMaxWidth(0.58f)
-                    .height(180.dp)
+                    .matchParentSize()
                     .alpha(0.78f)
             )
 
-            // Fundido horizontal para conservar la legibilidad
+            // Fundido horizontal para integrar la imagen
+            // y conservar la legibilidad del contenido.
             Box(
                 modifier = Modifier
                     .matchParentSize()
@@ -63,9 +61,10 @@ internal fun WorkspaceCard(
                         Brush.horizontalGradient(
                             colorStops = arrayOf(
                                 0.0f to MaterialTheme.colorScheme.surface,
-                                0.30f to MaterialTheme.colorScheme.surface,
-                                0.55f to MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
-                                0.80f to MaterialTheme.colorScheme.surface.copy(alpha = 0.35f),
+                                0.35f to MaterialTheme.colorScheme.surface,
+                                0.65f to MaterialTheme.colorScheme.surface.copy(
+                                    alpha = 0.80f
+                                ),
                                 1.0f to Color.Transparent
                             )
                         )
@@ -79,7 +78,6 @@ internal fun WorkspaceCard(
                     .padding(ArxSpacing.lg),
                 verticalArrangement = Arrangement.spacedBy(ArxSpacing.md)
             ) {
-
                 Column(
                     verticalArrangement = Arrangement.spacedBy(ArxSpacing.xs)
                 ) {
