@@ -200,6 +200,9 @@ object ArxIcons {
     /** Micrófono desactivado. */
     val MicOff = R.drawable.ic_mic_off
 
+    val GraphicEq=R.drawable.ic_graphic_eq
+    val GraphicEqOff=R.drawable.ic_graphic_eq_off
+
     /** Linterna encendida. */
     val FlashLightON = R.drawable.ic_flashlight_on
 
