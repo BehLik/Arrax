@@ -135,6 +135,8 @@ object ArxIcons {
      * un icono de inventario/producto.
      */
     val Order = R.drawable.ic_orders
+    /**representacion de un corte de carne */
+    val Meat=R.drawable.ic_meat
 
     /** Representa una línea o elemento de pedido. */
     val OrderLine = R.drawable.ic_box

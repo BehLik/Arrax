@@ -11,6 +11,8 @@ import com.example.arrax.ui.root.navigation.backAction
 import com.example.arrax.ui.root.navigation.safeNavigate
 import com.example.arrax.ui.screen.events.home.subscreen.edit.EventEditScreen
 import com.example.arrax.ui.screen.events.home.subscreen.viewdetail.EventViewDetailScreen
+import com.example.arrax.ui.screen.events.orders.subscreen.placeorder.EventPlaceOrderScreen
+import com.example.arrax.ui.screen.events.orders.subscreen.view.EventViewOrderScreen
 import com.example.arrax.ui.screen.events.shell.EventShellScreen
 
 fun NavGraphBuilder.eventGraph(nav: NavController) {
@@ -45,24 +47,24 @@ private fun NavGraphBuilder.eventShell(nav: NavController) {
 private fun NavGraphBuilder.eventOrders(nav: NavController) {
     val back = nav.backAction()
 
-    composable<EventOrderEdit> { entry ->
-        val args = entry.toRoute<EventOrderEdit>()
-        PlaceholderScreen(
-            title = if (args.orderId == null) "Nuevo pedido" else "Editar pedido",
-            onBack = back
+    composable<EventPlaceOrder> { entry ->
+        val args = entry.toRoute<EventPlaceOrder>()
+        EventPlaceOrderScreen(
+//            title = if (args.orderId == null) "Nuevo pedido" else "Editar pedido",
+//            onBack = back
         )
     }
 
-    composable<EventOrderDetail> { entry ->
-        val args = entry.toRoute<EventOrderDetail>()
-        PlaceholderScreen(
-            title = "Detalle del pedido",
-            onBack = back,
-            actions = listOf(
-                PlaceholderAction("Editar") {
-                    nav.safeNavigate(EventOrderEdit(args.businessId, args.eventId, args.orderId))
-                }
-            )
+    composable<EventOrderView> { entry ->
+        val args = entry.toRoute<EventOrderView>()
+        EventViewOrderScreen(
+//            title = "Detalle del pedido",
+//            onBack = back,
+//            actions = listOf(
+//                PlaceholderAction("Editar") {
+//                    nav.safeNavigate(EventOrderView(args.businessId, args.eventId, args.orderId))
+//                }
+//            )
         )
     }
 }

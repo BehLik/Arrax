@@ -55,12 +55,8 @@ import kotlinx.serialization.Serializable
 
 // Pedidos
 @Serializable data class EventOrders(val businessId: String, val eventId: String)          // lista (por cliente / por corte)
-@Serializable data class EventOrderEdit(                                                   // registrar / editar
-    val businessId: String,
-    val eventId: String,
-    val orderId: String? = null                                                             // null = nuevo
-)
-@Serializable data class EventOrderDetail(val businessId: String, val eventId: String, val orderId: String)
+@Serializable data class EventPlaceOrder(val businessId: String,val eventId: String,val orderId: String?=null)
+@Serializable data class EventOrderView(val businessId: String, val eventId: String, val orderId: String)
 
 // Pesaje
 @Serializable data class EventWeighingSetup(val businessId: String, val eventId: String)   // elegir modo

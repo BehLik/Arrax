@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -21,7 +22,7 @@ import com.example.arrax.core.designsystem.theme.ArxSpacing
 import com.example.arrax.core.designsystem.theme.ArxTheme
 import com.example.arrax.ui.screen.business.customers.component.AddCustomerAction
 import com.example.arrax.ui.screen.business.customers.component.CustomersEmptyState
-import com.example.arrax.ui.screen.business.customers.component.CustomersList
+import com.example.arrax.ui.screen.business.customers.component.CustomersIndexedList
 import com.example.arrax.ui.screen.business.customers.component.CustomersTabs
 
 @Composable
@@ -55,6 +56,7 @@ internal fun BusinessCustomersContent(
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val sections = remember(state.customers) { state.customers.toSections() }
         ArxBackground(decoration = ArxDecoration.None) {
             Column(modifier = Modifier.fillMaxSize()) {
                 ArxTopBar(
@@ -87,8 +89,8 @@ internal fun BusinessCustomersContent(
                         onAddClick =onAddCustomerClick
                     )
                 } else {
-                    CustomersList(
-                        customers = state.customers,
+                    CustomersIndexedList(
+                        sections = sections,
                         onCustomerClick = onCustomerClick,
                         modifier = Modifier.weight(1f)
                     )

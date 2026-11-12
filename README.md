@@ -42,17 +42,25 @@ La plataforma busca que la tecnología se adapte al ritmo del trabajador, en lug
 
 > **Fase actual: F1 — Autenticación.** La F0 está en etapa de cierre (verificaciones, diagramas y pulido del design system). Las fases F2 y F3 cuentan con una implementación inicial que todavía debe validarse, probarse e integrarse visualmente antes de darse por completadas.
 
-| Fase | Alcance | Estado |
+---| Fase | Alcance | Estado |
 | ---- | ------- | ------ |
 | **F0** | Cimientos: arquitectura por capas, design system `Arx*` (tema claro y oscuro), Hilt, Firebase, modelo NoSQL, estados globales, Crashlytics, diagramas | En cierre |
-| **F1** | Autenticación con Firebase Auth: inicio de sesión, registro, recuperación de contraseña, estados de carga y error, restauración y cierre de sesión | **En curso** |
-| **F2** | Lobby multi-tenant: selección de negocio, membresías y roles, invitaciones seguras, reglas de seguridad, piloto en el negocio familiar | Implementación inicial, por validar |
-| **F3** | Eventos: creación y detalle, catálogo editable de cortes, validación de precios, creación atómica, cierre de evento | Implementación inicial, por validar |
-| **F4** | Pedidos, clientes, cola de pesado por corte, entregas, pagos y cuenta por cliente, manos libres (Bluetooth, TTS y voz) | Planeada |
+| **F1** | Autenticación con Firebase Auth: inicio de sesión, registro, recuperación de contraseña, estados de carga y error, restauración y cierre de sesión | Fuera del foco actual; cierre de pruebas por confirmar |
+| **F2** | Lobby multi-tenant: selección de negocio, membresías y roles, invitaciones seguras, reglas de seguridad, piloto en el negocio familiar | Integración y validación pendientes |
+| **F3** | Eventos: creación, edición y detalle; catálogo de cortes, precios y cierre | En desarrollo e integración; pruebas pendientes |
+| **F4** | Generación de pedidos (*orders*), clientes, cola de pesado por corte, entregas, pagos y cuenta por cliente; interacción manos libres (Bluetooth, TTS y voz) | **Siguiente etapa: por iniciar** |
 | **F5** | Gastos, utilidad neta y reportes; pruebas de extremo a extremo, concurrencia, versión beta; evaluación de automatización y de un segundo caso de uso | Planeada |
+En qué estoy trabajando ahora
+El siguiente módulo que comenzaré es Generar pedido / Order. La prioridad es construir una captura confiable y rápida, vinculada al evento activo y a sus precios de cortes.
 
----
-
+## Orden previsto de implementación:
+1. Modelo de pedido y líneas: definir cómo se representa cada pedido y cada corte solicitado.
+2. Captura de pedido: seleccionar o registrar al cliente, agregar cortes y capturar cantidades en kilogramos o en pesos.
+3. Conversión y validación: calcular la equivalencia entre dinero y peso usando el precio del corte del evento, y validar cantidades y subtotales.
+4. Persistencia y consulta: guardar el pedido y permitir encontrarlo desde el contexto del evento.
+5. Cola operativa: agrupar las líneas pendientes por corte para preparar el flujo de pesado.
+6. Manos libres: integrar progresivamente el disparador Bluetooth, la confirmación háptica, TTS y después comandos de voz contextuales.
+   Importante: este bloque describe el trabajo que está por comenzar. No implica que la generación de pedidos, el pesado ni el reconocimiento de voz ya estén implementados.
 ## Concepto
 
 La mayoría de las aplicaciones administrativas están diseñadas alrededor de formularios, tablas y registros.
@@ -178,13 +186,12 @@ El dominio puede evolucionar posteriormente hacia otros escenarios donde exista 
 ## Multi-tenencia y roles
 
 ARRAX es multi-tenant: varias familias pueden usar la aplicación, cada una con sus propios clientes, eventos y catálogo de cortes, aislados entre sí.
-
-* **Crear un negocio.** El primer usuario registra el negocio durante el onboarding y queda como administrador.
-* **Unirse a un negocio.** Otros usuarios entran con un código de invitación y quedan como operadores.
-* **Roles.** Algunas acciones, como crear o cerrar un evento, están reservadas al administrador. Las reglas de permisos todavía se están refinando (F2).
-* **Sesión local.** El negocio activo y el rol se guardan en DataStore para decidir la pantalla de arranque.
-
-La pantalla inicial se resuelve al abrir la app:
+- Crear un negocio. El primer usuario registra el negocio durante el onboarding y queda como administrador.
+- Unirse a un negocio. Otros usuarios entran con un código de invitación y quedan como operadores.
+- Roles. Algunas acciones, como crear o cerrar un evento, están reservadas al administrador. Las reglas de permisos todavía se están refinando (F2).
+- Sesión local. El negocio activo y el rol se guardan en DataStore para decidir la pantalla de arranque.
+  La pantalla inicial se resuelve al abrir la app:
+- 
 
 ```mermaid
 flowchart TD
@@ -198,28 +205,19 @@ flowchart TD
 ---
 
 ## Eventos (F3)
+El flujo de eventos cuenta con pantallas de creación, inicio/detalle y edición en desarrollo. La creación atómica, la sincronización en tiempo real y el cierre deben validarse con pruebas integrales.
 
-> Implementación inicial; pendiente de pruebas de creación atómica, detalle en tiempo real y cierre.
-
-### Creación en 3 pasos
-
+## Creación en 3 pasos
 Disponible solo para administradores.
-
-1. **Datos básicos.** Nombre, fecha y cantidad de cerdos (mínimo 1).
-2. **Selección de cortes.** Se eligen los cortes que se venderán en el evento.
-3. **Precios.** Cada corte seleccionado necesita un precio mayor a cero para poder confirmar.
-
-La creación se ejecuta como un **write batch**: el evento y un documento por cada corte seleccionado se escriben juntos. Si algo falla, no queda un evento a medias.
-
-### Detalle del evento
-
-* Se suscribe al evento **en tiempo real**, de modo que si otro dispositivo lo cierra mientras se visualiza, la pantalla se actualiza.
-* Muestra una tarjeta de resumen del evento.
-* El botón **Cerrar evento** solo aparece para administradores y solo si el evento está abierto. Pide confirmación antes de ejecutarse, porque no se puede revertir desde la interfaz.
-
-**Criterio de salida:** un administrador crea un evento completo de punta a punta, aparece de inmediato en el lobby para todos los usuarios del negocio (incluso sin conexión, gracias a la caché de Firestore) y puede cerrarse.
-
----
+1. Datos básicos. Nombre, fecha y cantidad de cerdos (mínimo 1).
+2. Selección de cortes. Se eligen los cortes que se venderán en el evento.
+3. Precios. Cada corte seleccionado necesita un precio mayor a cero para poder confirmar.
+   La creación se ejecuta como un write batch: el evento y un documento por cada corte seleccionado se escriben juntos. Si algo falla, no queda un evento a medias.
+ ##  Detalle del evento
+- Se suscribe al evento en tiempo real, de modo que si otro dispositivo lo cierra mientras se visualiza, la pantalla se actualiza.
+- Muestra una tarjeta de resumen del evento.
+- El botón Cerrar evento solo aparece para administradores y solo si el evento está abierto. Pide confirmación antes de ejecutarse, porque no se puede revertir desde la interfaz.
+  Criterio de salida: un administrador crea un evento completo de punta a punta, aparece de inmediato en el lobby para todos los usuarios del negocio (incluso sin conexión, gracias a la caché de Firestore) y puede cerrarse.
 
 ## Capacidades principales
 
@@ -609,20 +607,20 @@ La exportación o el uso compartido de reportes es parte de la F5.
 ### F2 — Lobby multi-tenant
 
 - [*] Lobby multi-tenant y selección de negocio
-- [ ] Diseñar e implementar membresías y roles por negocio
-- [ ] Implementar invitaciones seguras para unirse a un negocio
-- [ ] Definir y probar reglas de seguridad multi-tenant
-- [ ] Integrar las pantallas principales de Lobby, Business y Evento
-- [ ] Verificar el flujo de arranque según sesión y negocio
+- [*] Diseñar e implementar membresías y roles por negocio
+- [*] Implementar invitaciones seguras para unirse a un negocio
+- [*] Definir y probar reglas de seguridad multi-tenant
+- [*] Integrar las pantallas principales de Lobby, Business y Evento
+- [*] Verificar el flujo de arranque según sesión y negocio
 - [ ] Ejecutar piloto en el negocio familiar
 
 ### F3 — Eventos
 
-- [ ] Creación y detalle de eventos
-- [ ] Implementar catálogo editable de cortes
-- [ ] Crear iconos o imágenes predeterminadas de cortes
-- [ ] Validar precios y cortes del evento
-- [ ] Probar creación atómica de evento y cortes
+- [*] Creación y detalle de eventos
+- [*] Implementar catálogo editable de cortes
+- [*] Crear iconos o imágenes predeterminadas de cortes
+- [*] Validar precios y cortes del evento
+- [*] Probar creación atómica de evento y cortes
 - [ ] Probar detalle en tiempo real y cierre de evento
 
 ### F4 — Pedidos, pesaje y manos libres

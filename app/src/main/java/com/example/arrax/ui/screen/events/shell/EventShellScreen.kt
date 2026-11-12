@@ -25,8 +25,9 @@ import com.example.arrax.core.navigation.EventDetail
 import com.example.arrax.core.navigation.EventEdit
 import com.example.arrax.core.navigation.EventHome
 import com.example.arrax.core.navigation.EventMore
-import com.example.arrax.core.navigation.EventOrderDetail
-import com.example.arrax.core.navigation.EventOrderEdit
+//import com.example.arrax.core.navigation.EventOrderDetail
+//import com.example.arrax.core.navigation.EventOrderEdit
+import com.example.arrax.core.navigation.EventOrderView
 import com.example.arrax.core.navigation.EventOrders
 import com.example.arrax.core.navigation.EventShell
 import com.example.arrax.core.navigation.EventWeighing
@@ -120,14 +121,15 @@ fun EventShellScreen(args: EventShell, outerNav: NavController) {
                 EventHomeScreen(
                     onBack = { outerNav.popBackStack() },
                     onEditEventClick = {outerNav.safeNavigate(EventEdit(args.businessId,args.eventId))},
-                    onEditEventNameClick = {},
+//                    onEditEventNameClick = {},
                     onSeeDetailClick = {},
                     onViewDetailEventClick = {outerNav.safeNavigate(EventDetail(args.businessId,args.eventId))},
                     onMakeDeliveriesClick = { goTo(EventTab.DELIVERIES) },
-                    onMakeOrdersClick = { outerNav.safeNavigate(EventOrderEdit(args.businessId, args.eventId)) },
+                    onMakeOrdersClick = {},
+//                    onMakeOrdersClick = { outerNav.safeNavigate(EventOrderView(args.businessId, args.eventId)) },
                     onSeeAllOrdersClick = { goTo(EventTab.ORDERS) },
                     onOrderClick = { id ->
-                        outerNav.safeNavigate(EventOrderDetail(args.businessId, args.eventId, id))
+                        outerNav.safeNavigate(EventOrderView(args.businessId, args.eventId, id))
                     },
                     onHandsFreeWeighingClick = {
                         outerNav.safeNavigate(
