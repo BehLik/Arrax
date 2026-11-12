@@ -49,6 +49,7 @@ import kotlinx.serialization.Serializable
 @Serializable data class EventHome(val businessId: String, val eventId: String)
 
 @Serializable data class EventEdit(val businessId: String, val eventId: String)
+@Serializable data class EventDetail(val businessId: String,val eventId: String)
 @Serializable data class EventDeliveries(val businessId: String,val eventId: String)
 @Serializable data class EventMore(val businessId: String,val eventId: String)
 

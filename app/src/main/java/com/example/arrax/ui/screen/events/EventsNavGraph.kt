@@ -10,6 +10,7 @@ import com.example.arrax.ui.root.navigation.PlaceholderScreen
 import com.example.arrax.ui.root.navigation.backAction
 import com.example.arrax.ui.root.navigation.safeNavigate
 import com.example.arrax.ui.screen.events.home.subscreen.edit.EventEditScreen
+import com.example.arrax.ui.screen.events.home.subscreen.viewdetail.EventViewDetailScreen
 import com.example.arrax.ui.screen.events.shell.EventShellScreen
 
 fun NavGraphBuilder.eventGraph(nav: NavController) {
@@ -24,10 +25,19 @@ fun NavGraphBuilder.eventGraph(nav: NavController) {
 private fun NavGraphBuilder.eventShell(nav: NavController) {
     composable<EventShell> { entry ->
         EventShellScreen(args = entry.toRoute<EventShell>(), outerNav = nav)
-
     }
-    composable<EventEdit> { entry->
-        EventEditScreen()
+    composable<EventDetail> { entry ->
+        val args = entry.toRoute<EventDetail>()
+        EventViewDetailScreen(
+            onBack = { nav.popBackStack() },
+            onEditClick = { nav.safeNavigate(EventEdit(args.businessId, args.eventId)) }
+        )
+    }
+    composable<EventEdit> {
+        EventEditScreen(
+            onBack = { nav.popBackStack() },
+            onSaved = { nav.popBackStack() }
+        )
     }
 }
 

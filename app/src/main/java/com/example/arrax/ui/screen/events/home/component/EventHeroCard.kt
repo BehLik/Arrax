@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -28,12 +30,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.arrax.core.designsystem.components.cards.ArxCard
 import com.example.arrax.core.designsystem.components.cards.ArxCardVariant
 import com.example.arrax.core.designsystem.components.feedback.ArxChipStatus
 import com.example.arrax.core.designsystem.components.feedback.ArxStatusChip
+import com.example.arrax.core.designsystem.components.inputs.ArxTextField
 import com.example.arrax.core.designsystem.icons.ArxIcon
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.images.ArxImages
@@ -45,9 +49,11 @@ import com.example.arrax.ui.screen.events.home.EventHomeState
 internal fun EventHeroCard(
     state: EventHomeState,
     onEditNameClick: () -> Unit,
+    onNameDraftChange: (String) -> Unit,
+    onViewDetailEventClick:()-> Unit,
     modifier: Modifier = Modifier
 ) {
-    ArxCard(variant = ArxCardVariant.Glass, modifier = modifier.fillMaxWidth()) {
+    ArxCard(variant = ArxCardVariant.Glass, modifier = modifier.fillMaxWidth(), onClick = onViewDetailEventClick) {
         Box(modifier = Modifier.fillMaxWidth()) {
             // Capa decorativa derecha con fundido hacia la izquierda
             Image(
@@ -93,27 +99,42 @@ internal fun EventHeroCard(
                 Spacer(Modifier.height(ArxSpacing.xs))
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = state.eventName,
-                        style = MaterialTheme.typography.headlineLarge,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f, fill = false)
-                    )
-                    Spacer(Modifier.width(ArxSpacing.xs))
-                    Surface(
-                        onClick = onEditNameClick,
-                        shape = CircleShape,
-                        color = MaterialTheme.extendedColors.glass,
-                        border = BorderStroke(1.dp, MaterialTheme.extendedColors.glassBorder),
-                        modifier = Modifier.size(32.dp)
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            ArxIcon(
-                                icon = ArxIcons.Edit,
-                                tint = MaterialTheme.colorScheme.onSurface,
-                                size = 16.dp
+                    if (state.isEditingName) {
+                        Box(modifier = Modifier.weight(1f)) {
+                            ArxTextField(
+                                value = state.nameDraft,
+                                onValueChange = onNameDraftChange,
+                                label = "Nombre del evento",
+                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                keyboardActions = KeyboardActions(onDone = { onEditNameClick() })
                             )
+                        }
+                    } else {
+                        Text(
+                            text = state.eventName,
+                            style = MaterialTheme.typography.headlineLarge,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f, fill = false)
+                        )
+                    }
+                    if (state.canEditNameEvent) {
+                        Spacer(Modifier.width(ArxSpacing.xs))
+                        Surface(
+                            onClick = onEditNameClick,
+                            enabled = !state.isSavingName,
+                            shape = CircleShape,
+                            color = MaterialTheme.extendedColors.glass,
+                            border = BorderStroke(1.dp, MaterialTheme.extendedColors.glassBorder),
+                            modifier = Modifier.size(32.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                ArxIcon(
+                                    icon = if (state.isEditingName) ArxIcons.Done else ArxIcons.Edit,
+                                    tint = MaterialTheme.colorScheme.onSurface,
+                                    size = 16.dp
+                                )
+                            }
                         }
                     }
                 }

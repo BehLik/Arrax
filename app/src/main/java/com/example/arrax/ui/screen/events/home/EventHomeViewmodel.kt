@@ -5,11 +5,16 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.example.arrax.core.common.Resource
 import kotlinx.coroutines.flow.update
 import com.example.arrax.core.navigation.EventHome
+import com.example.arrax.domain.model.Access
 import com.example.arrax.domain.model.EventStatus
+import com.example.arrax.domain.model.Permission
+import com.example.arrax.domain.usecase.access.ObserveAccessUseCase
 import com.example.arrax.domain.usecase.business.members.observe.ObserveMembersUseCase
 import com.example.arrax.domain.usecase.event.detail.ObserveEventDetailUseCase
+import com.example.arrax.domain.usecase.event.edit.UpdateEventNameUseCase
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -33,7 +38,8 @@ import javax.inject.Inject
 sealed interface EventHomeEvent {
     data object NavigateBack : EventHomeEvent
     data object EditEvent : EventHomeEvent
-    data object EditEventName : EventHomeEvent
+//    data object EditEventName : EventHomeEvent
+    data object ViewDetailEvent: EventHomeEvent
     data object MakeOrders : EventHomeEvent
     data object HandsFreeWeighing : EventHomeEvent
     data object MakeDeliveries : EventHomeEvent
@@ -47,7 +53,10 @@ sealed interface EventHomeEvent {
 class EventHomeViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     observeEventDetail: ObserveEventDetailUseCase,
-    observeMembers: ObserveMembersUseCase
+    observeMembers: ObserveMembersUseCase,
+    observeAccess: ObserveAccessUseCase,
+    private val updateEventName: UpdateEventNameUseCase
+
 ) : ViewModel() {
 
     private val route = savedStateHandle.toRoute<EventHome>()
@@ -91,11 +100,38 @@ class EventHomeViewModel @Inject constructor(
                 }
             }
             .launchIn(viewModelScope)
+        observeAccess(route.businessId)
+            .onEach { a ->
+                val can = a is Access.Granted && a.can(Permission.EVENT_EDIT)
+                _state.update { it.copy(canEditEvent = can, canEditNameEvent = can) }
+            }
+            .launchIn(viewModelScope)
     }
 
     fun onBackClick() = send(EventHomeEvent.NavigateBack)
     fun onEditEventClick() = send(EventHomeEvent.EditEvent)
-    fun onEditEventNameClick() = send(EventHomeEvent.EditEventName)
+    fun onNameDraftChange(value: String) = _state.update { it.copy(nameDraft = value) }
+
+    fun onEditEventNameClick() {
+        val s = _state.value
+        if (!s.canEditNameEvent || s.isSavingName) return
+        if (!s.isEditingName) {
+            _state.update { it.copy(isEditingName = true, nameDraft = it.eventName) }
+            return
+        }
+        val newName = s.nameDraft.trim()
+        if (newName.isBlank() || newName == s.eventName) {
+            _state.update { it.copy(isEditingName = false) }
+            return
+        }
+        viewModelScope.launch {
+            _state.update { it.copy(isSavingName = true) }
+            val ok = updateEventName(route.businessId, route.eventId, newName) is Resource.Success
+            _state.update { it.copy(isSavingName = false, isEditingName = !ok) }
+        }
+    }
+
+    fun onViewDetailEventClick()=send(EventHomeEvent.ViewDetailEvent)
     fun onMakeOrdersClick() = send(EventHomeEvent.MakeOrders)
     fun onHandsFreeWeighingClick() = send(EventHomeEvent.HandsFreeWeighing)
     fun onMakeDeliveriesClick() = send(EventHomeEvent.MakeDeliveries)

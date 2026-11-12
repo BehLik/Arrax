@@ -21,6 +21,7 @@ import com.example.arrax.core.designsystem.components.navigation.ArxBottomBar
 import com.example.arrax.core.designsystem.components.navigation.ArxBottomBarItem
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.navigation.EventDeliveries
+import com.example.arrax.core.navigation.EventDetail
 import com.example.arrax.core.navigation.EventEdit
 import com.example.arrax.core.navigation.EventHome
 import com.example.arrax.core.navigation.EventMore
@@ -121,6 +122,7 @@ fun EventShellScreen(args: EventShell, outerNav: NavController) {
                     onEditEventClick = {outerNav.safeNavigate(EventEdit(args.businessId,args.eventId))},
                     onEditEventNameClick = {},
                     onSeeDetailClick = {},
+                    onViewDetailEventClick = {outerNav.safeNavigate(EventDetail(args.businessId,args.eventId))},
                     onMakeDeliveriesClick = { goTo(EventTab.DELIVERIES) },
                     onMakeOrdersClick = { outerNav.safeNavigate(EventOrderEdit(args.businessId, args.eventId)) },
                     onSeeAllOrdersClick = { goTo(EventTab.ORDERS) },

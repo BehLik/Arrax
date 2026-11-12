@@ -53,6 +53,27 @@ class EventRepositoryImpl @Inject constructor(
             EventWithCuts(event = event, cuts = cutDocs.mapNotNull { it.toEventCut() })
         }
     }
+    override suspend fun updateEventName(tenantId: String, eventId: String, name: String): Resource<Unit> =
+        try {
+            eventDataSource.updateEventName(tenantId, eventId, name)
+            Resource.Success(Unit)
+        } catch (e: CancellationException) { throw e }
+        catch (e: Exception) { Resource.Error(e.message ?: "No se pudo actualizar el nombre") }
+
+    override suspend fun updateEventWithCuts(
+        tenantId: String, eventId: String, name: String, date: Long, animalCount: Int,
+        cuts: List<EventCut>, removedCutIds: List<String>
+    ): Resource<Unit> =
+        try {
+            eventDataSource.updateEventWithCuts(
+                tenantId, eventId,
+                eventData = mapOf("name" to name, "date" to date, "animalCount" to animalCount),
+                cutsData = cuts.map { it.toMap() },
+                removedCutIds = removedCutIds
+            )
+            Resource.Success(Unit)
+        } catch (e: CancellationException) { throw e }
+        catch (e: Exception) { Resource.Error(e.message ?: "No se pudo guardar el evento") }
 
     override suspend fun closeEvent(tenantId: String, eventId: String): Resource<Unit> {
         return try {

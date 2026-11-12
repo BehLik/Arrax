@@ -297,7 +297,30 @@ class FirestoreEventDataSource @Inject constructor(
             eventSnap to cutSnaps
         }
     }
+    suspend fun updateEventName(tenantId: String, eventId: String, name: String) {
+        eventsCollection(tenantId).document(eventId).update("name", name).await()
+    }
 
+    suspend fun updateEventWithCuts(
+        tenantId: String,
+        eventId: String,
+        eventData: Map<String, Any>,          // solo name, date, animalCount
+        cutsData: List<Map<String, Any>>,     // cortes nuevos + existentes (set = upsert)
+        removedCutIds: List<String>
+    ) {
+        val eventDoc = eventsCollection(tenantId).document(eventId)
+        val batch = firestore.batch()
+        batch.update(eventDoc, eventData)
+        cutsData.forEach { cut ->
+            val cutId = cut["cutId"] as? String
+                ?: throw IllegalArgumentException("Corte sin cutId")
+            batch.set(cutsCollection(tenantId, eventId).document(cutId), cut)
+        }
+        removedCutIds.forEach { id ->
+            batch.delete(cutsCollection(tenantId, eventId).document(id))
+        }
+        batch.commit().await()
+    }
     // ---------------------------------------------------------
     // CLOSE EVENT
     // ---------------------------------------------------------

@@ -43,6 +43,7 @@ fun EventHomeScreen(
     onBack: () -> Unit = {},
     onEditEventClick: () -> Unit,
     onEditEventNameClick: () -> Unit,
+    onViewDetailEventClick:()-> Unit,
     onMakeOrdersClick: () -> Unit,
     onHandsFreeWeighingClick: () -> Unit,
     onMakeDeliveriesClick: () -> Unit,
@@ -58,7 +59,8 @@ fun EventHomeScreen(
         when (event) {
             EventHomeEvent.NavigateBack -> onBack()
             EventHomeEvent.EditEvent -> onEditEventClick()
-            EventHomeEvent.EditEventName -> onEditEventNameClick()
+//            EventHomeEvent.EditEventName -> onEditEventNameClick()
+            EventHomeEvent.ViewDetailEvent->onViewDetailEventClick()
             EventHomeEvent.MakeOrders -> onMakeOrdersClick()
             EventHomeEvent.HandsFreeWeighing -> onHandsFreeWeighingClick()
             EventHomeEvent.MakeDeliveries -> onMakeDeliveriesClick()
@@ -80,6 +82,8 @@ fun EventHomeScreen(
         onBackClick = viewModel::onBackClick,
         onEditEventClick = viewModel::onEditEventClick,
         onEditEventNameClick = viewModel::onEditEventNameClick,
+        onNameDraftChange = viewModel::onNameDraftChange,
+        onViewDetailEventClick=viewModel:: onViewDetailEventClick,
         onMakeOrdersClick = viewModel::onMakeOrdersClick,
         onHandsFreeWeighingClick = viewModel::onHandsFreeWeighingClick,
         onMakeDeliveriesClick = viewModel::onMakeDeliveriesClick,
@@ -92,11 +96,13 @@ fun EventHomeScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EventHomeContent(
+internal fun EventHomeContent(
     state: EventHomeState,
     onBackClick: () -> Unit,
     onEditEventClick: () -> Unit,
     onEditEventNameClick: () -> Unit,
+    onNameDraftChange: (String) -> Unit,
+    onViewDetailEventClick:()-> Unit,
     onMakeOrdersClick: () -> Unit,
     onHandsFreeWeighingClick: () -> Unit,
     onMakeDeliveriesClick: () -> Unit,
@@ -117,10 +123,12 @@ fun EventHomeContent(
                 navigationType = ArxTopBarNavigationType.BACK,
                 onNavigationClick = onBackClick,
                 actions = {
-                    EventEditPill(
-                        onClick = onEditEventClick,
-                        modifier = Modifier.padding(end = ArxSpacing.sm)
-                    )
+                    if (state.canEditEvent) {
+                        EventEditPill(
+                            onClick = onEditEventClick,
+                            modifier = Modifier.padding(end = ArxSpacing.sm)
+                        )
+                    }
                 }
             )
 
@@ -137,7 +145,9 @@ fun EventHomeContent(
                 item(key = "hero") {
                     EventHeroCard(
                         state = state,
-                        onEditNameClick = onEditEventNameClick
+                        onEditNameClick = onEditEventNameClick,
+                        onNameDraftChange = onNameDraftChange,
+                        onViewDetailEventClick = onViewDetailEventClick
                     )
                 }
 
@@ -202,6 +212,8 @@ private fun EventHomePreviewContent() {
         onBackClick = {},
         onEditEventClick = {},
         onEditEventNameClick = {},
+        onNameDraftChange = {},
+        onViewDetailEventClick = {},
         onMakeOrdersClick = {},
         onHandsFreeWeighingClick = {},
         onMakeDeliveriesClick = {},

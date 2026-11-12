@@ -16,4 +16,11 @@ interface EventRepository {
     fun observeEvent(tenantId: String, eventId: String): Flow<EventWithCuts?>
 
     suspend fun closeEvent(tenantId: String, eventId: String): Resource<Unit>
+
+    suspend fun updateEventName(tenantId: String, eventId: String, name: String): Resource<Unit>
+
+    suspend fun updateEventWithCuts(
+        tenantId: String, eventId: String, name: String, date: Long, animalCount: Int,
+        cuts: List<EventCut>, removedCutIds: List<String>
+    ): Resource<Unit>
 }

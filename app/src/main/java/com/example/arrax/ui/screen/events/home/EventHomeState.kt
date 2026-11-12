@@ -23,6 +23,9 @@ data class RecentOrderUi(
 
 @Immutable
 data class EventHomeState(
+    val isEditingName: Boolean = false,
+    val nameDraft: String = "",
+    val isSavingName: Boolean = false,
     val eventName: String = "Neos",
     val statusText: String = "Activo",
     val dateFormatted: String = "26 oct. 2026",
@@ -32,7 +35,9 @@ data class EventHomeState(
     val ordersCount: Int = 18,
     val totalSalesCents: Long = 324_050L,
     val recentOrders: List<RecentOrderUi> = defaultRecentOrders,
-    val currentRoute: String = ROUTE_HOME
+    val currentRoute: String = ROUTE_HOME,
+    val canEditNameEvent: Boolean=false,
+    val canEditEvent: Boolean=false
 ) {
     companion object {
         const val ROUTE_HOME = "event_home"
