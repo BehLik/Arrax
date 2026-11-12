@@ -42,7 +42,6 @@ import com.example.arrax.ui.screen.events.home.component.RecentOrderRowCard
 fun EventHomeScreen(
     onBack: () -> Unit = {},
     onEditEventClick: () -> Unit,
-    onEditEventNameClick: () -> Unit,
     onViewDetailEventClick:()-> Unit,
     onMakeOrdersClick: () -> Unit,
     onHandsFreeWeighingClick: () -> Unit,
@@ -59,7 +58,6 @@ fun EventHomeScreen(
         when (event) {
             EventHomeEvent.NavigateBack -> onBack()
             EventHomeEvent.EditEvent -> onEditEventClick()
-//            EventHomeEvent.EditEventName -> onEditEventNameClick()
             EventHomeEvent.ViewDetailEvent->onViewDetailEventClick()
             EventHomeEvent.MakeOrders -> onMakeOrdersClick()
             EventHomeEvent.HandsFreeWeighing -> onHandsFreeWeighingClick()
