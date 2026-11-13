@@ -102,4 +102,32 @@ class FirestoreOrderDataSource @Inject constructor(
         itemIds.forEach { batch.update(items(t, e).document(it), "deliveredAt", deliveredAt) }
         batch.commit().addOnFailureListener { Log.e("ORDERS", "markDelivered falló", it) }
     }
+    fun deleteOrder(t: String, e: String, orderId: String, itemIds: List<String>) {
+        val batch = firestore.batch()
+        itemIds.forEach { batch.delete(items(t, e).document(it)) }
+        batch.delete(orders(t, e).document(orderId))
+        batch.commit().addOnFailureListener { Log.e("ORDERS", "deleteOrder falló", it) }
+    }
+
+    fun updateOrder(
+        t: String, e: String, orderId: String, notes: String,
+        added: List<OrderItemDto>, updated: List<OrderItemDto>, removedIds: Set<String>,
+    ) {
+        val now = System.currentTimeMillis()
+        val batch = firestore.batch()
+        batch.update(orders(t, e).document(orderId), "notes", notes.trim())
+        added.forEach { batch.set(items(t, e).document(it.id), it.copy(createdAt = now)) }
+        updated.forEach {
+            batch.update(items(t, e).document(it.id), mapOf(
+                "requestedBy" to it.requestedBy,
+                "requestedGrams" to it.requestedGrams,
+                "requestedAmountCents" to it.requestedAmountCents,
+                "targetGrams" to it.targetGrams,
+                "pricePerKgCents" to it.pricePerKgCents,
+            ))
+        }
+        removedIds.forEach { batch.delete(items(t, e).document(it)) }
+        batch.commit().addOnFailureListener { Log.e("ORDERS", "updateOrder falló", it) }
+    }
+
 }

@@ -10,4 +10,11 @@ object OrderMath {
     // Se cobra SIEMPRE por peso real
     fun itemTotalCents(item: OrderItem) = amountFromGrams(item.weighedGrams, item.pricePerKgCents)
     fun customerTotalCents(items: List<OrderItem>) = items.sumOf { itemTotalCents(it) }
+    fun itemId(orderId: String, cutId: String) = "${orderId}_$cutId"
+    fun itemEstimatedCents(item: OrderItem): Long =
+        if (item.weighingStatus == WeighingStatus.PENDING)
+            amountFromGrams(item.targetGrams, item.pricePerKgCents)
+        else itemTotalCents(item)
+
+    fun customerEstimatedCents(items: List<OrderItem>) = items.sumOf { itemEstimatedCents(it) }
 }

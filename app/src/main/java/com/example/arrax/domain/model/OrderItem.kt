@@ -26,4 +26,9 @@ data class OrderItem(
     val weighingStatus: WeighingStatus = WeighingStatus.PENDING,
     val deliveredAt: Long? = null,
     val createdAt: Long = 0L,
-)
+) {
+    val isLocked: Boolean
+        get() = weighingStatus != WeighingStatus.PENDING ||
+                weighedGrams > 0 ||
+                deliveredAt != null
+}

@@ -24,7 +24,7 @@ fun OrderItemDto.toDomain() = OrderItem(
 )
 
 fun OrderItem.toDto() = OrderItemDto(
-    customerId = customerId, cutId = cutId, cutName = cutName,
+    id = id, orderId = orderId, customerId = customerId, cutId = cutId, cutName = cutName,
     pricePerKgCents = pricePerKgCents, requestedBy = requestedBy.name,
     requestedGrams = requestedGrams, requestedAmountCents = requestedAmountCents,
     targetGrams = targetGrams,
