@@ -74,21 +74,9 @@ class FirestoreOrderDataSource @Inject constructor(
         val batch = firestore.batch()
         batch.set(orders(t, e).document(order.id), order.copy(createdAt = now, createdBy = uid))
         lines.forEach { line ->
-            // id determinista: evita dos líneas del mismo corte en un pedido
-            val itemId = "${order.id}_${line.cutId}"
-            batch.set(items(t, e).document(itemId), line.copy(orderId = order.id, createdAt = now))
+            batch.set(items(t, e).document(line.id), line.copy(orderId = order.id, createdAt = now))
         }
         batch.commit().addOnFailureListener { Log.e("ORDERS", "createOrder falló", it) }
-    }
-
-    fun deleteOrder(t: String, e: String, orderId: String) {
-        // Borra el pedido y sus líneas juntos.
-        items(t, e).whereEqualTo("orderId", orderId).get().addOnSuccessListener { snap ->
-            val batch = firestore.batch()
-            snap.documents.forEach { batch.delete(it.reference) }
-            batch.delete(orders(t, e).document(orderId))
-            batch.commit().addOnFailureListener { Log.e("ORDERS", "deleteOrder falló", it) }
-        }
     }
 
     fun confirmWeighing(t: String, e: String, itemId: String, grams: Int, status: String) {
