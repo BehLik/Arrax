@@ -22,6 +22,7 @@ class BusinessCustomersViewModel @Inject constructor(
     observeCustomers: ObserveCustomersUseCase,
 ) : ViewModel() {
 
+    private val route = savedStateHandle.toRoute<BusinessCustomers>()
     private val businessId = savedStateHandle.toRoute<BusinessCustomers>().businessId
     private val query = MutableStateFlow("")
     private val tab = MutableStateFlow(CustomersTab.All)
@@ -48,6 +49,7 @@ class BusinessCustomersViewModel @Inject constructor(
                 selectedTab = t,
                 allCount = all.size,
                 frequentCount = 0,
+                selectMode = route.selectMode,
                 newCount = all.count(::isNew),
                 customers = filtered.map {
                     CustomerUi(
@@ -59,7 +61,7 @@ class BusinessCustomersViewModel @Inject constructor(
                     )
                 },
             )
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), BusinessCustomersState())
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000),BusinessCustomersState(selectMode = route.selectMode))
 
     fun onQueryChange(q: String) { query.value = q }
     fun onTabSelected(t: CustomersTab) { tab.value = t }

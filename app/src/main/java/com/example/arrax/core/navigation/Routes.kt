@@ -32,7 +32,8 @@ import kotlinx.serialization.Serializable
 @Serializable data class InvitationDetail(val businessId: String, val code: String)
 @Serializable data class InvitationCreate(val businessId: String)
 // Clientes
-@Serializable data class BusinessCustomers(val businessId: String)                         // lista
+@Serializable data class BusinessCustomers(val businessId: String,val selectMode: Boolean=false)
+const val SELECTED_CUSTOMER_KEY = "selectedCustomerId"                      // lista
 
 @Serializable data class BusinessCustomerAdd(val businessId: String, val customerId: String? = null)
 @Serializable data class BusinessCustomerView(val businessId: String, val customerId: String)
@@ -55,7 +56,8 @@ import kotlinx.serialization.Serializable
 
 // Pedidos
 @Serializable data class EventOrders(val businessId: String, val eventId: String)          // lista (por cliente / por corte)
-@Serializable data class EventPlaceOrder(val businessId: String,val eventId: String,val orderId: String?=null)
+@Serializable data class EventMakeOrder(val businessId: String,val eventId: String,val orderId: String?=null)
+//@Serializable data class EventMakeOrders(val businessId: String,val eventId: String,val orderId: String)
 @Serializable data class EventOrderView(val businessId: String, val eventId: String, val orderId: String)
 
 // Pesaje

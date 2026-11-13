@@ -24,20 +24,22 @@ import com.example.arrax.core.navigation.EventDeliveries
 import com.example.arrax.core.navigation.EventDetail
 import com.example.arrax.core.navigation.EventEdit
 import com.example.arrax.core.navigation.EventHome
+import com.example.arrax.core.navigation.EventMakeOrder
+import com.example.arrax.core.navigation.EventMakeOrders
 import com.example.arrax.core.navigation.EventMore
-//import com.example.arrax.core.navigation.EventOrderDetail
-//import com.example.arrax.core.navigation.EventOrderEdit
 import com.example.arrax.core.navigation.EventOrderView
 import com.example.arrax.core.navigation.EventOrders
 import com.example.arrax.core.navigation.EventShell
 import com.example.arrax.core.navigation.EventWeighing
 import com.example.arrax.core.navigation.WeighingMode
 import com.example.arrax.ui.root.navigation.ArraxTransitions
+import com.example.arrax.ui.root.navigation.backAction
 import com.example.arrax.ui.root.navigation.safeNavigate
 import com.example.arrax.ui.screen.events.deliveries.EventDeliveriesScreen
 import com.example.arrax.ui.screen.events.home.EventHomeScreen
 import com.example.arrax.ui.screen.events.more.EventMoreScreen
 import com.example.arrax.ui.screen.events.orders.EventOrderScreen
+import com.example.arrax.ui.screen.events.orders.subscreen.make.EventMakeOrderScreen
 
 private enum class EventTab(val key: String) {
     HOME("event_home"),
@@ -121,12 +123,10 @@ fun EventShellScreen(args: EventShell, outerNav: NavController) {
                 EventHomeScreen(
                     onBack = { outerNav.popBackStack() },
                     onEditEventClick = {outerNav.safeNavigate(EventEdit(args.businessId,args.eventId))},
-//                    onEditEventNameClick = {},
                     onSeeDetailClick = {},
                     onViewDetailEventClick = {outerNav.safeNavigate(EventDetail(args.businessId,args.eventId))},
                     onMakeDeliveriesClick = { goTo(EventTab.DELIVERIES) },
-                    onMakeOrdersClick = {},
-//                    onMakeOrdersClick = { outerNav.safeNavigate(EventOrderView(args.businessId, args.eventId)) },
+                   onMakeOrdersClick = { outerNav.safeNavigate(EventMakeOrder(args.businessId, args.eventId)) },
                     onSeeAllOrdersClick = { goTo(EventTab.ORDERS) },
                     onOrderClick = { id ->
                         outerNav.safeNavigate(EventOrderView(args.businessId, args.eventId, id))
@@ -138,9 +138,6 @@ fun EventShellScreen(args: EventShell, outerNav: NavController) {
                     }
                 )
             }
-            composable<EventOrders> { EventOrderScreen() }
-            composable<EventDeliveries> { EventDeliveriesScreen() }
-            composable<EventMore> { EventMoreScreen() }
         }
         val currentGoTo by rememberUpdatedState(::goTo)
         ArxBottomBar(

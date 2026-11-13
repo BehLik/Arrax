@@ -16,6 +16,7 @@ data class CustomerUi(
 data class BusinessCustomersState(
     val query: String = "",
     val selectedTab: CustomersTab = CustomersTab.All,
+    val selectMode: Boolean = false,
     val allCount: Int = 0,
     val frequentCount: Int = 0,
     val newCount: Int = 0,

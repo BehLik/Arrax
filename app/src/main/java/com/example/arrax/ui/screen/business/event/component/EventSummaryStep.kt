@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.example.arrax.core.common.toMoney
 import com.example.arrax.core.designsystem.components.cards.ArxCard
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.core.designsystem.theme.ArxSpacing

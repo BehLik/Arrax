@@ -135,9 +135,18 @@ private fun NavGraphBuilder.businessCustomers(nav: NavController) {
     composable<BusinessCustomers> { entry ->
         val args = entry.toRoute<BusinessCustomers>()
         BusinessCustomersScreen(
-            onBack =back,
+            onBack = back,
             onAddCustomerClick = { nav.safeNavigate(BusinessCustomerAdd(args.businessId)) },
-            onCustomerClick = { id -> nav.safeNavigate(BusinessCustomerView(args.businessId, id)) }
+            onCustomerClick = { id ->
+                if (args.selectMode) {
+                    nav.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set(SELECTED_CUSTOMER_KEY, id)
+                    nav.popBackStack()
+                } else {
+                    nav.safeNavigate(BusinessCustomerView(args.businessId, id))
+                }
+            }
         )
     }
 

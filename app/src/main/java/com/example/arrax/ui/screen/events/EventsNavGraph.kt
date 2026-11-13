@@ -5,13 +5,12 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.example.arrax.core.navigation.*
-import com.example.arrax.ui.root.navigation.PlaceholderAction
 import com.example.arrax.ui.root.navigation.PlaceholderScreen
 import com.example.arrax.ui.root.navigation.backAction
 import com.example.arrax.ui.root.navigation.safeNavigate
 import com.example.arrax.ui.screen.events.home.subscreen.edit.EventEditScreen
 import com.example.arrax.ui.screen.events.home.subscreen.viewdetail.EventViewDetailScreen
-import com.example.arrax.ui.screen.events.orders.subscreen.placeorder.EventPlaceOrderScreen
+import com.example.arrax.ui.screen.events.orders.subscreen.make.EventMakeOrderScreen
 import com.example.arrax.ui.screen.events.orders.subscreen.view.EventViewOrderScreen
 import com.example.arrax.ui.screen.events.shell.EventShellScreen
 
@@ -41,19 +40,28 @@ private fun NavGraphBuilder.eventShell(nav: NavController) {
             onSaved = { nav.popBackStack() }
         )
     }
+    composable<EventMakeOrder> { entry ->
+        val args = entry.toRoute<EventMakeOrder>()
+        EventMakeOrderScreen(
+            onBack = { nav.popBackStack() },
+            onSelectCustomer = {
+                nav.safeNavigate(BusinessCustomers(args.businessId, selectMode = true))
+            }
+        )
+    }
 }
 
 // ── Pedidos: crear/editar y detalle (sin bottom bar) ──
 private fun NavGraphBuilder.eventOrders(nav: NavController) {
     val back = nav.backAction()
 
-    composable<EventPlaceOrder> { entry ->
-        val args = entry.toRoute<EventPlaceOrder>()
-        EventPlaceOrderScreen(
-//            title = if (args.orderId == null) "Nuevo pedido" else "Editar pedido",
-//            onBack = back
-        )
-    }
+//    composable<EventPlaceOrder> { entry ->
+//        val args = entry.toRoute<EventPlaceOrder>()
+//        EventPlaceOrderScreen(
+////            title = if (args.orderId == null) "Nuevo pedido" else "Editar pedido",
+////            onBack = back
+//        )
+//    }
 
     composable<EventOrderView> { entry ->
         val args = entry.toRoute<EventOrderView>()
