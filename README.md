@@ -40,9 +40,11 @@ La plataforma busca que la tecnología se adapte al ritmo del trabajador, en lug
 
 ## Estado de implementación
 
-> **Fase actual: Generación de pedidos (*orders*), clientes, cola de pesado por corte, entregas, pagos y cuenta por cliente; interacción manos libres (Bluetooth, TTS y voz) | **Siguiente etapa: por iniciar** |
+## Estado de implementación
 
----| Fase | Alcance | Estado |
+> **Fase actual: F4 — Pedidos,** Pedidos, clientes, cola de pesado por corte, entregas, pagos y cuenta por cliente, manos libres (Bluetooth, TTS y voz).
+
+| Fase | Alcance | Estado |
 | ---- | ------- | ------ |
 | **F0** | Cimientos: arquitectura por capas, design system `Arx*` (tema claro y oscuro), Hilt, Firebase, modelo NoSQL, estados globales, Crashlytics, diagramas | En cierre |
 | **F1** | Autenticación con Firebase Auth: inicio de sesión, registro, recuperación de contraseña, estados de carga y error, restauración y cierre de sesión | Fuera del foco actual; cierre de pruebas por confirmar |
@@ -50,7 +52,8 @@ La plataforma busca que la tecnología se adapte al ritmo del trabajador, en lug
 | **F3** | Eventos: creación, edición y detalle; catálogo de cortes, precios y cierre | En desarrollo e integración; pruebas pendientes |
 | **F4** | Generación de pedidos (*orders*), clientes, cola de pesado por corte, entregas, pagos y cuenta por cliente; interacción manos libres (Bluetooth, TTS y voz) | **Siguiente etapa: por iniciar** |
 | **F5** | Gastos, utilidad neta y reportes; pruebas de extremo a extremo, concurrencia, versión beta; evaluación de automatización y de un segundo caso de uso | Planeada |
-En qué estoy trabajando ahora
+---
+>**En qué estoy trabajando ahora.**
 El siguiente módulo que comenzaré es Generar pedido / Order. La prioridad es construir una captura confiable y rápida, vinculada al evento activo y a sus precios de cortes.
 
 ## Orden previsto de implementación:

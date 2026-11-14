@@ -33,7 +33,11 @@ import com.example.arrax.core.navigation.EventWeighing
 import com.example.arrax.core.navigation.WeighingMode
 import com.example.arrax.ui.root.navigation.ArraxTransitions
 import com.example.arrax.ui.root.navigation.safeNavigate
+import com.example.arrax.ui.screen.events.deliveries.EventDeliveriesScreen
 import com.example.arrax.ui.screen.events.home.EventHomeScreen
+import com.example.arrax.ui.screen.events.more.EventMoreScreen
+import com.example.arrax.ui.screen.events.orders.EventOrderScreen
+
 private enum class EventTab(val key: String) {
     HOME("event_home"),
     ORDERS("event_orders"),
@@ -139,6 +143,9 @@ fun EventShellScreen(args: EventShell, outerNav: NavController) {
                     }
                 )
             }
+            composable<EventOrders> { EventOrderScreen() }
+            composable<EventDeliveries> { EventDeliveriesScreen() }
+            composable<EventMore> { EventMoreScreen() }
         }
         val currentGoTo by rememberUpdatedState(::goTo)
         ArxBottomBar(

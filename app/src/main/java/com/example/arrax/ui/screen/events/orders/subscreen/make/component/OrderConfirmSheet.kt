@@ -38,11 +38,11 @@ internal fun OrderConfirmSheet(
             Modifier.verticalScroll(rememberScrollState()).padding(horizontal = 16.dp).padding(bottom = 24.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            ArxOrderSummaryCard(                       // import ...components.cards.ArxOrderSummaryCard
+            ArxOrderSummaryCard(
                 orderId = customerName,
                 items = lines.map { it.toSummaryItem() },
                 statusLabel = "Por confirmar",
-                statusType = ArxChipStatus.Warning,    // usa el valor que exista en tu enum
+                statusType = ArxChipStatus.Warning,
             )
             if (notes.isNotBlank()) Text("Nota: $notes", style = MaterialTheme.typography.bodyMedium)
             ArxPrimaryButton(

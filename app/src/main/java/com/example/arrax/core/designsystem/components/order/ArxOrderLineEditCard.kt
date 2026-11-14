@@ -38,6 +38,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.example.arrax.core.designsystem.components.buttons.ArxTextButton
 import com.example.arrax.core.designsystem.components.cards.ArxCard
 import com.example.arrax.core.designsystem.components.cards.ArxCatalogImage
 import com.example.arrax.core.designsystem.components.cards.ArxCatalogImageView
@@ -73,7 +74,11 @@ fun ArxOrderLineEditCard(
                 }
                 Column(horizontalAlignment = Alignment.End) {
                     Text(totalText, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                    TextButton(onClick = onRemove, modifier = Modifier.heightIn(min = 48.dp)) { Text("Quitar") }
+                    ArxTextButton(
+                        text = "Quitar",
+                        onClick = onRemove,
+                        isDestructive = true
+                    )
                 }
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {

@@ -174,8 +174,6 @@ private fun EventMakeOrderContent(
         withFrameNanos { }
         runCatching { notesRequester.requestFocus() }
     }
-
-    // Al agregar un corte, el foco va directo a su cantidad
     var prevCount by remember { mutableIntStateOf(state.lines.size) }
     LaunchedEffect(state.lines.size) {
         if (state.lines.size > prevCount) focusLine(state.lines.lastIndex)
@@ -352,7 +350,6 @@ private fun EventMakeOrderScreenPreview() {
             onBack = {},
             onSelectCustomer = {},
             onAddCut = {},
-//            onQuantityChange = { _, _ -> },
             onRemoveLine = {},
             onNotesChange = {},
             onConfirm = {},

@@ -191,7 +191,8 @@ internal fun EventHeroCard(
                         Text(
                             text = "Cortes configurados: ",
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1
                         )
                         Text(
                             text = "${state.configuredCutsCount}",
@@ -199,7 +200,13 @@ internal fun EventHeroCard(
                             fontWeight = FontWeight.Bold
                         )
                     }
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+
+                    Spacer(Modifier.width(ArxSpacing.sm))
+
+                    Row(
+                        modifier = Modifier.weight(1f, fill = false),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         ArxIcon(
                             icon = ArxIcons.User,
                             size = 16.dp,
@@ -209,7 +216,10 @@ internal fun EventHeroCard(
                         Text(
                             text = "Creado por: ${state.createdBy}",
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f, fill = false)
                         )
                     }
                 }

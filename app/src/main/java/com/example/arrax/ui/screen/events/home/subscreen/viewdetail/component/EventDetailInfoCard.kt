@@ -14,6 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.arrax.core.designsystem.components.cards.ArxCard
 import com.example.arrax.core.designsystem.components.cards.ArxCardVariant
@@ -47,7 +49,7 @@ internal fun EventDetailInfoCard(state: EventViewDetailState, modifier: Modifier
 }
 
 @Composable
-private fun InfoRow(icon: Int, label: String, value: String) {   // ⚠ ajusta el tipo de `icon` al de ArxIcons
+private fun InfoRow(icon: Int, label: String, value: String) {
     Row(
         modifier = Modifier.fillMaxWidth().padding(vertical = ArxSpacing.xxs),
         verticalAlignment = Alignment.CenterVertically
@@ -55,11 +57,19 @@ private fun InfoRow(icon: Int, label: String, value: String) {   // ⚠ ajusta e
         ArxIcon(icon = icon, size = 16.dp, tint = MaterialTheme.colorScheme.onSurfaceVariant)
         Spacer(Modifier.width(ArxSpacing.xs))
         Text(
-            label,
+            text = label,
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Spacer(Modifier.width(ArxSpacing.sm))
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.End,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(1f)
         )
-        Text(value, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
     }
 }

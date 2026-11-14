@@ -31,7 +31,7 @@ data class EventHomeState(
     val dateFormatted: String = "26 oct. 2026",
     val animalCount: Int = 2,
     val configuredCutsCount: Int = 5,
-    val createdBy: String = "Tú",
+    val createdBy: String = "Ti",
     val ordersCount: Int = 18,
     val totalSalesCents: Long = 324_050L,
     val recentOrders: List<RecentOrderUi> = defaultRecentOrders,
