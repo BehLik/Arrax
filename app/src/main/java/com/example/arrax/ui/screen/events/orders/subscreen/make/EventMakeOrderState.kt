@@ -4,14 +4,23 @@ import com.example.arrax.core.designsystem.components.cards.ArxCatalogImage
 import com.example.arrax.domain.model.Customer
 import com.example.arrax.domain.model.EventCut
 import com.example.arrax.domain.model.OrderMath
+import com.example.arrax.domain.model.RequestMode
 
 data class OrderLineUi(
     val cutId: String,
     val cutName: String,
     val pricePerKgCents: Long,
-    val grams: Int,
+    val mode: RequestMode = RequestMode.KG,
+    val grams: Int = 1000,
+    val amountCents: Long = 0L,
 ) {
-    val estimatedCents: Long get() = OrderMath.amountFromGrams(grams, pricePerKgCents)
+    val targetGrams: Int
+        get() = if (mode == RequestMode.KG) grams
+        else OrderMath.gramsFromAmount(amountCents, pricePerKgCents)
+
+    val estimatedCents: Long
+        get() = if (mode == RequestMode.MONEY) amountCents
+        else OrderMath.amountFromGrams(grams, pricePerKgCents)
 }
 
 data class EventMakeOrderState(
@@ -27,6 +36,8 @@ data class EventMakeOrderState(
     val isSaving: Boolean = false,
     val errorMessage: String? = null,
     val saved: Boolean = false,
+    val showSummary: Boolean = false,
+    val infoMessage: String? = null,
 ) {
     fun imageOf(cutId: String): ArxCatalogImage = cutImages[cutId] ?: ArxCatalogImage.None
     val selectedCustomer: Customer? get() = customers.firstOrNull { it.id == selectedCustomerId }
@@ -39,5 +50,5 @@ data class EventMakeOrderState(
 
     val canConfirm: Boolean
         get() = eventOpen && !isSaving && selectedCustomerId != null &&
-                lines.isNotEmpty() && lines.all { it.grams > 0 }
+                lines.isNotEmpty() && lines.all { it.targetGrams > 0 }
 }

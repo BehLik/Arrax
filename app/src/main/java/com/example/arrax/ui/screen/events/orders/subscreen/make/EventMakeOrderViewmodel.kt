@@ -72,15 +72,6 @@ class EventMakeOrderViewModel @Inject constructor(
                     _state.update { it.copy(cutImages = list.associate { c -> c.id to c.toCatalogImage() }) }
                 }
         }
-//        viewModelScope.launch {
-//            savedStateHandle.getStateFlow<String?>(SELECTED_CUSTOMER_ID_KEY, null)
-//                .filterNotNull()
-//                .collect { id ->
-//                    _state.update { it.copy(selectedCustomerId = id) }
-//                    savedStateHandle[SELECTED_CUSTOMER_ID_KEY] = null
-//                }
-//        }
-
     }
 
     fun onCustomerSelected(customerId: String) =
@@ -102,12 +93,12 @@ class EventMakeOrderViewModel @Inject constructor(
         )
     }
 
-    fun onQuantityChange(cutId: String, kg: Double) {
-        val grams = (kg * 1000).roundToInt().coerceAtLeast(0)
-        _state.update { s ->
-            s.copy(lines = s.lines.map { if (it.cutId == cutId) it.copy(grams = grams) else it })
-        }
-    }
+//    fun onQuantityChange(cutId: String, kg: Double) {
+//        val grams = (kg * 1000).roundToInt().coerceAtLeast(0)
+//        _state.update { s ->
+//            s.copy(lines = s.lines.map { if (it.cutId == cutId) it.copy(grams = grams) else it })
+//        }
+//    }
 
     fun onRemoveLine(cutId: String) =
         _state.update { s -> s.copy(lines = s.lines.filterNot { it.cutId == cutId }) }
@@ -116,27 +107,74 @@ class EventMakeOrderViewModel @Inject constructor(
     fun onErrorShown() = _state.update { it.copy(errorMessage = null) }
 
 
-    fun onConfirm() {
+//    fun onConfirm() {
+//        val s = _state.value
+//        val customerId = s.selectedCustomerId ?: return
+//        if (!s.canConfirm) return
+//        _state.update { it.copy(isSaving = true, errorMessage = null) }
+//        viewModelScope.launch {
+//            val result = createOrder(
+//                tenantId = tenantId,
+//                eventId = eventId,
+//                customerId = customerId,
+//                notes = s.notes,
+//                lines = s.lines.map {
+//                    OrderLineInput(
+//                        cutId = it.cutId,
+//                        requestedBy = RequestMode.KG,
+//                        requestedGrams = it.grams,
+//                    )
+//                },
+//            )
+//            when (result) {
+//                is Resource.Success -> _state.update { it.copy(isSaving = false, saved = true) }
+//                is Resource.Error -> _state.update { it.copy(isSaving = false, errorMessage = result.message) }
+//                else -> _state.update { it.copy(isSaving = false) }
+//            }
+//        }
+//    }
+private fun updateLine(cutId: String, transform: (OrderLineUi) -> OrderLineUi) =
+    _state.update { s -> s.copy(lines = s.lines.map { if (it.cutId == cutId) transform(it) else it }) }
+
+    fun onModeChange(cutId: String, mode: RequestMode) = updateLine(cutId) { l ->
+        when {
+            l.mode == mode -> l
+            mode == RequestMode.MONEY -> l.copy(mode = mode, amountCents = l.estimatedCents)
+            else -> l.copy(mode = mode, grams = l.targetGrams)
+        }
+    }
+    fun onGramsChange(cutId: String, grams: Int) = updateLine(cutId) { it.copy(grams = grams.coerceAtLeast(0)) }
+    fun onAmountChange(cutId: String, cents: Long) = updateLine(cutId) { it.copy(amountCents = cents.coerceAtLeast(0)) }
+
+    fun onConfirmClick() = _state.update { if (it.canConfirm) it.copy(showSummary = true) else it }
+    fun onDismissSummary() = _state.update { it.copy(showSummary = false) }
+    fun onInfoShown() = _state.update { it.copy(infoMessage = null) }
+
+    fun onSave(addAnother: Boolean) {
         val s = _state.value
         val customerId = s.selectedCustomerId ?: return
         if (!s.canConfirm) return
-        _state.update { it.copy(isSaving = true, errorMessage = null) }
+        _state.update { it.copy(isSaving = true, showSummary = false, errorMessage = null) }
         viewModelScope.launch {
             val result = createOrder(
-                tenantId = tenantId,
-                eventId = eventId,
-                customerId = customerId,
-                notes = s.notes,
+                tenantId = tenantId, eventId = eventId, customerId = customerId, notes = s.notes,
                 lines = s.lines.map {
+                    val money = it.mode == RequestMode.MONEY
                     OrderLineInput(
                         cutId = it.cutId,
-                        requestedBy = RequestMode.KG,
-                        requestedGrams = it.grams,
+                        requestedBy = it.mode,
+                        requestedGrams = if (money) null else it.grams,
+                        requestedAmountCents = if (money) it.amountCents else null,
                     )
                 },
             )
             when (result) {
-                is Resource.Success -> _state.update { it.copy(isSaving = false, saved = true) }
+                is Resource.Success -> _state.update {
+                    if (addAnother) it.copy(
+                        isSaving = false, lines = emptyList(), notes = "",
+                        infoMessage = "Pedido guardado. Agrega otro para ${it.selectedCustomer?.name ?: "el cliente"}",
+                    ) else it.copy(isSaving = false, saved = true)
+                }
                 is Resource.Error -> _state.update { it.copy(isSaving = false, errorMessage = result.message) }
                 else -> _state.update { it.copy(isSaving = false) }
             }

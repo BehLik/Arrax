@@ -40,6 +40,9 @@ import com.example.arrax.core.designsystem.components.order.ArxOrderLineEditCard
 import com.example.arrax.core.designsystem.theme.ArxTheme
 import com.example.arrax.domain.model.Customer
 import com.example.arrax.domain.model.EventCut
+import com.example.arrax.domain.model.RequestMode
+import com.example.arrax.ui.screen.events.orders.subscreen.make.component.OrderConfirmSheet
+import java.util.Locale
 
 @Composable
 fun EventMakeOrderScreen(
@@ -65,6 +68,12 @@ fun EventMakeOrderScreen(
             onSelectedCustomerConsumed()
         }
     }
+    LaunchedEffect(state.infoMessage) {
+        state.infoMessage?.let {
+            snackbarHostState.showSnackbar(it)
+            viewModel.onInfoShown()
+        }
+    }
 
     EventMakeOrderContent(
         state = state,
@@ -72,10 +81,12 @@ fun EventMakeOrderScreen(
         onBack = onBack,
         onSelectCustomer = onSelectCustomer,
         onAddCut = viewModel::onAddCutClick,
-        onQuantityChange = viewModel::onQuantityChange,
+        onModeChange = viewModel::onModeChange,
+        onGramsChange = viewModel::onGramsChange,
+        onAmountChange = viewModel::onAmountChange,
         onRemoveLine = viewModel::onRemoveLine,
         onNotesChange = viewModel::onNotesChange,
-        onConfirm = viewModel::onConfirm,
+        onConfirm = viewModel::onConfirmClick,
     )
 
     if (state.showCutPicker) {
@@ -84,6 +95,17 @@ fun EventMakeOrderScreen(
             onPick = viewModel::onCutPicked,
             imageOf = state::imageOf,
             onDismiss = viewModel::onDismissCutPicker,
+        )
+    }
+    if (state.showSummary) {
+        OrderConfirmSheet(
+            customerName = state.selectedCustomer?.name.orEmpty(),
+            notes = state.notes,
+            lines = state.lines,
+            isSaving = state.isSaving,
+            onConfirm = { viewModel.onSave(addAnother = false) },
+            onConfirmAndAddAnother = { viewModel.onSave(addAnother = true) },
+            onDismiss = viewModel::onDismissSummary,
         )
     }
 }
@@ -96,7 +118,9 @@ private fun EventMakeOrderContent(
     onBack: () -> Unit,
     onSelectCustomer: () -> Unit,
     onAddCut: () -> Unit,
-    onQuantityChange: (String, Double) -> Unit,
+    onModeChange: (String, RequestMode) -> Unit,
+    onGramsChange: (String, Int) -> Unit,
+    onAmountChange: (String, Long) -> Unit,
     onRemoveLine: (String) -> Unit,
     onNotesChange: (String) -> Unit,
     onConfirm: () -> Unit,
@@ -160,13 +184,19 @@ private fun EventMakeOrderContent(
                     item { Text("Agrega al menos un corte para continuar.") }
                 } else {
                     items(state.lines, key = { it.cutId }) { line ->
+                        val money = line.mode == RequestMode.MONEY
                         ArxOrderLineEditCard(
                             title = line.cutName,
                             image = state.imageOf(line.cutId),
                             pricePerKgText = "${line.pricePerKgCents.toMoney()}/kg",
                             totalText = line.estimatedCents.toMoney(),
-                            quantityKg = line.grams / 1000.0,
-                            onQuantityChange = { kg -> onQuantityChange(line.cutId, kg) },
+                            isMoneyMode = money,
+                            grams = line.grams,
+                            amountCents = line.amountCents,
+                            equivalentText = if (money) "≈ ${String.format(Locale.US, "%.3f", line.targetGrams / 1000.0)} kg" else null,
+                            onModeChange = { m -> onModeChange(line.cutId, if (m) RequestMode.MONEY else RequestMode.KG) },
+                            onGramsChange = { onGramsChange(line.cutId, it) },
+                            onAmountCentsChange = { onAmountChange(line.cutId, it) },
                             onRemove = { onRemoveLine(line.cutId) },
                         )
                     }
@@ -225,10 +255,13 @@ private fun EventMakeOrderScreenPreview() {
             onBack = {},
             onSelectCustomer = {},
             onAddCut = {},
-            onQuantityChange = { _, _ -> },
+//            onQuantityChange = { _, _ -> },
             onRemoveLine = {},
             onNotesChange = {},
             onConfirm = {},
+            onModeChange = { _, _ -> },
+            onGramsChange = { _, _ -> },
+            onAmountChange = { _, _ -> },
         )
     }
 }
