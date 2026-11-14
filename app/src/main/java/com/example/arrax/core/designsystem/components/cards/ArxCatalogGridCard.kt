@@ -162,7 +162,7 @@ private fun CatalogMedia(
     modifier: Modifier = Modifier,
 ) {
     Box(modifier.background(glow()), contentAlignment = Alignment.Center) {
-        CatalogImage(
+        ArxCatalogImageView(
             image = image,
             title = title,
             modifier = Modifier
@@ -250,7 +250,7 @@ private fun CatalogTextRow(
 }
 
 @Composable
-private fun CatalogImage(
+fun ArxCatalogImageView(
     image: ArxCatalogImage,
     title: String,
     modifier: Modifier = Modifier,

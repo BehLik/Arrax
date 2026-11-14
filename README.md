@@ -40,7 +40,7 @@ La plataforma busca que la tecnología se adapte al ritmo del trabajador, en lug
 
 ## Estado de implementación
 
-> **Fase actual: F1 — Autenticación.** La F0 está en etapa de cierre (verificaciones, diagramas y pulido del design system). Las fases F2 y F3 cuentan con una implementación inicial que todavía debe validarse, probarse e integrarse visualmente antes de darse por completadas.
+> **Fase actual: Generación de pedidos (*orders*), clientes, cola de pesado por corte, entregas, pagos y cuenta por cliente; interacción manos libres (Bluetooth, TTS y voz) | **Siguiente etapa: por iniciar** |
 
 ---| Fase | Alcance | Estado |
 | ---- | ------- | ------ |

@@ -1,5 +1,6 @@
 package com.example.arrax.data.mapper
 
+import com.example.arrax.core.designsystem.components.cards.ArxCatalogImage
 import com.example.arrax.domain.model.CutState
 import com.example.arrax.domain.model.DefaultCuts
 import com.example.arrax.data.remote.CutCatalogDto

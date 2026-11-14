@@ -25,7 +25,6 @@ import com.example.arrax.core.navigation.EventDetail
 import com.example.arrax.core.navigation.EventEdit
 import com.example.arrax.core.navigation.EventHome
 import com.example.arrax.core.navigation.EventMakeOrder
-import com.example.arrax.core.navigation.EventMakeOrders
 import com.example.arrax.core.navigation.EventMore
 import com.example.arrax.core.navigation.EventOrderView
 import com.example.arrax.core.navigation.EventOrders
@@ -33,14 +32,8 @@ import com.example.arrax.core.navigation.EventShell
 import com.example.arrax.core.navigation.EventWeighing
 import com.example.arrax.core.navigation.WeighingMode
 import com.example.arrax.ui.root.navigation.ArraxTransitions
-import com.example.arrax.ui.root.navigation.backAction
 import com.example.arrax.ui.root.navigation.safeNavigate
-import com.example.arrax.ui.screen.events.deliveries.EventDeliveriesScreen
 import com.example.arrax.ui.screen.events.home.EventHomeScreen
-import com.example.arrax.ui.screen.events.more.EventMoreScreen
-import com.example.arrax.ui.screen.events.orders.EventOrderScreen
-import com.example.arrax.ui.screen.events.orders.subscreen.make.EventMakeOrderScreen
-
 private enum class EventTab(val key: String) {
     HOME("event_home"),
     ORDERS("event_orders"),
@@ -71,8 +64,16 @@ fun EventShellScreen(args: EventShell, outerNav: NavController) {
                 selectedIconRes = ArxIcons.HomeFilled,
                 route = EventTab.HOME.key
             ),
-            ArxBottomBarItem(label = "Pedidos", iconRes = ArxIcons.Order, route = EventTab.ORDERS.key),
-            ArxBottomBarItem(label = "Entregas", iconRes = ArxIcons.Delivery, route = EventTab.DELIVERIES.key),
+            ArxBottomBarItem(
+                label = "Pedidos",
+                iconRes = ArxIcons.Order,
+                route = EventTab.ORDERS.key
+            ),
+            ArxBottomBarItem(
+                label = "Entregas",
+                iconRes = ArxIcons.Delivery,
+                route = EventTab.DELIVERIES.key
+            ),
             ArxBottomBarItem(label = "Más", iconRes = ArxIcons.More, route = EventTab.MORE.key)
         )
     }
@@ -126,7 +127,7 @@ fun EventShellScreen(args: EventShell, outerNav: NavController) {
                     onSeeDetailClick = {},
                     onViewDetailEventClick = {outerNav.safeNavigate(EventDetail(args.businessId,args.eventId))},
                     onMakeDeliveriesClick = { goTo(EventTab.DELIVERIES) },
-                   onMakeOrdersClick = { outerNav.safeNavigate(EventMakeOrder(args.businessId, args.eventId)) },
+                    onMakeOrdersClick = { outerNav.safeNavigate(EventMakeOrder(args.businessId, args.eventId)) },
                     onSeeAllOrdersClick = { goTo(EventTab.ORDERS) },
                     onOrderClick = { id ->
                         outerNav.safeNavigate(EventOrderView(args.businessId, args.eventId, id))

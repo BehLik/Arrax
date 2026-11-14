@@ -1,5 +1,6 @@
 package com.example.arrax.ui.screen.events.orders.subscreen.make
 
+import com.example.arrax.core.designsystem.components.cards.ArxCatalogImage
 import com.example.arrax.domain.model.Customer
 import com.example.arrax.domain.model.EventCut
 import com.example.arrax.domain.model.OrderMath
@@ -18,6 +19,7 @@ data class EventMakeOrderState(
     val eventOpen: Boolean = true,
     val customers: List<Customer> = emptyList(),
     val eventCuts: List<EventCut> = emptyList(),
+    val cutImages: Map<String, ArxCatalogImage> = emptyMap(),
     val selectedCustomerId: String? = null,
     val lines: List<OrderLineUi> = emptyList(),
     val notes: String = "",
@@ -26,6 +28,7 @@ data class EventMakeOrderState(
     val errorMessage: String? = null,
     val saved: Boolean = false,
 ) {
+    fun imageOf(cutId: String): ArxCatalogImage = cutImages[cutId] ?: ArxCatalogImage.None
     val selectedCustomer: Customer? get() = customers.firstOrNull { it.id == selectedCustomerId }
 
     // Cortes del evento que aún no están en el pedido

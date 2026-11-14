@@ -8,9 +8,11 @@ import com.example.arrax.domain.model.EventCut
 import com.example.arrax.domain.model.EventStatus
 import com.example.arrax.domain.model.OrderLineInput
 import com.example.arrax.domain.model.RequestMode
+import com.example.arrax.domain.usecase.catalog.GetCatalogCutUseCase
 import com.example.arrax.domain.usecase.customer.Observe.ObserveCustomersUseCase
 import com.example.arrax.domain.usecase.event.detail.ObserveEventDetailUseCase
 import com.example.arrax.domain.usecase.order.create.CreateOrderUseCase
+import com.example.arrax.ui.screen.events.orders.subscreen.make.component.toCatalogImage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlin.math.roundToInt
@@ -26,6 +28,7 @@ class EventMakeOrderViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     observeCustomers: ObserveCustomersUseCase,
     observeEventDetail: ObserveEventDetailUseCase,
+    getCatalog: GetCatalogCutUseCase,
     private val createOrder: CreateOrderUseCase,
 ) : ViewModel() {
 
@@ -62,6 +65,22 @@ class EventMakeOrderViewModel @Inject constructor(
                     }
                 }
         }
+        viewModelScope.launch {
+            getCatalog(tenantId)
+                .catch { /* sin imagen no es crítico */ }
+                .collect { list ->
+                    _state.update { it.copy(cutImages = list.associate { c -> c.id to c.toCatalogImage() }) }
+                }
+        }
+//        viewModelScope.launch {
+//            savedStateHandle.getStateFlow<String?>(SELECTED_CUSTOMER_ID_KEY, null)
+//                .filterNotNull()
+//                .collect { id ->
+//                    _state.update { it.copy(selectedCustomerId = id) }
+//                    savedStateHandle[SELECTED_CUSTOMER_ID_KEY] = null
+//                }
+//        }
+
     }
 
     fun onCustomerSelected(customerId: String) =
@@ -95,6 +114,7 @@ class EventMakeOrderViewModel @Inject constructor(
 
     fun onNotesChange(value: String) = _state.update { it.copy(notes = value) }
     fun onErrorShown() = _state.update { it.copy(errorMessage = null) }
+
 
     fun onConfirm() {
         val s = _state.value

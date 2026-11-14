@@ -137,14 +137,14 @@ private fun NavGraphBuilder.businessCustomers(nav: NavController) {
         BusinessCustomersScreen(
             onBack = back,
             onAddCustomerClick = { nav.safeNavigate(BusinessCustomerAdd(args.businessId)) },
-            onCustomerClick = { id ->
+            onCustomerClick = { customerId ->
                 if (args.selectMode) {
                     nav.previousBackStackEntry
                         ?.savedStateHandle
-                        ?.set(SELECTED_CUSTOMER_KEY, id)
+                        ?.set(SELECTED_CUSTOMER_ID_KEY, customerId)
                     nav.popBackStack()
                 } else {
-                    nav.safeNavigate(BusinessCustomerView(args.businessId, id))
+                    nav.safeNavigate(BusinessCustomerView(args.businessId, customerId))
                 }
             }
         )

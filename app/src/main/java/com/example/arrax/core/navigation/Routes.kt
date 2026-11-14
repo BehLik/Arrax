@@ -33,7 +33,7 @@ import kotlinx.serialization.Serializable
 @Serializable data class InvitationCreate(val businessId: String)
 // Clientes
 @Serializable data class BusinessCustomers(val businessId: String,val selectMode: Boolean=false)
-const val SELECTED_CUSTOMER_KEY = "selectedCustomerId"                      // lista
+const val SELECTED_CUSTOMER_ID_KEY = "selectedCustomerId"
 
 @Serializable data class BusinessCustomerAdd(val businessId: String, val customerId: String? = null)
 @Serializable data class BusinessCustomerView(val businessId: String, val customerId: String)

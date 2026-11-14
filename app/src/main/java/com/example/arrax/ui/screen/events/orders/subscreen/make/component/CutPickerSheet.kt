@@ -17,12 +17,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.arrax.core.common.toMoney
 import com.example.arrax.core.designsystem.components.cards.ArxCard
+import com.example.arrax.core.designsystem.components.cards.ArxCatalogCardVariant
+import com.example.arrax.core.designsystem.components.cards.ArxCatalogGridCard
+import com.example.arrax.core.designsystem.components.cards.ArxCatalogImage
 import com.example.arrax.domain.model.EventCut
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun CutPickerSheet(
     cuts: List<EventCut>,
+    imageOf: (String) -> ArxCatalogImage,
     onPick: (EventCut) -> Unit,
     onDismiss: () -> Unit,
 ) {
@@ -32,22 +36,18 @@ internal fun CutPickerSheet(
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Text("Agregar corte", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-            if (cuts.isEmpty()) {
-                Text("Ya agregaste todos los cortes del evento.")
-            } else {
-                cuts.forEach { cut ->
-                    ArxCard(onClick = { onPick(cut) }, modifier = Modifier.fillMaxWidth()) {
-                        Row(
-                            modifier = Modifier.padding(16.dp).heightIn(min = 32.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Text(cut.name, style = MaterialTheme.typography.titleMedium)
-                            Text("${cut.pricePerKgCents.toLong().toMoney()}/kg")
-                        }
-                    }
-                }
+            if (cuts.isEmpty()) Text("Ya agregaste todos los cortes del evento.")
+            else cuts.forEach { cut ->
+                ArxCatalogGridCard(
+                    title = cut.name,
+                    subtitle = "${cut.pricePerKgCents.toLong().toMoney()}/kg",
+                    image = imageOf(cut.cutId),
+                    variant = ArxCatalogCardVariant.List,
+                    onClick = { onPick(cut) },
+                    modifier = Modifier.fillMaxWidth(),
+                )
             }
+
         }
     }
 }

@@ -21,11 +21,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.arrax.core.designsystem.components.cards.ArxCard
+import com.example.arrax.core.designsystem.components.cards.ArxCatalogImage
+import com.example.arrax.core.designsystem.components.cards.ArxCatalogImageView
 import com.example.arrax.core.designsystem.components.inputs.ArxQuantitySelector
 import com.example.arrax.core.designsystem.icons.ArxIcons
 
+
 @Composable
-fun ArxOrderItemHorizontalCard(
+fun ArxOrderLineEditCard(
     title: String,
     pricePerKgText: String,
     totalText: String,
@@ -33,7 +36,7 @@ fun ArxOrderItemHorizontalCard(
     onQuantityChange: (Double) -> Unit,
     onRemove: () -> Unit,
     modifier: Modifier = Modifier,
-    imageRes: Int? = null,
+    image: ArxCatalogImage = ArxCatalogImage.None,
 ) {
     ArxCard(onClick = {}, modifier = modifier.fillMaxWidth()) {
         Row(
@@ -41,22 +44,15 @@ fun ArxOrderItemHorizontalCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Image(
-                painter = painterResource(imageRes ?: ArxIcons.Box),
-                contentDescription = null,
-                modifier = Modifier.size(64.dp).clip(RoundedCornerShape(12.dp)),
-                contentScale = ContentScale.Crop,
-            )
-            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            ArxCatalogImageView(image = image, title = title, modifier = Modifier.size(64.dp))
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 Text(pricePerKgText, style = MaterialTheme.typography.bodyMedium)
                 ArxQuantitySelector(value = quantityKg, onValueChange = onQuantityChange)
             }
             Column(horizontalAlignment = Alignment.End) {
                 Text(totalText, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                TextButton(onClick = onRemove, modifier = Modifier.heightIn(min = 48.dp)) {
-                    Text("Quitar")
-                }
+                TextButton(onClick = onRemove, modifier = Modifier.heightIn(min = 48.dp)) { Text("Quitar") }
             }
         }
     }

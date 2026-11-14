@@ -1,5 +1,7 @@
 package com.example.arrax.ui.screen.events
 
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -42,11 +44,15 @@ private fun NavGraphBuilder.eventShell(nav: NavController) {
     }
     composable<EventMakeOrder> { entry ->
         val args = entry.toRoute<EventMakeOrder>()
+        val selectedId by entry.savedStateHandle
+            .getStateFlow<String?>(SELECTED_CUSTOMER_ID_KEY, null)
+            .collectAsStateWithLifecycle()
+
         EventMakeOrderScreen(
             onBack = { nav.popBackStack() },
-            onSelectCustomer = {
-                nav.safeNavigate(BusinessCustomers(args.businessId, selectMode = true))
-            }
+            onSelectCustomer = { nav.safeNavigate(BusinessCustomers(args.businessId, selectMode = true)) },
+            selectedCustomerId = selectedId,
+            onSelectedCustomerConsumed = { entry.savedStateHandle[SELECTED_CUSTOMER_ID_KEY] = null },
         )
     }
 }

@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -32,15 +30,13 @@ import com.example.arrax.core.designsystem.components.buttons.ArxPrimaryButton
 import com.example.arrax.core.designsystem.components.inputs.ArxTextField
 import com.example.arrax.core.designsystem.components.navigation.ArxTopBar
 import com.example.arrax.core.designsystem.components.navigation.ArxTopBarNavigationType
-import com.example.arrax.core.designsystem.components.order.ArxOrderItemHorizontalCard
 import com.example.arrax.core.designsystem.components.order.ArxOrderSummaryCard
 import com.example.arrax.core.designsystem.icons.ArxIcons
-import com.example.arrax.core.designsystem.icons.ArxIcons.Box
 import com.example.arrax.ui.screen.events.orders.subscreen.make.component.CustomerSelector
 import com.example.arrax.ui.screen.events.orders.subscreen.make.component.CutPickerSheet
 import com.example.arrax.ui.screen.events.orders.subscreen.make.component.OrderSectionHeader
-import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.arrax.core.designsystem.components.order.ArxOrderLineEditCard
 import com.example.arrax.core.designsystem.theme.ArxTheme
 import com.example.arrax.domain.model.Customer
 import com.example.arrax.domain.model.EventCut
@@ -49,8 +45,10 @@ import com.example.arrax.domain.model.EventCut
 fun EventMakeOrderScreen(
     onBack: () -> Unit,
     onSelectCustomer: () -> Unit,
+    selectedCustomerId: String?,
+    onSelectedCustomerConsumed: () -> Unit,
     viewModel: EventMakeOrderViewModel = hiltViewModel(),
-) {
+){
     val state by viewModel.state.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -59,6 +57,12 @@ fun EventMakeOrderScreen(
         state.errorMessage?.let {
             snackbarHostState.showSnackbar(it)
             viewModel.onErrorShown()
+        }
+    }
+    LaunchedEffect(selectedCustomerId) {
+        selectedCustomerId?.let {
+            viewModel.onCustomerSelected(it)
+            onSelectedCustomerConsumed()
         }
     }
 
@@ -78,6 +82,7 @@ fun EventMakeOrderScreen(
         CutPickerSheet(
             cuts = state.pickableCuts,
             onPick = viewModel::onCutPicked,
+            imageOf = state::imageOf,
             onDismiss = viewModel::onDismissCutPicker,
         )
     }
@@ -133,7 +138,7 @@ private fun EventMakeOrderContent(
                 }
 
                 item {
-                    OrderSectionHeader(title = "Cliente") // agrega iconRes = ArxIcons.Person si lo tienes
+                    OrderSectionHeader(title = "Cliente", iconRes = ArxIcons.User)
                 }
                 item {
                     CustomerSelector(
@@ -155,8 +160,9 @@ private fun EventMakeOrderContent(
                     item { Text("Agrega al menos un corte para continuar.") }
                 } else {
                     items(state.lines, key = { it.cutId }) { line ->
-                        ArxOrderItemHorizontalCard(
+                        ArxOrderLineEditCard(
                             title = line.cutName,
+                            image = state.imageOf(line.cutId),
                             pricePerKgText = "${line.pricePerKgCents.toMoney()}/kg",
                             totalText = line.estimatedCents.toMoney(),
                             quantityKg = line.grams / 1000.0,

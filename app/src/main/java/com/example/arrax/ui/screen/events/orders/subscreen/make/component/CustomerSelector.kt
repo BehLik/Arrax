@@ -8,7 +8,6 @@ import androidx.compose.ui.Modifier
 import com.example.arrax.core.designsystem.components.display.ArxAvatar
 import com.example.arrax.core.designsystem.components.display.ArxListItem
 import com.example.arrax.core.designsystem.components.display.arxInitials
-import com.example.arrax.core.designsystem.components.inputs.ArxDropdown
 import com.example.arrax.core.designsystem.icons.ArxIcon
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import com.example.arrax.domain.model.Customer
