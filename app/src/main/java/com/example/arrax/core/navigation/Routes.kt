@@ -2,6 +2,9 @@ package com.example.arrax.core.navigation
 
 import kotlinx.serialization.Serializable
 
+@Serializable object BusinessGraph
+@Serializable object EventGraph
+
 // ── Auth ──
 @Serializable data object AuthGraph
 @Serializable data object Login

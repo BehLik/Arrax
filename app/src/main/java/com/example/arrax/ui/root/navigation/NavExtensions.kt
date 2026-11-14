@@ -4,6 +4,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavOptionsBuilder
 import com.example.arrax.core.navigation.AuthGraph
+import com.example.arrax.core.navigation.Login
 
 private fun NavController.isCurrentEntryResumed(): Boolean =
     currentBackStackEntry?.lifecycle?.currentState == Lifecycle.State.RESUMED
@@ -25,5 +26,5 @@ fun NavController.backAction(): () -> Unit = { safePopBackStack() }
 
 /** Logout / sesión inválida: limpia todo el back stack y vuelve a Auth. */
 fun NavController.logoutToAuth() {
-    navigate(AuthGraph) { popUpTo(graph.id) { inclusive = true } }
+    navigate(Login) { popUpTo(graph.id) { inclusive = true } }
 }

@@ -17,6 +17,7 @@ import com.example.arrax.ui.root.navigation.backAction
 import com.example.arrax.ui.root.navigation.logoutToAuth
 import com.example.arrax.ui.root.navigation.safeNavigate
 import com.example.arrax.ui.root.session.LocalCurrentUser
+import com.example.arrax.ui.screen.business.openBusiness
 import com.example.arrax.ui.screen.lobby.business.LobbyBusinessCreateScreen
 import com.example.arrax.ui.screen.lobby.home.LobbyHomeScreen
 import com.example.arrax.ui.screen.lobby.join.LobbyJoinEvent
@@ -42,28 +43,28 @@ fun NavGraphBuilder.lobbyGraph(nav: NavController) {
             popExitTransition = { fadeOut(tween(400)) }
         ) {
             LobbyHomeScreen(
-                onBusinessClick = { id -> nav.safeNavigate(BusinessHome(id)) },
+                onBusinessClick = { id -> nav.openBusiness(id) }, // antes: safeNavigate(BusinessHome(id))
                 onCreateBusinessClick = { nav.safeNavigate(BusinessCreate) },
                 onJoinClick = { nav.safeNavigate(BusinessJoin) },
                 onViewAllClick = { nav.safeNavigate(MyBusinesses) },
                 onNotificationsClick = { nav.safeNavigate(Notifications) },
                 onProfileClick = { nav.safeNavigate(Profile) }
-
             )
         }
 
         composable<MyBusinesses> {
-            // TODO: onBusinessClick = { id -> nav.safeNavigate(BusinessHome(id)) }
+            // TODO: onBusinessClick = { id -> nav.openBusiness(id) }
             PlaceholderScreen("Mis negocios", back)
         }
 
+        // Crear y unirse: el BusinessGraph aún no está en la pila (vienes del lobby),
+        // por eso aquí basta con sacar la pantalla actual al entrar.
         composable<BusinessCreate> {
             LobbyBusinessCreateScreen(
                 onBack = back,
                 onCreated = { id ->
                     nav.navigate(BusinessHome(id)) { popUpTo<BusinessCreate> { inclusive = true } }
                 },
-
             )
         }
 

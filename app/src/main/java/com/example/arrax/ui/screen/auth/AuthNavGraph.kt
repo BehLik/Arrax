@@ -8,7 +8,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.example.arrax.core.navigation.*
-import com.example.arrax.ui.root.navigation.PlaceholderScreen
 import com.example.arrax.ui.root.navigation.backAction
 import com.example.arrax.ui.root.navigation.safeNavigate
 import com.example.arrax.ui.screen.auth.forgotpassword.ForgotPasswordScreen
@@ -45,8 +44,15 @@ fun NavGraphBuilder.authGraph(nav: NavController, startOnVerify: Boolean = false
 
         composable<VerifyEmail> {
             VerifyEmailScreen(
-                onVerified = { nav.safeNavigate(LobbyGraph) { popUpTo<AuthGraph> { inclusive = true } } },
-                onCancel = { nav.safeNavigate(Login) { popUpTo<Login> { inclusive = true } } }
+                onVerified = {
+                    nav.safeNavigate(LobbyGraph) { popUpTo<AuthGraph> { inclusive = true } }
+                },
+                // Antes: popUpTo<Login>. Si la app arrancó directo en VerifyEmail,
+                // Login no está en la pila y VerifyEmail se quedaba escondido debajo.
+                // Con AuthGraph limpias todo lo de auth en ambos casos.
+                onCancel = {
+                    nav.safeNavigate(Login) { popUpTo<AuthGraph> { inclusive = true } }
+                }
             )
         }
 
