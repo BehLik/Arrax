@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
@@ -26,10 +27,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.example.arrax.core.designsystem.components.cards.ArxCard
 import com.example.arrax.core.designsystem.components.cards.ArxCatalogImage
@@ -37,7 +44,6 @@ import com.example.arrax.core.designsystem.components.cards.ArxCatalogImageView
 import com.example.arrax.core.designsystem.components.inputs.ArxQuantitySelector
 import com.example.arrax.core.designsystem.icons.ArxIcons
 import java.util.Locale
-
 
 @Composable
 fun ArxOrderLineEditCard(
@@ -54,6 +60,8 @@ fun ArxOrderLineEditCard(
     onRemove: () -> Unit,
     modifier: Modifier = Modifier,
     image: ArxCatalogImage = ArxCatalogImage.None,
+    focusRequester: FocusRequester = remember { FocusRequester() },
+    onImeNext: () -> Unit = {},
 ) {
     ArxCard(onClick = {}, modifier = modifier.fillMaxWidth()) {
         Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -69,10 +77,23 @@ fun ArxOrderLineEditCard(
                 }
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                FilterChip(selected = !isMoneyMode, onClick = { onModeChange(false) }, label = { Text("Kilos") })
-                FilterChip(selected = isMoneyMode, onClick = { onModeChange(true) }, label = { Text("Pesos") })
+                FilterChip(
+                    selected = !isMoneyMode,
+                    onClick = { onModeChange(false); runCatching { focusRequester.requestFocus() } },
+                    label = { Text("Kilos") },
+                )
+                FilterChip(
+                    selected = isMoneyMode,
+                    onClick = { onModeChange(true); runCatching { focusRequester.requestFocus() } },
+                    label = { Text("Pesos") },
+                )
             }
-            LineQuantityInput(isMoneyMode, grams, amountCents, equivalentText, onGramsChange, onAmountCentsChange)
+            LineQuantityInput(
+                isMoney = isMoneyMode, grams = grams, amountCents = amountCents,
+                equivalentText = equivalentText,
+                onGramsChange = onGramsChange, onAmountCentsChange = onAmountCentsChange,
+                focusRequester = focusRequester, onImeNext = onImeNext,
+            )
         }
     }
 }
@@ -85,12 +106,16 @@ private fun LineQuantityInput(
     equivalentText: String?,
     onGramsChange: (Int) -> Unit,
     onAmountCentsChange: (Long) -> Unit,
+    focusRequester: FocusRequester,
+    onImeNext: () -> Unit,
 ) {
-    // Unidad base: gramos (kg) o centavos (pesos)
     val external = if (isMoney) amountCents else grams.toLong()
-    var text by remember { mutableStateOf(formatUnits(isMoney, external)) }
+    var field by remember { mutableStateOf(TextFieldValue(formatUnits(isMoney, external))) }
     LaunchedEffect(isMoney, external) {
-        if (parseUnits(isMoney, text) != external) text = formatUnits(isMoney, external)
+        if (parseUnits(isMoney, field.text) != external) {
+            val t = formatUnits(isMoney, external)
+            field = TextFieldValue(t, TextRange(t.length))
+        }
     }
     fun set(units: Long) = if (isMoney) onAmountCentsChange(units) else onGramsChange(units.toInt())
 
@@ -104,20 +129,24 @@ private fun LineQuantityInput(
         }
     }
     OutlinedTextField(
-        value = text,
-        onValueChange = { raw ->
-            if (raw.matches(Regex("[0-9]*[.,]?[0-9]*"))) {
-                text = raw
-                set(if (raw.isBlank()) 0L else parseUnits(isMoney, raw) ?: 0L)
+        value = field,
+        onValueChange = { v ->
+            if (v.text.matches(Regex("[0-9]*[.,]?[0-9]*"))) {
+                field = v
+                set(if (v.text.isBlank()) 0L else parseUnits(isMoney, v.text) ?: 0L)
             }
         },
         label = { Text(if (isMoney) "Monto" else "Cantidad") },
         prefix = if (isMoney) ({ Text("$") }) else null,
         suffix = if (!isMoney) ({ Text("kg") }) else null,
         supportingText = equivalentText?.let { { Text(it) } },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        keyboardActions = KeyboardActions(onNext = { onImeNext() }),
         singleLine = true,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .focusRequester(focusRequester)
+            .onFocusChanged { if (it.isFocused) field = field.copy(selection = TextRange(0, field.text.length)) },
     )
 }
 

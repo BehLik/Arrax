@@ -38,7 +38,16 @@ data class EventMakeOrderState(
     val saved: Boolean = false,
     val showSummary: Boolean = false,
     val infoMessage: String? = null,
+
 ) {
+    val confirmHint: String?
+        get() = when {
+            !eventOpen -> null
+            selectedCustomerId == null -> "Elige un cliente para continuar"
+            lines.isEmpty() -> "Agrega al menos un corte"
+            lines.any { it.targetGrams <= 0 } -> "Falta la cantidad en algún corte"
+            else -> null
+        }
     fun imageOf(cutId: String): ArxCatalogImage = cutImages[cutId] ?: ArxCatalogImage.None
     val selectedCustomer: Customer? get() = customers.firstOrNull { it.id == selectedCustomerId }
 
